@@ -157,7 +157,7 @@ fn find_recursive(pqs : &mut QS, size : usize, index : usize, count: &mut usize)
     if index >= (size+1)/2{
         if pqs.is_opqs(){
             *count+=1;
-            let s = pqs.to_string();
+            //let s = pqs.to_string();
             //println!("{s}");
         }
         return
@@ -181,10 +181,10 @@ fn main() {
 
     for i in 1..18{
         now = Instant::now();
-        find(14);
+        find(i);
         elapsed_time = now.elapsed().as_seconds_f32();
 
-        println!("For n = {i}, the function took: {elapsed_time} seconds")
+        println!("For n = {i}, the function took: {elapsed_time} seconds");
     }
 
 }

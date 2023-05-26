@@ -4,6 +4,7 @@
 
 import numpy as np
 from quaternion import *
+import time
 
 N = 16
 
@@ -128,7 +129,7 @@ def find(size):
 
     find_recursive(pqs, size, 1)
 
-    print(f"total number: {count}")
+    #print(f"total number: {count}")
 
 
 def find_recursive(pqs, size, index):
@@ -137,7 +138,7 @@ def find_recursive(pqs, size, index):
         if pqs.is_opqs():
             global count
             count+=1
-            print(pqs)
+            #print(pqs)
         return
 
     for index_value_to_test in range(N):
@@ -148,7 +149,13 @@ def find_recursive(pqs, size, index):
 
 
 
+for i in range(18):
 
+    start = time.time()
+    find(i)
+    end = time.time()
+
+    print(f"For n = {i}, the function took: {end-start} seconds")
 
 
 
