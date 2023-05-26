@@ -10,3 +10,4 @@ cgmath = "0.18.0"
 phf = { version = "0.11.1", features = ["macros"] }
 lazy_static = "1.4.0"
 dict = "0.1.5"
+time = "0.3.21"

@@ -2,6 +2,7 @@
 extern crate lazy_static;
 
 use cgmath::{*, num_traits::PrimInt};
+use time::*;
 
 const N : usize = 16;
 
@@ -148,7 +149,7 @@ fn find(size : usize){
 
     find_recursive(&mut pqs, size, 1, &mut count);
 
-    println!("total number: {count}")
+    //println!("total number: {count}")
 }
 
 fn find_recursive(pqs : &mut QS, size : usize, index : usize, count: &mut usize){
@@ -157,7 +158,7 @@ fn find_recursive(pqs : &mut QS, size : usize, index : usize, count: &mut usize)
         if pqs.is_opqs(){
             *count+=1;
             let s = pqs.to_string();
-            println!("{s}");
+            //println!("{s}");
         }
         return
     }
@@ -175,7 +176,15 @@ fn find_recursive(pqs : &mut QS, size : usize, index : usize, count: &mut usize)
 
 
 fn main() {
+    let mut now;
+    let mut elapsed_time;
 
-    find(14);
+    for i in 1..18{
+        now = Instant::now();
+        find(14);
+        elapsed_time = now.elapsed().as_seconds_f32();
+
+        println!("For n = {i}, the function took: {elapsed_time} seconds")
+    }
 
 }
