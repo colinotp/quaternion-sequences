@@ -1,5 +1,5 @@
 [package]
-name = "naive"
+name = "rust"
 version = "0.1.0"
 edition = "2021"
 
@@ -11,3 +11,4 @@ phf = { version = "0.11.1", features = ["macros"] }
 lazy_static = "1.4.0"
 dict = "0.1.5"
 time = "0.3.21"
+rayon = "1.7.0"

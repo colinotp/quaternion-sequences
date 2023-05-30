@@ -16,24 +16,24 @@ lazy_static! {
     pub static ref QPLUS : Vec<Quaternion<f32>> = vec![Q1, -Q1, QI, -QI, QJ, -QJ, QK, -QK, QQ, QQ*-1., QQ*QI, QQ*-QI, QQ*QJ, QQ*-QJ, QQ*QK, QQ*-QK];
 }
 
-fn quaternion_to_string(quat : &Quaternion<f32>) -> String {
+pub fn quaternion_to_string(quat : &Quaternion<f32>) -> String {
     match *quat {
         q if q==Q1 => "+".to_string(),
         q if q==-Q1 => "-".to_string(),
         q if q==QI  => "i".to_string(),
         q if q==-QI => "I".to_string(),
-        q if q==QJ  => "o".to_string(),
-        q if q==-QJ => "O".to_string(),
-        q if q==QK  => "u".to_string(),
-        q if q==-QK => "U".to_string(),
+        q if q==QJ  => "j".to_string(),
+        q if q==-QJ => "J".to_string(),
+        q if q==QK  => "k".to_string(),
+        q if q==-QK => "K".to_string(),
         q if q==QQ  => "q".to_string(),
         q if q==QQ*-1.  => "Q".to_string(),
-        q if q==QQ*QI  => "ì".to_string(),
-        q if q==QQ*-QI => "Ì".to_string(),
-        q if q==QQ*QJ  => "ò".to_string(),
-        q if q==QQ*-QJ => "Ò".to_string(),
-        q if q==QQ*QK  => "ù".to_string(),
-        q if q==QQ*-QK => "Ù".to_string(),
+        q if q==QQ*QI  => "x".to_string(),
+        q if q==QQ*-QI => "X".to_string(),
+        q if q==QQ*QJ  => "y".to_string(),
+        q if q==QQ*-QJ => "Y".to_string(),
+        q if q==QQ*QK  => "z".to_string(),
+        q if q==QQ*-QK => "Z".to_string(),
         _ => panic!("Invalid entry !")
     }
 }
@@ -47,6 +47,9 @@ pub struct QS {
     values: Vec<Quaternion<f32>>,
     symmetry : Option<Symmetry>
 }
+
+
+
 
 impl QS{
 
@@ -68,6 +71,7 @@ impl QS{
             Some(Symmetry::I) => {self.values[self.size - 1 - index] = value.clone();}
             Some(Symmetry::II) => {self.values[self.size/2 + index] = (-1).pow(index as u32) as f32 * value.clone();}
             Some(Symmetry::III) => {self.values[self.size/2 + index] = (-1).pow((index/2) as u32) as f32 * value.clone();}
+            Some(Symmetry::IV) => {self.values[self.size/2 + index] = -value.clone();}
             None => {}
         }
     }
