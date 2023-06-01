@@ -77,7 +77,7 @@ impl QS{
     }
 
 
-    pub fn search_size(&self) -> usize{
+    pub const fn search_size(&self) -> usize{
         match self.symmetry {
             Some(_) => {(self.size+1)/2}
             None => {self.size}
@@ -108,7 +108,7 @@ impl QS{
 
 
     pub fn is_pqs(&self) -> bool{
-        for t in 1..self.size {
+        for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.periodic_autocorrelation(t) != Q0 {
                 return false;
             }
@@ -117,7 +117,7 @@ impl QS{
     }
 
     pub fn is_opqs(&self) -> bool{
-        for t in 1..self.size {
+        for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.odd_periodic_autocorrelation(t) != Q0 {
                 return false;
             }
