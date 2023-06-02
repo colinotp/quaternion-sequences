@@ -54,7 +54,7 @@ fn find_williamson(){
     let mut count;
 
 
-    for i in 1..18{
+    for i in 1..7{
 
         now = Instant::now();
         count = find_williamson::find(i);
