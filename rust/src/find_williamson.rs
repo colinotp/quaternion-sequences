@@ -13,13 +13,16 @@ pub fn find(size : usize) -> usize{
 fn find_recursive(will : &mut Williamson, size : usize, index : usize) -> usize{
 
     if index >= will.search_size(){
-        if will.is_perfect_complementary(){
-            if !will.to_qs().is_pqs(){
-                println!("{}", will.to_string());
-                println!("{}", will.to_qs().to_string());
+        if will.verify_cross_correlation() {
+            if !will.to_qs().is_perfect(){
+                //println!("{}", will.to_string());
+                //println!("{}", will.to_qs().to_string());
             }
-            return 1;
+            else{
+                return 1;
+            }
         }
+        
         return 0;
     }
 

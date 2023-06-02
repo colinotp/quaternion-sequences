@@ -41,7 +41,7 @@ fn find_pqs(){
         }
 
         now = Instant::now();
-        count = find_naive::find(i, symmetry.clone());
+        count = find_optim::find(i, symmetry.clone());
         elapsed_time = now.elapsed().as_seconds_f32();
     
         println!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");

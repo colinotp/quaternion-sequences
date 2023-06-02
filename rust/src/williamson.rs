@@ -2,7 +2,7 @@ use crate::sequence::{QS, QPLUS};
 
 
 #[derive(Eq,PartialEq,PartialOrd,Ord)]
-pub enum SequenceTag {
+pub enum SequenceTag { // enum for choosing a specific sequence
     A, B, C, D
 }
 
@@ -55,10 +55,17 @@ impl Williamson{
     }
 
     pub const fn search_size(&self) -> usize{
+        // returns the size of the search
         self.size
     }
 
+    pub fn values(&self, index : usize) -> (i8, i8, i8, i8) {
+        // gets a quadruplet of values at a specific index
+        (self.a[index], self.b[index], self.c[index], self.d[index])
+    }
+
     pub fn set_all_values(&mut self, values : (Vec<i8>,Vec<i8>,Vec<i8>,Vec<i8>)){
+        // sets the sequences to specific values
         let (a,b,c,d) = values;
         self.a = a;
         self.b = b;
@@ -67,6 +74,7 @@ impl Williamson{
     }
 
     pub fn set_single_value(&mut self, value : i8, tag : &SequenceTag, index: usize){
+        // sets a value for a specific sequence and specific index
         match &tag {
             SequenceTag::A => self.a[index] = value,
             SequenceTag::B => self.b[index] = value,
@@ -76,6 +84,7 @@ impl Williamson{
     }
 
     pub fn set_sequence_value(&mut self, value : &(i8, i8, i8, i8), index: usize){
+        // sets a value for all 4 sequences on a specific index
         self.a[index] = value.0;
         self.b[index] = value.1;
         self.c[index] = value.2;
@@ -83,45 +92,48 @@ impl Williamson{
     }
 
 
-
-    pub fn periodic_autocorrelation(&self,t: usize) -> i32 {
-
-        let mut sum_res = 0;
-        for i in 0..self.size{
-            sum_res += (self.a[i]*self.a[(i+t)%self.size]) as i32;
-            sum_res += (self.b[i]*self.b[(i+t)%self.size]) as i32;
-            sum_res += (self.c[i]*self.c[(i+t)%self.size]) as i32;
-            sum_res += (self.d[i]*self.d[(i+t)%self.size]) as i32;
-        }
-        sum_res
-    }
-
-    pub fn odd_periodic_autocorrelation(&self,t: usize) -> i32 {
-
-        let mut sum_res = 0;
-        let mut power : i32;
-        for i in 0..self.size{
-            power = (-1 as i32).pow(((i+t)/self.size) as u32);
-            sum_res += power*(self.a[i]*self.a[(i+t)%self.size]) as i32;
-            sum_res += power*(self.b[i]*self.b[(i+t)%self.size]) as i32;
-            sum_res += power*(self.c[i]*self.c[(i+t)%self.size]) as i32;
-            sum_res += power*(self.d[i]*self.d[(i+t)%self.size]) as i32;
-        }
-        sum_res
-    }
-
-    pub fn is_perfect_complementary(&self) -> bool{
-        for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
-            if self.periodic_autocorrelation(t) != 0 {
+    pub fn is_periodic_complementary(&self) -> bool{
+        for offset in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
+            if periodic_autocorrelation(&self.a, offset) + periodic_autocorrelation(&self.b, offset) + periodic_autocorrelation(&self.c, offset) + periodic_autocorrelation(&self.d, offset) != 0 {
                 return false;
             }
         }
         true
     }
 
-    pub fn is_odd_perfect_complementary(&self) -> bool{
-        for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
-            if self.odd_periodic_autocorrelation(t) != 0 {
+    pub fn is_amicable(&self) -> bool {
+        for offset in 1..((self.size+1)/2) {
+            if cross_correlation(&self.a, &self.b, offset) == cross_correlation(&self.b, &self.a, offset) &&
+               cross_correlation(&self.a, &self.c, offset) == cross_correlation(&self.c, &self.a, offset) &&
+               cross_correlation(&self.a, &self.d, offset) == cross_correlation(&self.d, &self.a, offset) &&
+               cross_correlation(&self.b, &self.c, offset) == cross_correlation(&self.c, &self.b, offset) &&
+               cross_correlation(&self.b, &self.d, offset) == cross_correlation(&self.d, &self.b, offset) &&
+               cross_correlation(&self.c, &self.d, offset) == cross_correlation(&self.d, &self.c, offset)
+               {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    pub fn verify_cross_correlation(&self) -> bool {
+        for offset in 0..((self.size+1)/2) {
+            if cross_correlation(&self.a, &self.b, offset) - cross_correlation(&self.b, &self.a, offset) == cross_correlation(&self.d, &self.c, offset) - cross_correlation(&self.c, &self.d, offset) &&
+               cross_correlation(&self.a, &self.c, offset) - cross_correlation(&self.c, &self.a, offset) == cross_correlation(&self.b, &self.d, offset) - cross_correlation(&self.d, &self.b, offset) &&
+               cross_correlation(&self.a, &self.d, offset) - cross_correlation(&self.d, &self.a, offset) == cross_correlation(&self.c, &self.b, offset) - cross_correlation(&self.b, &self.c, offset)
+               {
+                return false;
+            }
+        }
+
+        true
+    }
+
+    pub fn is_symmetric(&self) -> bool {
+        let n = self.size;
+        for t in 1..((self.size+1)/2) {
+            if self.values(t) != self.values(n-t) {
                 return false;
             }
         }
@@ -131,6 +143,7 @@ impl Williamson{
 
 
     pub fn to_qs(&self) -> QS {
+        // transforms the sequence to a Quaternion Sequence
         let mut qs = QS::new(self.size, None);
 
         for i in 0..self.size {
@@ -161,17 +174,38 @@ impl Williamson{
 }
 
 
+pub fn periodic_autocorrelation(seq : &Vec<i8>, offset : usize) -> i32 {
+    let mut res = 0;
+    let n = seq.len();
+    for i in 0..n {
+        res += (seq[i]*seq[(i + n - offset) % n]) as i32;
+    }
+    
+    res
+}
 
-pub fn element_to_string(elem : i8) -> String {
+
+pub fn cross_correlation(seq1 : &Vec<i8>, seq2 : &Vec<i8>, offset : usize) -> i32 {
+    assert!(seq1.len() == seq2.len());
+
+    let n = seq1.len();
+    let mut res = 0;
+    for i in 0..n {
+        res += (seq1[i]*seq2[(i + n - offset) % n]) as i32;
+    }
+    
+    res
+}
+
+
+
+fn element_to_string(elem : i8) -> String {
     match elem {
         1 => "+".to_string(),
         -1 => "-".to_string(),
         _ => {panic!("invalid entry")}
     }
 }
-
-
-
 
 impl ToString for Williamson{
     fn to_string(&self) -> String {

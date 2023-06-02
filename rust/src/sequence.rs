@@ -16,27 +16,7 @@ lazy_static! {
     pub static ref QPLUS : Vec<Quaternion<f32>> = vec![Q1, -Q1, QI, -QI, QJ, -QJ, QK, -QK, QQ, QQ*-1., QQ*QI, QQ*-QI, QQ*QJ, QQ*-QJ, QQ*QK, QQ*-QK];
 }
 
-pub fn quaternion_to_string(quat : &Quaternion<f32>) -> String {
-    match *quat {
-        q if q==Q1 => "+".to_string(),
-        q if q==-Q1 => "-".to_string(),
-        q if q==QI  => "i".to_string(),
-        q if q==-QI => "I".to_string(),
-        q if q==QJ  => "j".to_string(),
-        q if q==-QJ => "J".to_string(),
-        q if q==QK  => "k".to_string(),
-        q if q==-QK => "K".to_string(),
-        q if q==QQ  => "q".to_string(),
-        q if q==QQ*-1.  => "Q".to_string(),
-        q if q==QQ*QI  => "x".to_string(),
-        q if q==QQ*-QI => "X".to_string(),
-        q if q==QQ*QJ  => "y".to_string(),
-        q if q==QQ*-QJ => "Y".to_string(),
-        q if q==QQ*QK  => "z".to_string(),
-        q if q==QQ*-QK => "Z".to_string(),
-        _ => panic!("Invalid entry !")
-    }
-}
+
 
 
 
@@ -107,7 +87,7 @@ impl QS{
     }
 
 
-    pub fn is_pqs(&self) -> bool{
+    pub fn is_perfect(&self) -> bool{
         for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.periodic_autocorrelation(t) != Q0 {
                 return false;
@@ -116,7 +96,7 @@ impl QS{
         true
     }
 
-    pub fn is_opqs(&self) -> bool{
+    pub fn is_odd_perfect(&self) -> bool{
         for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.odd_periodic_autocorrelation(t) != Q0 {
                 return false;
@@ -125,20 +105,41 @@ impl QS{
         true
     }
 
-
-    pub fn sub_opqs(self) -> Option<QS>{
-
-        let mut size;
-        let mut pqs;
-        for start in 1..(self.size-1)/2{
-            size = self.size - 2*start;
-            pqs = QS::new(size, self.symmetry.clone());
-            pqs.set_values(self.values[start..self.size-start].to_vec());
-            if pqs.is_opqs(){
-                return Some(pqs);
+    pub fn is_symmetric(&self) -> bool {
+        let n = self.size;
+        for t in 1..((self.size+1)/2) {
+            if self.values[t] != self.values[n-t] {
+                return false;
             }
         }
-        None
+        true
+    }
+
+}
+
+
+
+
+
+pub fn quaternion_to_string(quat : &Quaternion<f32>) -> String {
+    match *quat {
+        q if q==Q1 => "+".to_string(),
+        q if q==-Q1 => "-".to_string(),
+        q if q==QI  => "i".to_string(),
+        q if q==-QI => "I".to_string(),
+        q if q==QJ  => "j".to_string(),
+        q if q==-QJ => "J".to_string(),
+        q if q==QK  => "k".to_string(),
+        q if q==-QK => "K".to_string(),
+        q if q==QQ  => "q".to_string(),
+        q if q==QQ*-1.  => "Q".to_string(),
+        q if q==QQ*QI  => "x".to_string(),
+        q if q==QQ*-QI => "X".to_string(),
+        q if q==QQ*QJ  => "y".to_string(),
+        q if q==QQ*-QJ => "Y".to_string(),
+        q if q==QQ*QK  => "z".to_string(),
+        q if q==QQ*-QK => "Z".to_string(),
+        _ => panic!("Invalid entry !")
     }
 }
 
