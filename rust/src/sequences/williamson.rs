@@ -177,7 +177,7 @@ pub fn periodic_autocorrelation(seq : &Vec<i8>, offset : usize) -> i32 {
     let mut res = 0;
     let n = seq.len();
     for i in 0..n {
-        res += (seq[i]*seq[(i + n - offset) % n]) as i32;
+        res += (seq[i]*seq[(i + offset) % n]) as i32;
     }
     
     res

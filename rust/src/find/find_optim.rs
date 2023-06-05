@@ -14,7 +14,7 @@ pub fn find(size : usize, symmetry : Option<Symmetry>) -> usize{
 fn find_recursive(pqs : &mut QS, size : usize, index : usize) -> usize{
 
     if index >= pqs.search_size(){
-        if pqs.is_perfect() && pqs.is_symmetric(){
+        if pqs.is_perfect(){
             //println!("{}", pqs.to_string());
             return 1;
         }

@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 #[macro_use]
 extern crate lazy_static;
 
@@ -9,7 +10,6 @@ mod find;
 use crate::find::*;
 use crate::sequences::{sequence::*, williamson::*, symmetries::*};
 
-#[allow(dead_code)]
 fn print_group() {
     println!("{}", quaternion_to_string(&QQ));
     println!("{}", quaternion_to_string(&(QQ*-1.)));
@@ -21,49 +21,46 @@ fn print_group() {
     println!("{}", quaternion_to_string(&(QQ*QI*QK)));
 }
 
-#[allow(dead_code)]
-fn find_pqs(){
-    let mut now;
-    let mut elapsed_time;
-    let mut count;
-    let symmetry = None;
-
-
+fn find_pqs(symmetry : Option<Symmetry>){
     for i in 1..18{
-
-        match symmetry {
-            None | Some(Symmetry::I) => {}
-            _ => {
-                if i % 2 == 1 {continue}
-            },
-        }
-
-        now = Instant::now();
-        count = find_optim::find(i, symmetry.clone());
-        elapsed_time = now.elapsed().as_seconds_f32();
-    
-        println!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");
+        find_pqs_of_type(i, &symmetry);
     }
 }
 
-#[allow(dead_code)]
+fn find_pqs_of_type(i : usize, symmetry : &Option<Symmetry>){
+
+    match symmetry {
+        None | Some(Symmetry::I) => {}
+        _ => {
+            if i % 2 == 1 {return}
+        },
+    }
+
+    let now = Instant::now();
+    let count = find_optim::find(i, symmetry.clone());
+    let elapsed_time = now.elapsed().as_seconds_f32();
+
+    eprintln!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");
+}
+
+
+
 fn find_williamson(){
-    let mut now;
-    let mut elapsed_time;
-    let mut count;
-
-
     for i in 1..7{
-
-        now = Instant::now();
-        count = find_williamson::find(i);
-        elapsed_time = now.elapsed().as_seconds_f32();
-    
-        println!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");
+        find_williamson_of_size(i);
     }
 }
 
-#[allow(dead_code)]
+fn find_williamson_of_size(i : usize){
+
+    let now = Instant::now();
+    let count = find_williamson::find(i);
+    let elapsed_time = now.elapsed().as_seconds_f32();
+
+    eprintln!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");
+    
+}
+
 fn print_williamson(){
     let mut will = Williamson::new(6);
     will.set_single_value(-1, &SequenceTag::A, 0);
@@ -74,5 +71,6 @@ fn print_williamson(){
 }
 
 fn main() {
-    find_williamson();
+    find_pqs(None);
+    //find_williamson();
 }

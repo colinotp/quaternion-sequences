@@ -88,7 +88,7 @@ impl QS{
 
 
     pub fn is_perfect(&self) -> bool{
-        for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
+        for t in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.periodic_autocorrelation(t) != Q0 {
                 return false;
             }
@@ -97,7 +97,7 @@ impl QS{
     }
 
     pub fn is_odd_perfect(&self) -> bool{
-        for t in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
+        for t in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.odd_periodic_autocorrelation(t) != Q0 {
                 return false;
             }
@@ -113,6 +113,17 @@ impl QS{
             }
         }
         true
+    }
+
+
+    pub fn to_string_raw(&self) -> String {
+        let mut res_str: String = "".to_owned();
+
+        for q in &self.values{
+            res_str.push_str(&quaternion_to_string(&q));
+        }
+
+        res_str.to_string()
     }
 
 }

@@ -13,12 +13,12 @@ pub fn find(size : usize) -> usize{
 fn find_recursive(will : &mut Williamson, size : usize, index : usize) -> usize{
 
     if index >= will.search_size(){
-        if will.verify_cross_correlation() && will.is_periodic_complementary() {
+        if will.is_amicable() && will.is_periodic_complementary() {
             if !will.to_qs().is_perfect(){
-                println!("{}", will.to_qs().to_string());
                 //println!("{}", will.to_string());
             }
             else{
+                println!("{}", will.to_qs().to_string_raw());
                 return 1;
             }
         }
