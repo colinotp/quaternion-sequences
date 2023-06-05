@@ -1,8 +1,8 @@
 
 use rayon;
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
-use crate::sequence::*;
-use crate::symmetries::Symmetry;
+use crate::sequences::sequence::*;
+use crate::sequences::symmetries::Symmetry;
 
 
 pub fn find(size : usize, symmetry : Option<Symmetry>) -> usize{
@@ -14,7 +14,7 @@ pub fn find(size : usize, symmetry : Option<Symmetry>) -> usize{
 fn find_recursive(pqs : &mut QS, size : usize, index : usize) -> usize{
 
     if index >= pqs.search_size(){
-        if pqs.is_perfect(){
+        if pqs.is_perfect() && pqs.is_symmetric(){
             //println!("{}", pqs.to_string());
             return 1;
         }

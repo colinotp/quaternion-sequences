@@ -1,7 +1,7 @@
 
 use cgmath::{*, num_traits::PrimInt};
 
-use crate::symmetries::*;
+use super::symmetries::*;
 
 pub const N : usize = 16;
 

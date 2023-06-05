@@ -1,4 +1,4 @@
-use crate::sequence::{QS, QPLUS};
+use super::sequence::{QS, QPLUS};
 
 
 #[derive(Eq,PartialEq,PartialOrd,Ord)]
@@ -6,7 +6,6 @@ pub enum SequenceTag { // enum for choosing a specific sequence
     A, B, C, D
 }
 
-pub static SEQUENCE_TAGS : [SequenceTag; 4] = [SequenceTag::A, SequenceTag::B, SequenceTag::C, SequenceTag::D];
 
 pub static QUADRUPLETS : [(i8,i8,i8,i8); 16] = [
     (1,1,1,1),
@@ -93,7 +92,7 @@ impl Williamson{
 
 
     pub fn is_periodic_complementary(&self) -> bool{
-        for offset in 1..((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
+        for offset in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if periodic_autocorrelation(&self.a, offset) + periodic_autocorrelation(&self.b, offset) + periodic_autocorrelation(&self.c, offset) + periodic_autocorrelation(&self.d, offset) != 0 {
                 return false;
             }
@@ -101,14 +100,14 @@ impl Williamson{
         true
     }
 
-    pub fn is_amicable(&self) -> bool {
-        for offset in 1..((self.size+1)/2) {
-            if cross_correlation(&self.a, &self.b, offset) == cross_correlation(&self.b, &self.a, offset) &&
+    pub fn is_amicable(&self) -> bool { // This function and the verify_cross_correlation function are equivalent
+        for offset in 1..self.size {
+            if !(cross_correlation(&self.a, &self.b, offset) == cross_correlation(&self.b, &self.a, offset) &&
                cross_correlation(&self.a, &self.c, offset) == cross_correlation(&self.c, &self.a, offset) &&
                cross_correlation(&self.a, &self.d, offset) == cross_correlation(&self.d, &self.a, offset) &&
                cross_correlation(&self.b, &self.c, offset) == cross_correlation(&self.c, &self.b, offset) &&
                cross_correlation(&self.b, &self.d, offset) == cross_correlation(&self.d, &self.b, offset) &&
-               cross_correlation(&self.c, &self.d, offset) == cross_correlation(&self.d, &self.c, offset)
+               cross_correlation(&self.c, &self.d, offset) == cross_correlation(&self.d, &self.c, offset))
                {
                 return false;
             }
@@ -117,11 +116,11 @@ impl Williamson{
         true
     }
 
-    pub fn verify_cross_correlation(&self) -> bool {
-        for offset in 0..((self.size+1)/2) {
-            if cross_correlation(&self.a, &self.b, offset) - cross_correlation(&self.b, &self.a, offset) == cross_correlation(&self.d, &self.c, offset) - cross_correlation(&self.c, &self.d, offset) &&
+    pub fn verify_cross_correlation(&self) -> bool { // This function and the is_amicable function are equivalent
+        for offset in 0..self.size {
+            if !(cross_correlation(&self.a, &self.b, offset) - cross_correlation(&self.b, &self.a, offset) == cross_correlation(&self.d, &self.c, offset) - cross_correlation(&self.c, &self.d, offset) &&
                cross_correlation(&self.a, &self.c, offset) - cross_correlation(&self.c, &self.a, offset) == cross_correlation(&self.b, &self.d, offset) - cross_correlation(&self.d, &self.b, offset) &&
-               cross_correlation(&self.a, &self.d, offset) - cross_correlation(&self.d, &self.a, offset) == cross_correlation(&self.c, &self.b, offset) - cross_correlation(&self.b, &self.c, offset)
+               cross_correlation(&self.a, &self.d, offset) - cross_correlation(&self.d, &self.a, offset) == cross_correlation(&self.c, &self.b, offset) - cross_correlation(&self.b, &self.c, offset))
                {
                 return false;
             }
@@ -132,7 +131,7 @@ impl Williamson{
 
     pub fn is_symmetric(&self) -> bool {
         let n = self.size;
-        for t in 1..((self.size+1)/2) {
+        for t in 1..=((self.size)/2) { // Trying half the values is sufficient
             if self.values(t) != self.values(n-t) {
                 return false;
             }

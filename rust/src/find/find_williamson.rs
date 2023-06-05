@@ -1,5 +1,5 @@
 
-use crate::williamson::{Williamson, QUADRUPLETS};
+use crate::sequences::williamson::{Williamson, QUADRUPLETS};
 
 
 
@@ -13,9 +13,9 @@ pub fn find(size : usize) -> usize{
 fn find_recursive(will : &mut Williamson, size : usize, index : usize) -> usize{
 
     if index >= will.search_size(){
-        if will.verify_cross_correlation() {
-            println!("{}", will.to_qs().to_string());
+        if will.verify_cross_correlation() && will.is_periodic_complementary() {
             if !will.to_qs().is_perfect(){
+                println!("{}", will.to_qs().to_string());
                 //println!("{}", will.to_string());
             }
             else{

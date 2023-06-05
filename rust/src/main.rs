@@ -2,17 +2,14 @@
 extern crate lazy_static;
 
 use time::*;
-use williamson::Williamson;
 
-pub mod sequence;
-pub mod find_naive;
-pub mod find_optim;
-pub mod symmetries;
-pub mod williamson;
-mod find_williamson;
-use crate::sequence::*;
-use crate::symmetries::*;
+mod sequences;
+mod tests;
+mod find;
+use crate::find::*;
+use crate::sequences::{sequence::*, williamson::*, symmetries::*};
 
+#[allow(dead_code)]
 fn print_group() {
     println!("{}", quaternion_to_string(&QQ));
     println!("{}", quaternion_to_string(&(QQ*-1.)));
@@ -24,6 +21,7 @@ fn print_group() {
     println!("{}", quaternion_to_string(&(QQ*QI*QK)));
 }
 
+#[allow(dead_code)]
 fn find_pqs(){
     let mut now;
     let mut elapsed_time;
@@ -48,6 +46,7 @@ fn find_pqs(){
     }
 }
 
+#[allow(dead_code)]
 fn find_williamson(){
     let mut now;
     let mut elapsed_time;
@@ -64,11 +63,12 @@ fn find_williamson(){
     }
 }
 
+#[allow(dead_code)]
 fn print_williamson(){
     let mut will = Williamson::new(6);
-    will.set_single_value(-1, &williamson::SequenceTag::A, 0);
-    will.set_single_value(-1, &williamson::SequenceTag::B, 1);
-    will.set_single_value(-1, &williamson::SequenceTag::D, 3);
+    will.set_single_value(-1, &SequenceTag::A, 0);
+    will.set_single_value(-1, &SequenceTag::B, 1);
+    will.set_single_value(-1, &SequenceTag::D, 3);
     println!("{}", will.to_string());
     println!("{}", will.to_qs().to_string());
 }

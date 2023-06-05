@@ -1,8 +1,8 @@
 
-use crate::sequence::*;
-use crate::symmetries::Symmetry;
+use crate::sequences::sequence::*;
+use crate::sequences::symmetries::Symmetry;
 
-
+#[allow(dead_code)]
 pub fn find(size : usize, symmetry : Option<Symmetry>) -> usize{
     let mut count = 0;
     let mut pqs = QS::new(size, symmetry);
@@ -12,6 +12,7 @@ pub fn find(size : usize, symmetry : Option<Symmetry>) -> usize{
     return count;
 }
 
+#[allow(dead_code)]
 fn find_recursive(pqs : &mut QS, size : usize, index : usize, count: &mut usize){
 
     if index >= pqs.search_size(){
