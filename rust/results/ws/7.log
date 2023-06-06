@@ -1,0 +1,3 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.06s
+     Running `target\debug\rust.exe ws 7`
+For n = 7, the function took: 11.410959 seconds and found 60 sequences

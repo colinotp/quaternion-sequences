@@ -98,9 +98,9 @@ fn main() {
     }
     else if count == 2 {
         match &args[1] {
-            s if s == "qs" => {find_pqs(None)}
+            s if s == "pqs" => {find_pqs(None)}
             s if s == "ws" => {find_williamson()}
-            s if s == "wts" => {/* todo */}
+            s if s == "wts" => {find_williamson_type()}
             _ => {}
         }
     }
@@ -111,9 +111,9 @@ fn main() {
         };
 
         match &args[1] {
-            s if s == "qs" => {find_pqs_of_type(i, &None)}
+            s if s == "pqs" => {find_pqs_of_type(i, &None)}
             s if s == "ws" => {find_williamson_of_size(i)}
-            s if s == "wts" => {/* todo */}
+            s if s == "wts" => {find_williamson_type_of_size(i)}
             _ => {}
         }
     }
