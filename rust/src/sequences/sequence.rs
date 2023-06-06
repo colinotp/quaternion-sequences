@@ -88,6 +88,7 @@ impl QS{
 
 
     pub fn is_perfect(&self) -> bool{
+        if self.size == 1 {return true;}
         for t in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.periodic_autocorrelation(t) != Q0 {
                 return false;
@@ -97,6 +98,7 @@ impl QS{
     }
 
     pub fn is_odd_perfect(&self) -> bool{
+        if self.size == 1 {return true;}
         for t in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.odd_periodic_autocorrelation(t) != Q0 {
                 return false;

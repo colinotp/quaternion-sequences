@@ -46,7 +46,7 @@ fn find_pqs_of_type(i : usize, symmetry : &Option<Symmetry>){
 
 
 fn find_williamson(){
-    for i in 1..7{
+    for i in 1..15{
         find_williamson_of_size(i);
     }
 }
@@ -54,12 +54,29 @@ fn find_williamson(){
 fn find_williamson_of_size(i : usize){
 
     let now = Instant::now();
-    let count = find_williamson::find(i);
+    let count = find_williamson::find(i, |will| {will.is_symmetric() && will.is_periodic_complementary()});
     let elapsed_time = now.elapsed().as_seconds_f32();
 
     eprintln!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");
-    
 }
+
+fn find_williamson_type(){
+    for i in 1..15{
+        find_williamson_of_size(i);
+    }
+}
+
+fn find_williamson_type_of_size(i : usize){
+
+    let now = Instant::now();
+    let count = find_williamson::find(i, |will| {will.is_amicable() && will.is_periodic_complementary()});
+    let elapsed_time = now.elapsed().as_seconds_f32();
+
+    eprintln!("For n = {i}, the function took: {elapsed_time} seconds and found {count} sequences");
+}
+
+
+
 
 fn print_williamson(){
     let mut will = Williamson::new(6);
@@ -71,6 +88,36 @@ fn print_williamson(){
 }
 
 fn main() {
-    find_pqs(None);
-    //find_williamson();
+    let args : Vec<String> = std::env::args().collect();
+    let count = args.len();
+
+    if count == 1 {
+        find_pqs(None);
+        //find_williamson();
+        //find_pqs(Some(Symmetry::I));
+    }
+    else if count == 2 {
+        match &args[1] {
+            s if s == "qs" => {find_pqs(None)}
+            s if s == "ws" => {find_williamson()}
+            s if s == "wts" => {/* todo */}
+            _ => {}
+        }
+    }
+    else if count == 3 {
+        let i = match str::parse::<usize>(&args[2]){
+            Ok(a) => {a},
+            Err(_) => {panic!("argument isn't an integer !")}
+        };
+
+        match &args[1] {
+            s if s == "qs" => {find_pqs_of_type(i, &None)}
+            s if s == "ws" => {find_williamson_of_size(i)}
+            s if s == "wts" => {/* todo */}
+            _ => {}
+        }
+    }
+
+
+
 }
