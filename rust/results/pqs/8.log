@@ -1,3 +1,3 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.05s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.07s
      Running `target\debug\rust.exe pqs 8`
-error: process didn't exit successfully: `target\debug\rust.exe pqs 8` (exit code: 0xc000013a, STATUS_CONTROL_C_EXIT)
+For n = 8, the function took: 88.483185 seconds and found 768 sequences

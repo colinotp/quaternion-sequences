@@ -1,20 +1,20 @@
 #! /bin/sh
 
-# This script generates sequences.
-# It is used as follow:
+# This script generates a list of sequences in a .seq file, and a .log file for debug
+# It is used as follow: First place yourself in the "rust" folder, then type one of the following commands
 # 
-# gen_seq.sh
+# results/gen_seq.sh
 # to simply run main
 # 
-# gen_seq.sh type
+# results/gen_seq.sh type
 # to generate all the sequences of a certain type of length n, n in [0,100]
 # 
-# gen_seq.sh type number
+# results/gen_seq.sh type number
 # to generate all the sequences of a certain type of length number
 #
 #
 # Example:
-# gen_seq.sh qs 7
+# results/gen_seq.sh qs 7
 # will generate all the perfect quaternion sequences of length 7
 #
 #
@@ -29,7 +29,7 @@ number=$2
 regen=0
 
 if [ $# -gt 0 ]
-then
+then #check for the --regen keyword
     if [ $1 = "--regen" ]
     then
         type=$2
@@ -40,10 +40,10 @@ fi
 
 
 if [ $# -eq $regen ]
-then
+then # run main
     cargo run
 elif [ $# -eq $(($regen+1)) ]
-then
+then # generate all the sequences of a certain type of length n, n in [0,100]
     for i in {1..100}
     do
         if [ $regen -eq 1 ]
@@ -53,7 +53,7 @@ then
             ./results/gen_seq.sh $type $i
         fi
     done
-else
+else # generate all the sequences of a certain type of length number
     filename="results/$type/$number"
 
     if (test -f "$filename.log")
