@@ -7,7 +7,7 @@ pub enum SequenceTag { // enum for choosing a specific sequence
 }
 
 
-pub static QUADRUPLETS : [(i8,i8,i8,i8); 16] = [
+pub static QUADRUPLETS : [(i8,i8,i8,i8); 16] = [ // a table of all quadruplets possible
     (-1,-1,-1,-1),
     (1,1,1,1),
     (1,-1,-1,1), 
@@ -72,6 +72,16 @@ impl Williamson{
         self.d = d;
     }
 
+    pub fn set_sequence(&mut self, seq : Vec<i8>, tag : &SequenceTag){
+        // sets a value for a specific sequence
+        match &tag {
+            SequenceTag::A => self.a = seq,
+            SequenceTag::B => self.b = seq,
+            SequenceTag::C => self.c = seq,
+            SequenceTag::D => self.d = seq
+        }
+    }
+
     pub fn set_single_value(&mut self, value : i8, tag : &SequenceTag, index: usize){
         // sets a value for a specific sequence and specific index
         match &tag {
@@ -92,6 +102,7 @@ impl Williamson{
 
 
     pub fn is_periodic_complementary(&self) -> bool{
+        // tests if the sequences are periodic complementary
         for offset in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if periodic_autocorrelation(&self.a, offset) + periodic_autocorrelation(&self.b, offset) + periodic_autocorrelation(&self.c, offset) + periodic_autocorrelation(&self.d, offset) != 0 {
                 return false;
@@ -130,6 +141,7 @@ impl Williamson{
     }
 
     pub fn is_symmetric(&self) -> bool {
+        // tests if the sequence is symmetric
         let n = self.size;
         for t in 1..=((self.size)/2) { // Trying half the values is sufficient
             if self.values(t) != self.values(n-t) {
@@ -174,6 +186,7 @@ impl Williamson{
 
 
 pub fn periodic_autocorrelation(seq : &Vec<i8>, offset : usize) -> i32 {
+    // computes the periodic auto correlation fo the sequence
     let mut res = 0;
     let n = seq.len();
     for i in 0..n {
@@ -185,6 +198,7 @@ pub fn periodic_autocorrelation(seq : &Vec<i8>, offset : usize) -> i32 {
 
 
 pub fn cross_correlation(seq1 : &Vec<i8>, seq2 : &Vec<i8>, offset : usize) -> i32 {
+    // computes the periodic cross correlation fo the sequences
     assert!(seq1.len() == seq2.len());
 
     let n = seq1.len();

@@ -1,0 +1,235 @@
+use itertools::*;
+
+type Quad = (usize,usize,usize,usize);
+
+
+
+pub fn sequence_to_string(seq: Vec<i8>) -> String {
+    let mut res_str: String = "".to_owned();
+
+    for i in seq.iter(){
+        let str = match i {
+            1 => "+",
+            -1 => "-",
+            _ => {panic!("not a +-1 sequence !")}
+        };
+        res_str.push_str(&str);
+    }
+
+    res_str.to_string()
+}
+
+
+
+pub fn rowsum(seq : Vec<i8>) -> isize {
+    // computes the rowsum of the sequence seq
+    seq.iter().map(|i| *i as isize).sum()
+}
+
+
+
+pub fn generate_sequences_with_rowsum(rowsum: isize, size : usize) -> Vec<Vec<i8>> {
+    // generates all sequences of length size and whose sum equals rowsum
+
+    if rowsum % 2 != (size % 2) as isize {
+        // no combination will work
+        return vec![];
+    }
+
+    // we get the number of ones in our sequence
+    let nb_ones = ((size as isize + rowsum)/2) as usize;
+
+    // and we call the recursive function
+    let seq : Vec<i8> = vec![-1;size];
+    gen_seq_rec(&seq, nb_ones, 0)
+}
+
+
+pub fn gen_seq_rec(seq : &Vec<i8>, remaining_ones : usize, current_pos : usize) -> Vec<Vec<i8>> {
+
+    if remaining_ones == 0 {
+        // We're done ! There are no more ones to place
+        return vec![seq.to_vec()];
+    }
+    if current_pos + remaining_ones > seq.len() {
+        // We can't possibly fit the remaining ones in the rest of the sequence, so this is impossible
+        return vec![];
+    }
+
+    // Either there's a -1 in position current_pos...
+    let mut modified_seq = seq.clone();
+    modified_seq[current_pos] = 1;
+    let mut results1 = gen_seq_rec(&modified_seq, remaining_ones - 1, current_pos + 1);
+
+    // or there's not.
+    let mut results2 = gen_seq_rec(seq, remaining_ones, current_pos + 1);
+
+    // We concatenate both results
+    results1.append(&mut results2);
+
+    results1
+}
+
+
+
+
+
+fn square_sum(s : &Quad) -> usize {
+    s.0*s.0 + s.1*s.1 + s.2*s.2 + s.3*s.3
+}
+
+fn increment_squares(s : &mut Quad, bound : usize) {
+    // auxiliary function of sum_of_four_squares.
+    // calling this function transforms s to the next quadruplet to test
+
+    s.3 += 1;
+    if square_sum(&s) <= bound {
+        return;
+    }
+
+    s.2 += 1;
+    s.3 = s.2;
+    if square_sum(&s) <= bound {
+        return;
+    }
+    
+    s.1 += 1;
+    s.2 = s.1;
+    s.3 = s.1;
+    if square_sum(&s) <= bound {
+        return;
+    }
+
+    s.0 += 1;
+    s.1 = s.0;
+    s.2 = s.0;
+    s.3 = s.0;
+}
+
+
+
+pub fn sum_of_four_squares(p : usize) -> Vec<Quad> {
+    // returns all possible combination of quadruplets of integers whose square sum is p
+    // each quadruplet is sorted in increasing order, so there are no permutations.
+
+    let mut squares_list : Vec<Quad> = vec![];
+    let mut squares = (1,1,1,1);
+
+    while squares.0*squares.0 <= p {
+        if square_sum(&squares) == p {
+            squares_list.push(squares.clone())
+        }
+
+        increment_squares(&mut squares, p);
+    }
+
+    squares_list
+}
+
+
+
+
+pub fn generate_other_quadruplets(quad : &Quad) -> Vec<Quad> {
+    // returns all the permutations of the quadruplet up to equivalence
+    
+    // generate all permutations and filter them
+    let quad_vec = vec![quad.0,quad.1,quad.2,quad.3];
+    let squares_list = quad_vec.iter()
+        .permutations(4) // generate all permutations of size 4
+        .map(|q| (*q[0], *q[1], *q[2], *q[3])) // convert them to Quad
+        .unique_by(|q| equivalent(&q)) // take one unique elements of the equivalence class
+        .collect(); // converts the iterator to a vec
+    
+    squares_list
+}
+
+
+
+
+fn swap(quad : &mut Quad, i1 : usize, i2 : usize) {
+    // swaps two indices of a Quad
+    let val1 = match i1 {
+        0 => {quad.0},
+        1 => {quad.1},
+        2 => {quad.2},
+        3 => {quad.3},
+        _ => {panic!()}
+    };
+    let val2 = match i2 {
+        0 => {quad.0},
+        1 => {quad.1},
+        2 => {quad.2},
+        3 => {quad.3},
+        _ => {panic!()}
+    };
+    match i1 {
+        0 => {quad.0 = val2},
+        1 => {quad.1 = val2},
+        2 => {quad.2 = val2},
+        3 => {quad.3 = val2},
+        _ => {panic!()}
+    };
+    match i2 {
+        0 => {quad.0 = val1},
+        1 => {quad.1 = val1},
+        2 => {quad.2 = val1},
+        3 => {quad.3 = val1},
+        _ => {panic!()}
+    };
+
+}
+
+fn better_than(q1 : &Quad, q2 : &Quad) -> bool {
+    // compares two quads
+    if q1.0 < q2.0 {true}
+    else if q1.0 > q2.0 {false}
+    else{
+        if q1.1 < q2.1 {true}
+        else if q1.1 > q2.1 {false}
+        else{
+            if q1.2 < q2.2 {true}
+            else if q1.2 > q2.2 {false}
+            else{
+                if q1.3 < q2.3 {true}
+                else{false}
+            }
+        }
+    }
+}
+
+fn equivalent(quad : &Quad) -> Quad {
+    // finds the representative of the equivalence class that quad belongs to
+    let mut final_quad = quad;
+
+    let mut test_quad1 = quad.clone(); // at the start, this is 1 2 3 4
+    swap(&mut test_quad1, 0, 1); // 2 1 3 4
+    swap(&mut test_quad1, 2, 3); // 2 1 4 3
+    if better_than(&test_quad1, final_quad) {final_quad = &test_quad1}
+
+    let mut test_quad2 = test_quad1.clone();
+    swap(&mut test_quad2, 0, 2);
+    swap(&mut test_quad2, 1, 3); // 4 3 2 1
+    if better_than(&test_quad2, final_quad) {final_quad = &test_quad2}
+
+    let mut test_quad3 = test_quad2.clone();
+    swap(&mut test_quad3, 0, 1);
+    swap(&mut test_quad3, 2, 3); // 3 4 1 2
+    if better_than(&test_quad3, final_quad) {final_quad = &test_quad3}
+
+    *final_quad
+}
+
+
+
+
+pub fn generate_rowsums(p : usize) -> Vec<Quad>{
+    let quads = sum_of_four_squares(4*p);
+
+    let mut total_quadruplets = vec![];
+
+    for elm in quads {
+        total_quadruplets.append(&mut generate_other_quadruplets(&elm));
+    }
+
+    total_quadruplets
+}

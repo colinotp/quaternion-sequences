@@ -42,10 +42,12 @@ impl QS{
     }
 
     pub fn set_values(&mut self, values : Vec<Quaternion<f32>>){
+        // replaces the whole sequence
         self.values = values;
     }
 
     pub fn set_value(&mut self, value : Quaternion<f32>, index: usize){
+        // sets a specific value of the sequence, and applies the symmetry
         self.values[index] = value;
         match &self.symmetry {
             Some(Symmetry::I) => {self.values[self.size - 1 - index] = value.clone();}
@@ -58,6 +60,8 @@ impl QS{
 
 
     pub const fn search_size(&self) -> usize{
+        // returns the search size. If there is a symmetry,
+        // we only have to search on half of the sequence
         match self.symmetry {
             Some(_) => {(self.size+1)/2}
             None => {self.size}
@@ -67,7 +71,7 @@ impl QS{
 
 
     pub fn periodic_autocorrelation(&self,t: usize) -> Quaternion<f32> {
-
+        // computes the periodic auto-correlation
         let mut sum_res = Q0.clone();
         for i in 0..self.size{
             sum_res += self.values[i]*(self.values[(i+t)%self.size]).conjugate();
@@ -76,7 +80,7 @@ impl QS{
     }
 
     pub fn odd_periodic_autocorrelation(&self,t : usize) -> Quaternion<f32> {
-
+        // computes the odd periodic auto-correlation
         let mut sum_res = Q0.clone();
         let mut power : f32;
         for i in 0..self.size{
@@ -88,6 +92,7 @@ impl QS{
 
 
     pub fn is_perfect(&self) -> bool{
+        // tests if the sequence is perfect
         if self.size == 1 {return true;}
         for t in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.periodic_autocorrelation(t) != Q0 {
@@ -98,6 +103,7 @@ impl QS{
     }
 
     pub fn is_odd_perfect(&self) -> bool{
+        // tests if the sequence is odd perfect
         if self.size == 1 {return true;}
         for t in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
             if self.odd_periodic_autocorrelation(t) != Q0 {
@@ -108,6 +114,7 @@ impl QS{
     }
 
     pub fn is_symmetric(&self) -> bool {
+        // tests if the sequence is symmetric
         let n = self.size;
         for t in 1..((self.size+1)/2) {
             if self.values[t] != self.values[n-t] {
