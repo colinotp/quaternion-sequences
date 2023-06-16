@@ -1,8 +1,9 @@
 use itertools::*;
 
-type Quad = (usize,usize,usize,usize);
 
+// * Sequence generation with specific rowsum
 
+pub type Quad = (usize,usize,usize,usize);
 
 pub fn sequence_to_string(seq: Vec<i8>) -> String {
     let mut res_str: String = "".to_owned();
@@ -28,16 +29,16 @@ pub fn rowsum(seq : Vec<i8>) -> isize {
 
 
 
-pub fn generate_sequences_with_rowsum(rowsum: isize, size : usize) -> Vec<Vec<i8>> {
+pub fn generate_sequences_with_rowsum(rowsum: usize, size : usize) -> Vec<Vec<i8>> {
     // generates all sequences of length size and whose sum equals rowsum
 
-    if rowsum % 2 != (size % 2) as isize {
+    if rowsum % 2 != size % 2 {
         // no combination will work
         return vec![];
     }
 
     // we get the number of ones in our sequence
-    let nb_ones = ((size as isize + rowsum)/2) as usize;
+    let nb_ones = (size+ rowsum)/2;
 
     // and we call the recursive function
     let seq : Vec<i8> = vec![-1;size];
@@ -72,6 +73,7 @@ pub fn gen_seq_rec(seq : &Vec<i8>, remaining_ones : usize, current_pos : usize) 
 
 
 
+// * Rowsum generation
 
 
 fn square_sum(s : &Quad) -> usize {
@@ -202,7 +204,7 @@ fn equivalent(quad : &Quad) -> Quad {
     let mut final_quad = quad;
 
     let mut test_quad1 = quad.clone(); // at the start, this is 1 2 3 4
-    swap(&mut test_quad1, 0, 1); // 2 1 3 4
+    swap(&mut test_quad1, 0, 1); 
     swap(&mut test_quad1, 2, 3); // 2 1 4 3
     if better_than(&test_quad1, final_quad) {final_quad = &test_quad1}
 

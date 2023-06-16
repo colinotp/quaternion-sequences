@@ -41,7 +41,7 @@ mod tests {
         
         for (n,r) in tests{
             let res = generate_sequences_with_rowsum(r, n);
-            assert_eq!(res.len(), choose(n,((n as isize + r)/2) as usize));
+            assert_eq!(res.len(), choose(n,(n + r)/2));
         }
 
         

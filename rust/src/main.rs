@@ -87,12 +87,14 @@ fn print_williamson(){
     println!("{}", will.to_qs().to_string());
 }
 
+
+
 fn main() {
     let args : Vec<String> = std::env::args().collect();
     let count = args.len();
 
     if count == 1 {
-        find_pqs(None);
+        //find_pqs(None);
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
     }
