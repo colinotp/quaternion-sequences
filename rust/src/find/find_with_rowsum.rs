@@ -1,8 +1,7 @@
 use std::usize::MAX;
 
-use itertools::Itertools;
 
-use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum}, williamson::SequenceTag, fourier::{iter_over_filtered_dft}, self};
+use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum}, fourier::{iter_over_filtered_dft}};
 
 
 fn get_two_best(quad: &Quad) -> ((usize, usize),(usize, usize)){
@@ -25,7 +24,7 @@ pub fn find(p : usize) {
     let rowsums = generate_rowsums(4*p);
 
     for rs in rowsums {
-        let ((maxi,index),(maxi2,index2)) = get_two_best(&rs);
+        let ((maxi,index),(maxi2,index2)) = get_two_best(&rs); // should we get the two best or just the same two each time ?
 
         let sequences_1 = generate_sequences_with_rowsum(maxi, p);
         let sequences_2 = generate_sequences_with_rowsum(maxi2, p);

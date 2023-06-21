@@ -225,6 +225,8 @@ fn equivalent(quad : &Quad) -> Quad {
 
 
 pub fn generate_rowsums(p : usize) -> Vec<Quad>{
+    // generates all quadruplets of integers such that the sum of their squares equal 4*p
+    // it also generates their permutation, but only up to equivalence
     let quads = sum_of_four_squares(4*p);
 
     let mut total_quadruplets = vec![];

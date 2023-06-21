@@ -106,4 +106,17 @@ mod tests {
         assert_eq!(rowsums[5], (3,5,5,3));
     }
 
+
+
+    #[test]
+    fn test_aux(){
+        
+        let res = generate_sequences_with_rowsum(7, 11);
+
+        for elm in res {
+            println!("{:?}", elm);
+        }
+        
+        panic!();
+    }
 }
