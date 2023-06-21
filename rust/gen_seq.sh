@@ -48,13 +48,13 @@ then # generate all the sequences of a certain type of length n, n in [0,100]
     do
         if [ $regen -eq 1 ]
         then
-            ./results/gen_seq.sh --regen $type $i
+            ./gen_seq.sh --regen $type $i
         else
-            ./results/gen_seq.sh $type $i
+            ./gen_seq.sh $type $i
         fi
     done
 else # generate all the sequences of a certain type of length number
-    filename="results/$type/$number"
+    filename="results/sequences/$type/$number"
 
     if (test -f "$filename.log")
     then
