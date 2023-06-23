@@ -108,9 +108,8 @@ fn main() {
     }
     else if count == 3 {
         let i = match str::parse::<usize>(&args[2]){
-            Ok(a) => {a},
-            Err(_) => {panic!("argument isn't an integer !")}
-        };
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
 
         match &args[1] {
             s if s == "pqs" => {find_pqs_of_type(i, &None)}

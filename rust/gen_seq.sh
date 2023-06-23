@@ -3,18 +3,18 @@
 # This script generates a list of sequences in a .seq file, and a .log file for debug
 # It is used as follow: First place yourself in the "rust" folder, then type one of the following commands
 # 
-# results/gen_seq.sh
+# gen_seq.sh
 # to simply run main
 # 
-# results/gen_seq.sh type
+# gen_seq.sh type
 # to generate all the sequences of a certain type of length n, n in [0,100]
 # 
-# results/gen_seq.sh type number
+# gen_seq.sh type number
 # to generate all the sequences of a certain type of length number
 #
 #
 # Example:
-# results/gen_seq.sh qs 7
+# gen_seq.sh qs 7
 # will generate all the perfect quaternion sequences of length 7
 #
 #
