@@ -97,6 +97,7 @@ fn main() {
         //find_pqs(None);
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
+        find_with_rowsum::find(5, SequenceType::WilliamsonType);
     }
     else if count == 2 {
         match &args[1] {

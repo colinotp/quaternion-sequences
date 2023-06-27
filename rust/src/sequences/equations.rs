@@ -11,48 +11,51 @@ pub enum AddType {
 }
 
 
-pub fn generate_equations(seq1 : &Vec<i8>, tag1 : SequenceTag, seq2 : &Vec<i8>, tag2 : SequenceTag, seqtype : SequenceType) {
+pub fn generate_equations(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag, seqtype : &SequenceType) -> String{
     // generates all the equations given by two sequences and their positions, so that they return a specific type of sequence.
 
     match seqtype {
         SequenceType::WilliamsonType => {
             equations_williamson_type(seq1, tag1, seq2, tag2)
         }
-        _ => {/* TODO */}
+        _ => {panic!()/* TODO */}
     }
 }
 
 
-fn equations_williamson_type(seq1 : &Vec<i8>, tag1 : SequenceTag, seq2 : &Vec<i8>, tag2 : SequenceTag) {
+fn equations_williamson_type(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag) -> String {
     // generates the equations given by two sequences and their positions so that that they return Williamson-type sequences
+    let mut result = "".to_string();
     
     match (tag1, tag2) { // ! In case of multiple sequences, make sure the same sequences are on the same side !!!
         (SequenceTag::A, SequenceTag::B) => {
-            equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
-            equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
         }
         (SequenceTag::A, SequenceTag::C) => {
-            equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::RightMinus, AddType::Plus);
-            equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::RightMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::LeftMinus, AddType::Plus);
         }
         (SequenceTag::A, SequenceTag::D) => {
-            equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
-            equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
         }
         (SequenceTag::B, SequenceTag::C) => {
-            equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
-            equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
         }
         (SequenceTag::B, SequenceTag::D) => {
-            equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::LeftMinus, AddType::Plus);
-            equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
         }
         (SequenceTag::C, SequenceTag::D) => {
-            equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
-            equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
         }
         _ => {panic!("incorrect tags entered !")}
     }
+
+    result
 }
 
 
@@ -75,7 +78,7 @@ fn op_right_minus(seq : &Vec<i8>, k : usize, t : usize, n : usize) -> i8{
 
 
 
-pub fn equations_crosscorrelation(seq1 : &Vec<i8>, op_type1 : OpType, seq2 : &Vec<i8>, op_type2 : OpType, add_type : AddType) {
+pub fn equations_crosscorrelation(seq1 : &Vec<i8>, op_type1 : OpType, seq2 : &Vec<i8>, op_type2 : OpType, add_type : AddType) -> String {
     // generates the equations given by applying the crosscorrelation properties on each sequence with their specific operator: + or -
 
     let op1 = match op_type1 { // op1 is a function corresponding to either a + or a - operator
@@ -98,7 +101,7 @@ pub fn equations_crosscorrelation(seq1 : &Vec<i8>, op_type1 : OpType, seq2 : &Ve
 
     let n = seq1.len();
     let mut values = vec![0 ; 2*n];
-
+    let mut result = "".to_string();
 
     for t in 0..n { 
         // computes the n equations given by the crosscorrelation property
@@ -117,12 +120,14 @@ pub fn equations_crosscorrelation(seq1 : &Vec<i8>, op_type1 : OpType, seq2 : &Ve
             values[k] = 2*values[k]
         }
 
-        generate_equation_from(&values, rightside_value);
+        result += &("\n".to_string() + &generate_equation_from(&values, rightside_value));
     }
+
+    result
 }
 
 
-pub fn generate_equation_from(coefficients : &Vec<i8>, rightside_value : isize) {
+pub fn generate_equation_from(coefficients : &Vec<i8>, rightside_value : isize) -> String{
     // generates the equation given by the specific values
     // The value on the right side of the equation is computed automatically unless specified otherwise
 
@@ -149,11 +154,11 @@ pub fn generate_equation_from(coefficients : &Vec<i8>, rightside_value : isize) 
 
     if all_zero_coeff {
         // the values were all 0, so nothing can be learned from it
-        return ;
+        return "".to_string();
     }
 
     result += &("= ".to_owned() + &rightside_value.to_string() + ";");
 
 
-    println!("{}", result);
+    result
 }
