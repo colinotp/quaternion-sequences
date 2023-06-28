@@ -18,12 +18,13 @@ pub fn dft_sequence(seq : &Vec<i8>) -> Vec<Complex<f64>>{
     b.to_vec()
 }
 
-pub fn iter_over_filtered_dft<'a>(sequences : &'a Vec<Vec<i8>>, bound : &'a f64) -> impl std::iter::Iterator<Item = &'a Vec<i8>> {
+pub fn iter_over_filtered_dft<'a>(sequences : &'a Vec<Vec<i8>>, bound : f64) -> impl std::iter::Iterator<Item = &'a Vec<i8>> {
+    let bound_sqr = bound * bound;
     sequences.iter()
-        .filter(|seq| {
+        .filter(move |seq| {
             let dft = dft_sequence(seq);
             for elm in dft {
-                if elm.norm_sqr() > *bound {return false;}
+                if elm.norm_sqr() > bound_sqr {return false;}
             }
             true
         })

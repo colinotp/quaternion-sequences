@@ -63,6 +63,18 @@ mod tests {
 
     }
 
+    #[test]
+    fn test_four_squares2(){
+
+        let list = sum_of_four_squares(4*6);
+
+        for elm in list {
+            println!("{:?}", elm);
+        }
+
+        panic!();
+    }
+
 
     #[test]
     fn test_gen_quads(){

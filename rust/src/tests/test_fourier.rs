@@ -3,7 +3,7 @@
 mod tests {
     use num_complex::Complex64;
 
-    use crate::sequences::fourier::dft_sequence;
+    use crate::sequences::{fourier::{dft_sequence}, rowsum::generate_sequences_with_rowsum};
 
 
     #[test]
@@ -28,5 +28,22 @@ mod tests {
 
         let seq = vec![1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1];
         let _ = dft_sequence(&seq);
+    }
+
+    #[test]
+    fn test_filter(){
+        
+        let r = 2;
+        let p = 5;
+        let seqs = generate_sequences_with_rowsum(r, p);
+
+        for seq in seqs{
+            println!("===new seq===");
+            for elm in dft_sequence(&seq){
+                println!("{:?}", elm.norm_sqr());
+            }
+        }
+
+        panic!();
     }
 }

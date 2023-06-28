@@ -97,7 +97,7 @@ fn main() {
         //find_pqs(None);
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
-        find_with_rowsum::find(5, SequenceType::WilliamsonType);
+        find_with_rowsum::find(9, SequenceType::WilliamsonType);
     }
     else if count == 2 {
         match &args[1] {
@@ -116,6 +116,7 @@ fn main() {
             s if s == "pqs" => {find_pqs_of_type(i, &None)}
             s if s == "ws" => {find_williamson_of_size(i)}
             s if s == "wts" => {find_williamson_type_of_size(i)}
+            s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
             _ => {}
         }
     }

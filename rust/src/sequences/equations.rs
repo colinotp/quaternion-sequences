@@ -115,9 +115,10 @@ pub fn equations_crosscorrelation(seq1 : &Vec<i8>, op_type1 : OpType, seq2 : &Ve
         }
         
         let mut rightside_value = 0;
-        for k in 0..2*n { // we convert the variables from {+-1} to {0,1} by applying x -> 2x-1
-            rightside_value += values[k] as isize;
-            values[k] = 2*values[k]
+        for k in 0..2*n {
+            // we convert the variables from {+-1} to {0,1} by applying x -> 2x-1
+            // Then we divide all the values by 2
+            rightside_value += (values[k]/2) as isize;
         }
 
         result += &("\n".to_string() + &generate_equation_from(&values, rightside_value));
