@@ -1,10 +1,10 @@
-use std::{usize::MIN, fs::{*, self}, path::Path, io::Write, env};
+use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env};
 
 
 use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft}, equations::generate_equations, williamson::{SequenceTag, tag_to_string}, symmetries::SequenceType};
 
 
-fn get_two_best(quad: &Quad) -> ((usize, usize),(usize, usize)){
+fn get_two_best(quad: &Quad) -> ((isize, usize),(isize, usize)){
     let (mut maxi, mut index) = (quad.0, 0);
     if quad.1 > maxi {(maxi, index) = (quad.1, 1)}
     if quad.2 > maxi {(maxi, index) = (quad.2, 2)}
@@ -75,18 +75,21 @@ pub fn find(p : usize, seqtype : SequenceType) {
                 let path = Path::new(&s);
 
                 // convert to equations
-                let equations = generate_equations(&seq1, &tag1, &seq2, &tag2, &seqtype);
-                if equations != ""{
+                let equations = generate_equations(&seq1, &tag1, &seq2, &tag2, &seqtype, &rs);
+                // TODO add rowsum constraints
+
+                //if there are equations to write, create a new file
+                if equations != "" {
                     let mut f = File::create(path).expect("Invalid file ?");
                     let comment = generate_comment(seq1, &tag1, seq2, &tag2, &rs);
                     f.write(comment.as_bytes()).expect("Error when writing in the file");
                     f.write(equations.as_bytes()).expect("Error when writing in the file");
+                    count +=1;
                 }
 
                 // solve using libexact
 
 
-                count +=1;
             }
         }
     }

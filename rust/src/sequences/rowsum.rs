@@ -3,7 +3,7 @@ use itertools::*;
 
 // * Sequence generation with specific rowsum
 
-pub type Quad = (usize,usize,usize,usize);
+pub type Quad = (isize,isize,isize,isize);
 
 pub fn sequence_to_string(seq: &Vec<i8>) -> String {
     let mut res_str: String = "".to_owned();
@@ -29,20 +29,20 @@ pub fn rowsum(seq : Vec<i8>) -> isize {
 
 
 
-pub fn generate_sequences_with_rowsum(rowsum: usize, size : usize) -> Vec<Vec<i8>> {
+pub fn generate_sequences_with_rowsum(rowsum: isize, size : usize) -> Vec<Vec<i8>> {
     // generates all sequences of length size and whose sum equals rowsum
 
-    if rowsum % 2 != size % 2 {
+    if (rowsum % 2) as usize != size % 2 {
         // no combination will work
         return vec![];
     }
 
     // we get the number of ones in our sequence
-    let nb_ones = (size+ rowsum)/2;
+    let nb_ones = (size as isize + rowsum)/2;
 
     // and we call the recursive function
     let seq : Vec<i8> = vec![-1;size];
-    gen_seq_rec(&seq, nb_ones, 0)
+    gen_seq_rec(&seq, nb_ones as usize, 0)
 }
 
 
@@ -77,7 +77,7 @@ pub fn gen_seq_rec(seq : &Vec<i8>, remaining_ones : usize, current_pos : usize) 
 
 
 fn square_sum(s : &Quad) -> usize {
-    s.0*s.0 + s.1*s.1 + s.2*s.2 + s.3*s.3
+    (s.0*s.0 + s.1*s.1 + s.2*s.2 + s.3*s.3) as usize
 }
 
 fn increment_squares(s : &mut Quad, bound : usize) {
@@ -115,9 +115,9 @@ pub fn sum_of_four_squares(p : usize) -> Vec<Quad> {
     // each quadruplet is sorted in increasing order, so there are no permutations.
 
     let mut squares_list : Vec<Quad> = vec![];
-    let mut squares = (0,0,0,0);
+    let mut squares : Quad = (0,0,0,0);
 
-    while squares.0*squares.0 <= p {
+    while (squares.0*squares.0) as usize <= p {
         if square_sum(&squares) == p {
             squares_list.push(squares.clone())
         }
@@ -231,7 +231,7 @@ pub fn generate_rowsums(p : usize) -> Vec<Quad>{
 
     let mut total_quadruplets = vec![];
 
-    let parity = p % 2;
+    let parity = (p % 2) as isize;
 
     for elm in quads {
         if parity == elm.0 % 2 && parity == elm.1 % 2 && parity == elm.2 % 2 && parity == elm.3 % 2 {

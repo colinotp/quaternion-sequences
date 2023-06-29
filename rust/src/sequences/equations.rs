@@ -1,4 +1,4 @@
-use super::{williamson::SequenceTag, symmetries::SequenceType};
+use super::{williamson::{SequenceTag, tag_to_string}, symmetries::SequenceType, rowsum::Quad};
 
 
 
@@ -11,46 +11,58 @@ pub enum AddType {
 }
 
 
-pub fn generate_equations(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag, seqtype : &SequenceType) -> String{
+pub fn generate_equations(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag, seqtype : &SequenceType, rowsum : &Quad) -> String{
     // generates all the equations given by two sequences and their positions, so that they return a specific type of sequence.
 
     match seqtype {
         SequenceType::WilliamsonType => {
-            equations_williamson_type(seq1, tag1, seq2, tag2)
+            equations_williamson_type(seq1, tag1, seq2, tag2, rowsum)
         }
         _ => {panic!()/* TODO */}
     }
 }
 
 
-fn equations_williamson_type(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag) -> String {
+fn equations_williamson_type(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag, rowsum : &Quad) -> String {
     // generates the equations given by two sequences and their positions so that that they return Williamson-type sequences
     let mut result = "".to_string();
     
     match (tag1, tag2) { // ! In case of multiple sequences, make sure the same sequences are on the same side !!!
-        (SequenceTag::A, SequenceTag::B) => {
+        (SequenceTag::A, SequenceTag::B) => {// x1 ... is D, ... xn is C
+            result += &additional_comment(&SequenceTag::D, &SequenceTag::C);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.2);
         }
-        (SequenceTag::A, SequenceTag::C) => {
+        (SequenceTag::A, SequenceTag::C) => {// x1 ... is D, ... xn is B
+            result += &additional_comment(&SequenceTag::D, &SequenceTag::B);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::LeftMinus, AddType::Plus);
+            result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.1);
         }
-        (SequenceTag::A, SequenceTag::D) => {
+        (SequenceTag::A, SequenceTag::D) => {// x1 ... is B, ... xn is C
+            result += &additional_comment(&SequenceTag::B, &SequenceTag::C);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_rowsum(seq1.len(), rowsum.1, rowsum.2);
         }
-        (SequenceTag::B, SequenceTag::C) => {
+        (SequenceTag::B, SequenceTag::C) => {// x1 ... is D, ... xn is A
+            result += &additional_comment(&SequenceTag::D, &SequenceTag::A);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.0);
         }
-        (SequenceTag::B, SequenceTag::D) => {
+        (SequenceTag::B, SequenceTag::D) => {// x1 ... is A, ... xn is C
+            result += &additional_comment(&SequenceTag::A, &SequenceTag::C);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_rowsum(seq1.len(), rowsum.0, rowsum.2);
         }
-        (SequenceTag::C, SequenceTag::D) => {
+        (SequenceTag::C, SequenceTag::D) => {// x1 ... is A, ... xn is B
+            result += &additional_comment(&SequenceTag::A, &SequenceTag::B);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_rowsum(seq1.len(), rowsum.0, rowsum.1);
         }
         _ => {panic!("incorrect tags entered !")}
     }
@@ -121,7 +133,7 @@ pub fn equations_crosscorrelation(seq1 : &Vec<i8>, op_type1 : OpType, seq2 : &Ve
             rightside_value += (values[k]/2) as isize;
         }
 
-        result += &("\n".to_string() + &generate_equation_from(&values, rightside_value));
+        result += &generate_equation_from(&values, rightside_value);
     }
 
     result
@@ -158,8 +170,32 @@ pub fn generate_equation_from(coefficients : &Vec<i8>, rightside_value : isize) 
         return "".to_string();
     }
 
-    result += &("= ".to_owned() + &rightside_value.to_string() + ";");
+    result += &("= ".to_owned() + &rightside_value.to_string() + &";"  + &"\n");
 
 
     result
+}
+
+
+
+
+fn equations_rowsum(n : usize, rs1 : isize, rs2 : isize) -> String {
+    let mut result = "".to_string();
+    let mut coeff1 = vec![0;2*n];
+    let mut coeff2 = vec![0;2*n];
+    for i in 0..n {
+        coeff1[i] = 2;
+        coeff2[2*n-1-i] = 2;
+    }
+
+    result += &(generate_equation_from(&coeff1, rs1 + n as isize));
+    result += &(generate_equation_from(&coeff2, rs2 + n as isize));
+
+    result
+}
+
+
+
+fn additional_comment(tag1 : &SequenceTag, tag2 : &SequenceTag) -> String {
+    "\n* x1 ... is xn".to_string() + &tag_to_string(tag1) + &", xn+1 ... x2n is " + &tag_to_string(tag2) + &"\n"
 }
