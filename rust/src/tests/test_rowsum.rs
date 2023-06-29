@@ -55,18 +55,19 @@ mod tests {
 
         let list = sum_of_four_squares(4*19);
 
-        assert_eq!(list.len(), 4);
-        assert_eq!(list[0], (1,1,5,7));
-        assert_eq!(list[1], (1,5,5,5));
-        assert_eq!(list[2], (2,2,2,8));
-        assert_eq!(list[3], (3,3,3,7));
+        assert_eq!(list.len(), 5);
+        assert_eq!(list[0], (0,2,6,6));
+        assert_eq!(list[1], (1,1,5,7));
+        assert_eq!(list[2], (1,5,5,5));
+        assert_eq!(list[3], (2,2,2,8));
+        assert_eq!(list[4], (3,3,3,7));
 
     }
 
     #[test]
     fn test_four_squares2(){
 
-        let list = sum_of_four_squares(4*6);
+        let list = sum_of_four_squares(4*17);
 
         for elm in list {
             println!("{:?}", elm);

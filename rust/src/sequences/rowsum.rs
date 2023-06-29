@@ -5,7 +5,7 @@ use itertools::*;
 
 pub type Quad = (usize,usize,usize,usize);
 
-pub fn sequence_to_string(seq: Vec<i8>) -> String {
+pub fn sequence_to_string(seq: &Vec<i8>) -> String {
     let mut res_str: String = "".to_owned();
 
     for i in seq.iter(){
@@ -115,7 +115,7 @@ pub fn sum_of_four_squares(p : usize) -> Vec<Quad> {
     // each quadruplet is sorted in increasing order, so there are no permutations.
 
     let mut squares_list : Vec<Quad> = vec![];
-    let mut squares = (1,1,1,1);
+    let mut squares = (0,0,0,0);
 
     while squares.0*squares.0 <= p {
         if square_sum(&squares) == p {
@@ -231,8 +231,12 @@ pub fn generate_rowsums(p : usize) -> Vec<Quad>{
 
     let mut total_quadruplets = vec![];
 
+    let parity = p % 2;
+
     for elm in quads {
-        total_quadruplets.append(&mut generate_other_quadruplets(&elm));
+        if parity == elm.0 % 2 && parity == elm.1 % 2 && parity == elm.2 % 2 && parity == elm.3 % 2 {
+            total_quadruplets.append(&mut generate_other_quadruplets(&elm));
+        }
     }
 
     total_quadruplets

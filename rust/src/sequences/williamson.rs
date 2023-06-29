@@ -6,6 +6,14 @@ pub enum SequenceTag { // enum for choosing a specific sequence
     A, B, C, D
 }
 
+pub fn tag_to_string(tag : &SequenceTag) -> String{
+    match *tag {
+        SequenceTag::A => {"A".to_string()}
+        SequenceTag::B => {"B".to_string()}
+        SequenceTag::C => {"C".to_string()}
+        SequenceTag::D => {"D".to_string()}
+    }
+}
 
 pub static QUADRUPLETS : [(i8,i8,i8,i8); 16] = [ // a table of all quadruplets possible
     (-1,-1,-1,-1),

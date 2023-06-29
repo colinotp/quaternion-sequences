@@ -1,7 +1,7 @@
 use std::{usize::MIN, fs::{*, self}, path::Path, io::Write, env};
 
 
-use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum}, fourier::{iter_over_filtered_dft}, equations::generate_equations, williamson::SequenceTag, symmetries::SequenceType};
+use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft}, equations::generate_equations, williamson::{SequenceTag, tag_to_string}, symmetries::SequenceType};
 
 
 fn get_two_best(quad: &Quad) -> ((usize, usize),(usize, usize)){
@@ -11,10 +11,10 @@ fn get_two_best(quad: &Quad) -> ((usize, usize),(usize, usize)){
     if quad.3 > maxi {(maxi, index) = (quad.3, 3)}
 
     let (mut maxi2, mut index2) = (MIN, 4);
-    if quad.0 > maxi2 && index != 0 {(maxi2, index2) = (quad.1, 1)}
-    if quad.1 > maxi2 && index != 1 {(maxi2, index2) = (quad.1, 1)}
-    if quad.2 > maxi2 && index != 2 {(maxi2, index2) = (quad.2, 2)}
-    if quad.3 > maxi2 && index != 3 {(maxi2, index2) = (quad.3, 3)}
+    if quad.0 >= maxi2 && index != 0 {(maxi2, index2) = (quad.0, 0)}
+    if quad.1 >= maxi2 && index != 1 {(maxi2, index2) = (quad.1, 1)}
+    if quad.2 >= maxi2 && index != 2 {(maxi2, index2) = (quad.2, 2)}
+    if quad.3 >= maxi2 && index != 3 {(maxi2, index2) = (quad.3, 3)}
 
     if index < index2 {
         ((maxi,index),(maxi2,index2))
@@ -33,6 +33,12 @@ fn index_to_tag(index: usize) -> SequenceTag {
         3 => {SequenceTag::D}
         _ => {panic!("incorrect index")}
     }
+}
+
+fn generate_comment(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag, rowsum : &Quad) -> String {
+    let mut comment = "* ".to_string() + &tag_to_string(tag1) + &": " + &sequence_to_string(seq1) + &"\n* " + &tag_to_string(tag2) + &": " + &sequence_to_string(seq2) + &"\n";
+    comment += &("* rowsum: (".to_string() + &rowsum.0.to_string() + &"," + &rowsum.1.to_string() + &"," + &rowsum.2.to_string() + &"," + &rowsum.3.to_string() + &")");
+    comment
 }
 
 
@@ -72,6 +78,8 @@ pub fn find(p : usize, seqtype : SequenceType) {
                 let equations = generate_equations(&seq1, &tag1, &seq2, &tag2, &seqtype);
                 if equations != ""{
                     let mut f = File::create(path).expect("Invalid file ?");
+                    let comment = generate_comment(seq1, &tag1, seq2, &tag2, &rs);
+                    f.write(comment.as_bytes()).expect("Error when writing in the file");
                     f.write(equations.as_bytes()).expect("Error when writing in the file");
                 }
 
