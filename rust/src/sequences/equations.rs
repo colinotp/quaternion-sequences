@@ -1,4 +1,4 @@
-use super::{williamson::{SequenceTag, tag_to_string}, symmetries::SequenceType, rowsum::Quad};
+use super::{williamson::{SequenceTag, tag_to_string, periodic_autocorrelation, cross_correlation}, symmetries::SequenceType, rowsum::Quad};
 
 
 
@@ -32,40 +32,48 @@ fn equations_williamson_type(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i
             result += &additional_comment(&SequenceTag::D, &SequenceTag::C);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::LeftMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.2);
         }
         (SequenceTag::A, SequenceTag::C) => {// x1 ... is D, ... xn is B
             result += &additional_comment(&SequenceTag::D, &SequenceTag::B);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::LeftMinus, AddType::Plus);
+            result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.1);
         }
         (SequenceTag::A, SequenceTag::D) => {// x1 ... is B, ... xn is C
             result += &additional_comment(&SequenceTag::B, &SequenceTag::C);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.1, rowsum.2);
         }
         (SequenceTag::B, SequenceTag::C) => {// x1 ... is D, ... xn is A
             result += &additional_comment(&SequenceTag::D, &SequenceTag::A);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
+            result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::LeftMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.0);
         }
         (SequenceTag::B, SequenceTag::D) => {// x1 ... is A, ... xn is C
             result += &additional_comment(&SequenceTag::A, &SequenceTag::C);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::RightMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.0, rowsum.2);
         }
         (SequenceTag::C, SequenceTag::D) => {// x1 ... is A, ... xn is B
             result += &additional_comment(&SequenceTag::A, &SequenceTag::B);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
+            result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.0, rowsum.1);
         }
         _ => {panic!("incorrect tags entered !")}
     }
+
+    result += &equations_autocorrelation(&seq1, &seq2);
 
     result
 }
@@ -194,8 +202,163 @@ fn equations_rowsum(n : usize, rs1 : isize, rs2 : isize) -> String {
     result
 }
 
+fn equations_autocorrelation(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> String {
+    let mut result = "".to_string();
+    let n = seq1.len();
+
+    for offset in 1..n {
+        let rightside_value = periodic_autocorrelation(seq1, offset) + periodic_autocorrelation(seq2, offset);   
+        result += &generate_equation_autocorrelation(n, offset, -rightside_value);
+    }
+
+    result
+
+}
+
+fn generate_equation_autocorrelation(size : usize, offset : usize, mut rightside_value : isize) -> String {
+    let mut result = "".to_string();
+    let mut first_time = true;
+    for index in 1..=size {
+
+        if !first_time {
+            result += "+ ";
+        }
+
+        let index_offset = (index + offset) % size;
+        result += &("4 x".to_string() + &(index).to_string() + &" x" + &index_offset.to_string() + " ");
+        result += &("-2 x".to_string() + &(index).to_string() + &" -2 x" + &index_offset.to_string() + " ");
+
+        result += &("+4 x".to_string() + &(index + size).to_string() + &" x" + &(index_offset + size).to_string() + " ");
+        result += &("-2 x".to_string() + &(index + size).to_string() + &" -2 x" + &(index_offset + size).to_string() + " ");
+
+        rightside_value += -2;
+
+        first_time = false;
+    }
+    result += &("= ".to_string() + &rightside_value.to_string() + &";\n");
+
+    result
+}
+
+
+
+
+
+
+fn op_minus(seqa : &Vec<i8>, seqb : &Vec<i8>, offset: usize) -> isize{
+    cross_correlation(seqa, seqb, offset) - cross_correlation(seqa, seqb, offset)
+}
+
+fn op_plus(seqa : &Vec<i8>, seqb : &Vec<i8>, offset: usize) -> isize{
+    cross_correlation(seqa, seqb, offset) + cross_correlation(seqa, seqb, offset)
+}
+
+
+
+fn equations_nonlinear_crosscorrelation(seq1 : &Vec<i8>, seq2 : &Vec<i8>, op_type1 : OpType, op_type2 : OpType, add_type : AddType) -> String {
+    let mut result = "".to_string();
+    let n = seq1.len();
+
+
+    let op = match op_type1 {
+        OpType::LeftPlus | OpType::RightPlus => {|seq1, seq2, offset| op_plus(seq1, seq2, offset)}
+        OpType::LeftMinus => {|seq1, seq2, offset| op_minus(seq1, seq2, offset)}
+        OpType::RightMinus => {|seq1, seq2, offset| op_minus(seq2, seq1, offset)}
+    };
+    let op2 = match add_type {
+        AddType::Minus => { |x : isize| -x}
+        AddType::Plus => { |x : isize| x}
+    };
+
+
+
+    for offset in 1..n {
+        let rightside_value = op2(-op(seq1,seq2, offset));   
+        result += &generate_equation_non_linear_crosscorrelation(n, offset, &op_type2, -rightside_value);
+    }
+
+    result
+
+}
+
+
+
+
+fn generator_left_minus(index : usize, offset : usize, size : usize) -> String {
+    let index_offset = (index + offset) % size;
+
+    let mut result = "".to_string();
+    result += &("4 x".to_string() + &(index).to_string() + &" x" + &(index_offset + size).to_string() + " ");
+    result += &("-2 x".to_string() + &(index).to_string() + &" -2 x" + &(index_offset + size).to_string() + " ");
+
+    result += &("-4 x".to_string() + &(index + size).to_string() + &" x" + &index_offset.to_string() + " ");
+    result += &("+2 x".to_string() + &(index + size).to_string() + &" +2 x" + &index_offset.to_string() + " ");
+
+    result
+}
+
+fn generator_right_minus(index : usize, offset : usize, size : usize) -> String {
+    let index_offset = (index + offset) % size;
+
+    let mut result = "".to_string();
+    result += &("4 x".to_string() + &(index + size).to_string() + &" x" + &index_offset.to_string() + " ");
+    result += &("-2 x".to_string() + &(index + size).to_string() + &" -2 x" + &index_offset.to_string() + " ");
+
+    result += &("-4 x".to_string() + &(index).to_string() + &" x" + &(index_offset + size).to_string() + " ");
+    result += &("+2 x".to_string() + &(index).to_string() + &" +2 x" + &(index_offset + size).to_string() + " ");
+
+    result
+}
+
+fn generator_plus(index : usize, offset : usize, size : usize) -> String {
+    let index_offset = (index + offset) % size;
+
+    let mut result = "".to_string();
+    result += &("4 x".to_string() + &(index).to_string() + &" x" + &(index_offset + size).to_string() + " ");
+    result += &("-2 x".to_string() + &(index).to_string() + &" -2 x" + &(index_offset + size).to_string() + " ");
+
+    result += &("+4 x".to_string() + &(index + size).to_string() + &" x" + &index_offset.to_string() + " ");
+    result += &("-2 x".to_string() + &(index + size).to_string() + &" -2 x" + &index_offset.to_string() + " ");
+
+    result
+}
+
+
+
+
+
+fn generate_equation_non_linear_crosscorrelation(size : usize, offset : usize, op_type : &OpType, mut rightside_value : isize) -> String {
+    let mut result = "".to_string();
+    let mut first_time = true;
+
+    let line_generator = match *op_type {
+        OpType::LeftMinus => {generator_left_minus}
+        OpType::RightMinus => {generator_right_minus}
+        OpType::LeftPlus => {generator_plus}
+        OpType::RightPlus => {generator_plus}
+    };
+
+
+    for index in 1..=size {
+
+        if !first_time {
+            result += "+ ";
+        }
+
+        result += &line_generator(index, offset, size);
+
+        rightside_value += -2;
+
+        first_time = false;
+    }
+    result += &("= ".to_string() + &rightside_value.to_string() + &";\n");
+
+    result
+}
+
+
 
 
 fn additional_comment(tag1 : &SequenceTag, tag2 : &SequenceTag) -> String {
-    "\n* x1 ... is xn".to_string() + &tag_to_string(tag1) + &", xn+1 ... x2n is " + &tag_to_string(tag2) + &"\n"
+    "\n* x1 ... xn is ".to_string() + &tag_to_string(tag1) + &", xn+1 ... x2n is " + &tag_to_string(tag2) + &"\n"
 }

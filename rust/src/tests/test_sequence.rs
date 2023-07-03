@@ -62,6 +62,20 @@ mod tests {
     }
 
     #[test]
+    fn test_perf_aux(){
+        let mut qs = QS::new(6, None);
+
+        let val = vec![QPLUS[1], QPLUS[5], QPLUS[14], QPLUS[7], QPLUS[9], QPLUS[4]];
+        qs.set_values(val);
+
+        for t in 0..qs.search_size() {
+            println!("{:?}",qs.periodic_autocorrelation(t));
+        }
+
+        assert!(qs.is_perfect());
+    }
+
+    #[test]
     fn test_symmetric() {
         let mut qs = QS::new(5, None);
         assert!(qs.is_symmetric());

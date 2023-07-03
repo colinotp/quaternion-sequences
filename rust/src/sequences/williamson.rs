@@ -193,26 +193,26 @@ impl Williamson{
 }
 
 
-pub fn periodic_autocorrelation(seq : &Vec<i8>, offset : usize) -> i32 {
+pub fn periodic_autocorrelation(seq : &Vec<i8>, offset : usize) -> isize {
     // computes the periodic auto correlation fo the sequence
     let mut res = 0;
     let n = seq.len();
     for i in 0..n {
-        res += (seq[i]*seq[(i + offset) % n]) as i32;
+        res += (seq[i]*seq[(i + offset) % n]) as isize;
     }
     
     res
 }
 
 
-pub fn cross_correlation(seq1 : &Vec<i8>, seq2 : &Vec<i8>, offset : usize) -> i32 {
+pub fn cross_correlation(seq1 : &Vec<i8>, seq2 : &Vec<i8>, offset : usize) -> isize {
     // computes the periodic cross correlation fo the sequences
     assert!(seq1.len() == seq2.len());
 
     let n = seq1.len();
     let mut res = 0;
     for i in 0..n {
-        res += (seq1[i]*seq2[(i + n - offset) % n]) as i32;
+        res += (seq1[i]*seq2[(i + n - offset) % n]) as isize;
     }
     
     res

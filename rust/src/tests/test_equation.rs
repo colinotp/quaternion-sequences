@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::sequences::equations::{generate_equation_from, equations_crosscorrelation, OpType, AddType};
+    use crate::sequences::{equations::{generate_equation_from, equations_crosscorrelation, OpType, AddType}, williamson::{periodic_autocorrelation, cross_correlation}};
 
 
 
@@ -48,5 +48,32 @@ mod tests {
 
         panic!();
     }
+
+
+    #[test]
+    fn test_result() {
+        let size = 6;
+        // rowsum: 0,2,2,4
+        let seq_x = vec![1,-1,1,-1,-1,1];
+        let seq_y = vec![1,1,1,1,1,-1];
+        let seq_z = vec![1,-1,-1,1,1,1];
+        let seq_w = vec![1,1,1,-1,1,-1];
+
+        // test autocorrelation
+        for offset in 1..size {
+            let autoc = periodic_autocorrelation(&seq_x, offset) + periodic_autocorrelation(&seq_y, offset) + periodic_autocorrelation(&seq_z, offset) + periodic_autocorrelation(&seq_w, offset);
+            println!("for offset: {offset}, autocorelation equals: {autoc}")
+        }
+
+        // test crosscorrelation
+        for offset in 1..size {
+            let crossc1 = cross_correlation(&seq_w, &seq_x, offset) - cross_correlation(&seq_x, &seq_w, offset) + cross_correlation(&seq_y, &seq_z, offset) - cross_correlation(&seq_z, &seq_y, offset);
+            let crossc2 = cross_correlation(&seq_w, &seq_y, offset) - cross_correlation(&seq_y, &seq_w, offset) + cross_correlation(&seq_z, &seq_x, offset) - cross_correlation(&seq_x, &seq_z, offset);
+            let crossc3 = cross_correlation(&seq_w, &seq_z, offset) - cross_correlation(&seq_z, &seq_w, offset) + cross_correlation(&seq_x, &seq_y, offset) - cross_correlation(&seq_y, &seq_x, offset);
+            println!("for offset: {offset}, crosscorelations equals: {crossc1}, {crossc2}, {crossc3}")
+        }
+
+    }
+
 
 }
