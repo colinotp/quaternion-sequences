@@ -4,3 +4,4 @@ mod test_rowsum;
 mod test_fourier;
 mod test_exact;
 mod test_equation;
+mod test_matrices;

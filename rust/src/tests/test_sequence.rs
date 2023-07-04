@@ -6,13 +6,13 @@ mod tests {
 
     #[test]
     fn test_instance() {
-        let mut qs = QS::new(16, None);
-        for (i, q) in QPLUS.iter().enumerate(){
+        let mut qs = QS::new(24, None);
+        for (i, q) in Q24.iter().enumerate(){
             qs.set_value(*q, i);
         } 
 
         let res = qs.to_string();
-        let str_test = "[+-iIjJkKqQxXyYzZ]";
+        let str_test = "[+-iIjJkKqQxXyYzZsSuUvVwW]";
         assert_eq!(res, str_test);
     }
 

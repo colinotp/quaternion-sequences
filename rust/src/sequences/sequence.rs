@@ -11,14 +11,21 @@ pub const QI : Quaternion<f32> = Quaternion::new(0.,1.,0.,0.);
 pub const QJ : Quaternion<f32> = Quaternion::new(0.,0.,1.,0.);
 pub const QK : Quaternion<f32> = Quaternion::new(0.,0.,0.,1.);
 pub const QQ : Quaternion<f32> = Quaternion::new(0.5,0.5,0.5,0.5);
+pub const QS : Quaternion<f32> = Quaternion::new(0.5,-0.5,-0.5,-0.5);
 
 lazy_static! {
     pub static ref QPLUS : Vec<Quaternion<f32>> = vec![Q1, -Q1, QI, -QI, QJ, -QJ, QK, -QK, QQ, QQ*-1., QQ*QI, QQ*-QI, QQ*QJ, QQ*-QJ, QQ*QK, QQ*-QK];
 }
 
+lazy_static! {
+    pub static ref Q24 : Vec<Quaternion<f32>> = vec![Q1, -Q1, QI, -QI, QJ, -QJ, QK, -QK,
+                                                     QQ, QQ*-1., QQ*QI, QQ*-QI, QQ*QJ, QQ*-QJ, QQ*QK, QQ*-QK,
+                                                     QS, QS*-1., QS*QI, QS*-QI, QS*QJ, QS*-QJ, QS*QK, QS*-QK];
+}
 
-
-
+pub static Q24_STRING: [&str; 24] = ["+","-","i","I","j","J","k","K",
+                                     "q","Q","x","X","y","Y","z","Z",
+                                     "s","S","u","U","v","V","w","W"];
 
 
 #[derive(Clone)]
@@ -67,6 +74,15 @@ impl QS{
             None => {self.size}
         }
     }
+
+    pub const fn size(&self) -> usize {
+        self.size
+    }
+
+    pub const fn values(&self) -> &Vec<Quaternion<f32>> {
+        &self.values
+    }
+
 
 
 
@@ -142,24 +158,13 @@ impl QS{
 
 
 pub fn quaternion_to_string(quat : &Quaternion<f32>) -> String {
-    match *quat {
-        q if q==Q1 => "+".to_string(),
-        q if q==-Q1 => "-".to_string(),
-        q if q==QI  => "i".to_string(),
-        q if q==-QI => "I".to_string(),
-        q if q==QJ  => "j".to_string(),
-        q if q==-QJ => "J".to_string(),
-        q if q==QK  => "k".to_string(),
-        q if q==-QK => "K".to_string(),
-        q if q==QQ  => "q".to_string(),
-        q if q==QQ*-1.  => "Q".to_string(),
-        q if q==QQ*QI  => "x".to_string(),
-        q if q==QQ*-QI => "X".to_string(),
-        q if q==QQ*QJ  => "y".to_string(),
-        q if q==QQ*-QJ => "Y".to_string(),
-        q if q==QQ*QK  => "z".to_string(),
-        q if q==QQ*-QK => "Z".to_string(),
-        _ => panic!("Invalid entry !")
+
+    let mut iterator = Q24.iter().enumerate().filter(|(_,q)| *q == quat);
+    let index = iterator.next();
+
+    match index {
+        None => {panic!("Unrecognized quaternion!")}
+        Some((i,_)) => {Q24_STRING[i].to_string()}
     }
 }
 
