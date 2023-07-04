@@ -202,6 +202,12 @@ fn equations_rowsum(n : usize, rs1 : isize, rs2 : isize) -> String {
     result
 }
 
+
+
+
+
+
+
 fn equations_autocorrelation(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> String {
     let mut result = "".to_string();
     let n = seq1.len();
@@ -221,7 +227,7 @@ fn generate_equation_autocorrelation(size : usize, offset : usize, mut rightside
     for index in 1..=size {
 
         if !first_time {
-            result += "+ ";
+            result += "+";
         }
 
         let index_offset = (index + offset) % size;
@@ -239,6 +245,8 @@ fn generate_equation_autocorrelation(size : usize, offset : usize, mut rightside
 
     result
 }
+
+
 
 
 
@@ -342,12 +350,10 @@ fn generate_equation_non_linear_crosscorrelation(size : usize, offset : usize, o
     for index in 1..=size {
 
         if !first_time {
-            result += "+ ";
+            result += "+";
         }
 
         result += &line_generator(index, offset, size);
-
-        rightside_value += -2;
 
         first_time = false;
     }

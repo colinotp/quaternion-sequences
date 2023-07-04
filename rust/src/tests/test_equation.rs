@@ -52,12 +52,12 @@ mod tests {
 
     #[test]
     fn test_result() {
-        let size = 6;
-        // rowsum: 0,2,2,4
-        let seq_x = vec![1,-1,1,-1,-1,1];
-        let seq_y = vec![1,1,1,1,1,-1];
-        let seq_z = vec![1,-1,-1,1,1,1];
-        let seq_w = vec![1,1,1,-1,1,-1];
+        let size = 5;
+        // rowsum: 1,3,3,1
+        let seq_x = vec![1,-1,-1,1,1];
+        let seq_y = vec![1,1,1,1,-1];
+        let seq_z = vec![1,1,1,1,-1];
+        let seq_w = vec![1,-1,-1,1,-1];
 
         // test autocorrelation
         for offset in 1..size {

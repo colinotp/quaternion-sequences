@@ -149,6 +149,22 @@ mod tests {
             aux_recursive2(&mut will1, size, index+1);
         }
     }
+
+    #[test]
+    fn test_williamson_type() {
+        
+        let size = 10;
+        // rowsum: 0,0,2,6
+        let seq_x = vec![1,-1,-1,-1,1,1,-1,1,-1,1];
+        let seq_y = vec![-1,1,1,1,-1,1,-1,-1,-1,1];
+        let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
+        let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
+
+        let mut will = Williamson::new(size);
+        will.set_all_values((seq_x, seq_y, seq_z, seq_w));
+
+        assert!(will.to_qs().is_perfect());
+    }
 }
 
 
