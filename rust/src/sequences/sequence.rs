@@ -48,6 +48,26 @@ impl QS{
         }
     }
 
+    pub fn from_str(s : &String) -> QS {
+
+        let size = s.len();
+        let mut values = vec![];
+        let symmetry = None;
+
+        for char in s.chars() {
+            let mut iterator = Q24_STRING.iter().enumerate().filter(|(_,c)| ***c == char.to_string());
+            let index = iterator.next();
+
+            values.push(
+                match index {
+                    None => {panic!("Unrecognized String!")}
+                    Some((i,_)) => {Q24[i]}
+                });
+        }
+
+        QS {size, values, symmetry}
+    }
+
     pub fn set_values(&mut self, values : Vec<Quaternion<f32>>){
         // replaces the whole sequence
         self.values = values;

@@ -2,6 +2,11 @@
 #[macro_use]
 extern crate lazy_static;
 
+use std::fs::File;
+use std::io::{self, BufRead, Write};
+use std::path::Path;
+
+use sequences::matrices::QHM;
 use time::*;
 
 mod sequences;
@@ -9,17 +14,6 @@ mod tests;
 mod find;
 use crate::find::*;
 use crate::sequences::{sequence::*, williamson::*, symmetries::*};
-
-fn print_group() {
-    println!("{}", quaternion_to_string(&QQ));
-    println!("{}", quaternion_to_string(&(QQ*-1.)));
-    println!("{}", quaternion_to_string(&(QQ*QI)));
-    println!("{}", quaternion_to_string(&(QQ*QJ)));
-    println!("{}", quaternion_to_string(&(QQ*QK)));
-    println!("{}", quaternion_to_string(&(QQ*QI*QI)));
-    println!("{}", quaternion_to_string(&(QQ*QI*QJ)));
-    println!("{}", quaternion_to_string(&(QQ*QI*QK)));
-}
 
 fn find_pqs(symmetry : Option<Symmetry>){
     for i in 1..18{
@@ -76,15 +70,38 @@ fn find_williamson_type_of_size(i : usize){
 }
 
 
+fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
+where P: AsRef<Path>, { // compact code to read a file
+    let file = File::open(filename)?;
+    Ok(io::BufReader::new(file).lines())
+}
 
+fn convert_qs_to_matrices() {
+    for i in 1.. {
+        println!("{}", &("./results/sequences/pqs/".to_string() + &i.to_string() + &".seq"));
+        if let Ok(lines) = read_lines(&("./results/sequences/pqs/".to_string() + &i.to_string() + &".seq")) {
+            // Consumes the iterator, returns an (Optional) String
+            let s = &("./results/sequences/qhm/".to_string() + &i.to_string() + &".mat");
+            let path = Path::new(s);
+            let mut f = File::create(path).expect("Invalid file ?");
 
-fn print_williamson(){
-    let mut will = Williamson::new(6);
-    will.set_single_value(-1, &SequenceTag::A, 0);
-    will.set_single_value(-1, &SequenceTag::B, 1);
-    will.set_single_value(-1, &SequenceTag::D, 3);
-    println!("{}", will.to_string());
-    println!("{}", will.to_qs().to_string());
+            let mut result = "".to_string();
+            for line in lines {
+                if let Ok(pqs) = line {
+                    let mut qhm = QHM::from_pqs(QS::from_str(&pqs));
+                    qhm.dephase();
+                    result += &qhm.to_string();
+                    result += &"\n";
+                }
+            }
+            f.write(result.as_bytes()).expect("Error when writing in the file");
+
+            println!("converted sequences of size {i}");
+        }
+        else {
+            break;
+        }
+    }
 }
 
 
@@ -97,7 +114,7 @@ fn main() {
         //find_pqs(None);
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
-        find_with_rowsum::find(5, SequenceType::WilliamsonType);
+        convert_qs_to_matrices();
     }
     else if count == 2 {
         match &args[1] {

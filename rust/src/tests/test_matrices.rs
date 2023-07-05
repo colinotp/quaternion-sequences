@@ -25,5 +25,4 @@ mod tests {
         println!("{}", qhm.to_string());
 
     }
-
 }

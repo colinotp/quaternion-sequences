@@ -46,7 +46,6 @@ impl QHM {
                 self.matrix[row][col] = self.matrix[0][col].conjugate()*self.matrix[row][col];
             }
         }
-        println!("{}", self.to_string());
         // dephase the columns
         for inv_col in 0..self.size {
             for row in 0..self.size {
