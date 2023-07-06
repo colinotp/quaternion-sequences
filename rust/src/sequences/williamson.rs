@@ -66,18 +66,36 @@ impl Williamson{
         self.size
     }
 
+    pub const fn size(&self) -> usize{
+        // returns the size of the search
+        self.size
+    }
+
+    pub fn sequence(&self, seqtag : SequenceTag) -> Vec<i8>{
+        match seqtag {
+            SequenceTag::A => {self.a.clone()}
+            SequenceTag::B => {self.b.clone()}
+            SequenceTag::C => {self.c.clone()}
+            SequenceTag::D => {self.d.clone()}
+        }
+    }
+
+    pub fn sequences(&self) -> (Vec<i8>,Vec<i8>,Vec<i8>,Vec<i8>){
+        (self.a.clone(), self.b.clone(), self.c.clone(), self.d.clone())
+    }
+
     pub fn values(&self, index : usize) -> (i8, i8, i8, i8) {
         // gets a quadruplet of values at a specific index
         (self.a[index], self.b[index], self.c[index], self.d[index])
     }
 
-    pub fn set_all_values(&mut self, values : (Vec<i8>,Vec<i8>,Vec<i8>,Vec<i8>)){
+    pub fn set_all_values(&mut self, values : &(Vec<i8>,Vec<i8>,Vec<i8>,Vec<i8>)){
         // sets the sequences to specific values
         let (a,b,c,d) = values;
-        self.a = a;
-        self.b = b;
-        self.c = c;
-        self.d = d;
+        self.a = a.clone();
+        self.b = b.clone();
+        self.c = c.clone();
+        self.d = d.clone();
     }
 
     pub fn set_sequence(&mut self, seq : Vec<i8>, tag : &SequenceTag){

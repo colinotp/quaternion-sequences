@@ -335,7 +335,7 @@ fn generator_plus(index : usize, offset : usize, size : usize) -> String {
 
 
 
-fn generate_equation_non_linear_crosscorrelation(size : usize, offset : usize, op_type : &OpType, mut rightside_value : isize) -> String {
+fn generate_equation_non_linear_crosscorrelation(size : usize, offset : usize, op_type : &OpType, rightside_value : isize) -> String {
     let mut result = "".to_string();
     let mut first_time = true;
 

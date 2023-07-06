@@ -13,7 +13,7 @@ mod sequences;
 mod tests;
 mod find;
 use crate::find::*;
-use crate::sequences::{sequence::*, williamson::*, symmetries::*};
+use crate::sequences::{sequence::*, symmetries::*};
 
 fn find_pqs(symmetry : Option<Symmetry>){
     for i in 1..18{
