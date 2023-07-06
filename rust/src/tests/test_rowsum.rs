@@ -73,7 +73,6 @@ mod tests {
             println!("{:?}", elm);
         }
 
-        panic!();
     }
 
 
@@ -130,6 +129,5 @@ mod tests {
             println!("{:?}", elm);
         }
         
-        panic!();
     }
 }

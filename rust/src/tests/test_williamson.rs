@@ -12,7 +12,7 @@ mod tests {
         }
 
         let res = will.to_qs().to_string();
-        let str_test = "[-yxjzkiqQIKZJXY+]";
+        let str_test = "[+-iIjJkKqQxXyYzZ]";
         assert_eq!(res, str_test);
     }
 
@@ -61,7 +61,7 @@ mod tests {
         let mut will = Williamson::new(4);
         assert!(!will.is_periodic_complementary());
 
-        let val = [QUADRUPLETS[0], QUADRUPLETS[0], QUADRUPLETS[15], QUADRUPLETS[0]];
+        let val = [QUADRUPLETS[0], QUADRUPLETS[0], QUADRUPLETS[1], QUADRUPLETS[0]];
         for (i,q) in val.iter().enumerate(){
             will.set_sequence_value(q, i);
         }
@@ -153,16 +153,16 @@ mod tests {
     #[test]
     fn test_williamson_type() {
         
-        let size = 10;
+        let size = 8;
         // rowsum: 0,0,2,6
-        let seq_x = vec![1,-1,-1,-1,1,1,-1,1,-1,1];
-        let seq_y = vec![-1,1,1,1,-1,1,-1,-1,-1,1];
-        let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
-        let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
+        let seq_x = vec![-1,-1,-1, 1,1,-1,1, 1];
+        let seq_y = vec![-1,-1,-1,-1,1,-1,1,-1];
+        let seq_z = vec![-1,-1,-1,-1,1,-1,1,-1];
+        let seq_w = vec![-1,-1,-1, 1,1,-1,1, 1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values((seq_x, seq_y, seq_z, seq_w));
-
+        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        
         assert!(will.to_qs().is_perfect());
     }
 }

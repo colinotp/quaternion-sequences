@@ -65,7 +65,7 @@ mod tests {
     fn test_perf_aux(){
         let mut qs = QS::new(6, None);
 
-        let val = vec![QPLUS[1], QPLUS[5], QPLUS[14], QPLUS[7], QPLUS[9], QPLUS[4]];
+        let val = vec![QPLUS[1], QPLUS[5], QPLUS[15], QPLUS[5], QPLUS[1], QPLUS[10]];
         qs.set_values(val);
 
         for t in 0..qs.search_size() {
