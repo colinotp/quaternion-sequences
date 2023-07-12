@@ -6,6 +6,7 @@ use std::fs::File;
 use std::io::{self, BufRead, Write};
 use std::path::Path;
 
+use find::find_optim::find_q24;
 use sequences::matrices::QHM;
 use time::*;
 
@@ -70,6 +71,26 @@ fn find_williamson_type_of_size(i : usize){
 }
 
 
+fn find_unique_williamson_type_of_size(i : usize){
+
+    let now = Instant::now();
+    let result = find_unique::find(i);
+    let elapsed_time = now.elapsed().as_seconds_f32();
+
+    eprintln!("For n = {i}, the function took: {elapsed_time} seconds");
+
+    let s = &("./results/sequences/unique_wts/".to_string() + &i.to_string() + &".seq");
+    let path = Path::new(s);
+    let mut f = File::create(path).expect("Invalid file ?");
+    
+    f.write(result.as_bytes()).expect("Error when writing in the file");
+}
+
+
+
+
+
+
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>
 where P: AsRef<Path>, { // compact code to read a file
     let file = File::open(filename)?;
@@ -78,8 +99,8 @@ where P: AsRef<Path>, { // compact code to read a file
 
 fn convert_qs_to_matrices() {
     for i in 1.. {
-        println!("{}", &("./results/sequences/pqs/".to_string() + &i.to_string() + &".seq"));
-        if let Ok(lines) = read_lines(&("./results/sequences/pqs/".to_string() + &i.to_string() + &".seq")) {
+        println!("{}", &("./results/sequences/unique_wts/".to_string() + &i.to_string() + &".seq"));
+        if let Ok(lines) = read_lines(&("./results/sequences/unique_wts/".to_string() + &i.to_string() + &".seq")) {
             // Consumes the iterator, returns an (Optional) String
             let s = &("./results/sequences/qhm/".to_string() + &i.to_string() + &".mat");
             let path = Path::new(s);
@@ -115,6 +136,8 @@ fn main() {
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
         convert_qs_to_matrices();
+        //find_unique_williamson_type_of_size(9);
+        //find_q24(8, None);
     }
     else if count == 2 {
         match &args[1] {
@@ -133,6 +156,7 @@ fn main() {
             s if s == "pqs" => {find_pqs_of_type(i, &None)}
             s if s == "ws" => {find_williamson_of_size(i)}
             s if s == "wts" => {find_williamson_type_of_size(i)}
+            s if s == "unique" => {find_unique_williamson_type_of_size(i)}
             s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
             _ => {}
         }

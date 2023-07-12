@@ -6,3 +6,4 @@ pub mod fourier;
 pub mod equations;
 pub mod matrices;
 pub mod equivalence;
+pub mod product;

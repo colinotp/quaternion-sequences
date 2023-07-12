@@ -2,6 +2,7 @@
 
 #[cfg(test)]
 mod tests {
+
     use crate::sequences::{williamson::{Williamson, QUADRUPLETS}, equivalence::*};
 
     #[test]
@@ -16,7 +17,6 @@ mod tests {
             println!("{:?}", elm);
         }
     }
-
 
 
     #[test]
@@ -55,7 +55,7 @@ mod tests {
         let mut will = Williamson::new(size);
         will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
 
-        let equivalent = equivalent_shift(&will);
+        let equivalent = equivalent_uniform_shift(&will);
         assert!(equivalent.len() == 10);
 
         for seq in equivalent {
@@ -106,9 +106,9 @@ mod tests {
         }
     }
 
-    
-    fn test_equivalence_alternate_negation() {
-        let size = 6;
+    #[test]
+    fn test_equivalence_class() {
+        let size = 5;
         let mut will = Williamson::new(size);
     
         alt_recursive(&mut will, size, 1);
@@ -118,10 +118,10 @@ mod tests {
     
         if index >= will.search_size(){
             if will.to_qs().is_perfect() {
-                let equivalent = equivalent_alternated_negation(&will);
-                assert!(equivalent.len() == 2);
-                println!("{}, {}", equivalent[0].to_qs().to_string_raw(), equivalent[1].to_qs().to_string_raw());
-                assert!(equivalent[1].to_qs().is_perfect());
+                let equivalent = generate_equivalence_class(&will);
+                for seq in equivalent {
+                    assert!(seq.to_qs().is_perfect());
+                }
             }
             return;
         }
@@ -164,5 +164,24 @@ mod tests {
             assert!(seq.to_qs().is_perfect());
         }
     
+    }
+
+    #[test]
+    fn test_class() {
+
+        let size = 7;
+        let seq_x = vec![-1,1,1,-1, 1, 1, 1];
+        let seq_y = vec![-1,1,1,-1,-1,-1,-1];
+        let seq_z = vec![-1,1,1,-1,-1,-1,-1];
+        let seq_w = vec![-1,1,1,-1, 1,-1, 1];
+
+        let mut will = Williamson::new(size);
+        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+
+        for elm in generate_equivalence_class(&will) {
+            println!("{}", elm.to_qs().to_string_raw());
+            assert!(elm.to_qs().is_perfect());
+        }
+
     }
 }

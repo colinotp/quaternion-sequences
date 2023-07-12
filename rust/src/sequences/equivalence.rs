@@ -1,6 +1,9 @@
-use itertools::{iproduct, Itertools};
+use std::collections::HashSet;
 
-use super::{williamson::{Williamson}};
+
+use itertools::iproduct;
+
+use super::williamson::{Williamson, SequenceTag};
 
 
 
@@ -105,55 +108,98 @@ pub fn will_less_than(will1 : &Williamson, will2 : &Williamson) -> bool {
                             seq_less_than(&d1, &d2)
                         }
     }}}}}
-}   
-
+}
 
 
 
 // * Functions to treat the equivalences
 
-pub fn generate_equivalent(seq : &Williamson) -> Williamson {
-    // This function generates the representative of the equivalence class that seq belongs to
-    
-    let mut lexical_minimum = seq.clone();
-
-    minimize_wrt_equivalence(&mut lexical_minimum, Box::new(equivalent_reorder)); // E1: reorder
-    minimize_wrt_equivalence(&mut lexical_minimum, Box::new(equivalent_negate)); // E2 : negate
-    minimize_wrt_equivalence(&mut lexical_minimum, Box::new(equivalent_shift)); // E3 : shift
-    minimize_wrt_equivalence(&mut lexical_minimum, Box::new(equivalent_automorphism)); // E4 : automorphisms
-    minimize_wrt_equivalence(&mut lexical_minimum, Box::new(equivalent_alternated_negation)); // E5 : alternate negation
-    
-    lexical_minimum
+pub fn generate_canonical_representative(seq : &Williamson) -> Williamson{
+    let set = generate_equivalence_class(seq);
+    let mut mini = seq.clone();
+    for elm in set {
+        if will_less_than(&elm, &mini) {
+            mini = elm;
+        }
+    }
+    mini
 }
 
 
-pub fn minimize_wrt_equivalence(will : &mut Williamson, equivalence : Box<dyn Fn (&Williamson) -> Vec<Williamson>>) {
-    
-    let mut best = will.clone();
 
-    for current in equivalence(will) {
-        if will_less_than(&current, &best) {
-            best = current;
+
+pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
+    // This function generates the representative of the equivalence class that seq belongs to
+    
+    let mut class = HashSet::new();
+    class.insert(seq.clone());
+
+    loop {
+        let mut new = HashSet::new();
+
+        for seq in &class {
+            for equivalence in [equivalent_reorder, equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism] {
+                for equ in equivalence(&seq){
+                    if !class.contains(&equ) {
+                        new.insert(equ);
+                    }
+                }
+            }
+
+        }
+
+
+        if new.len() == 0 {break;}
+        else {
+            for seq in new {
+                class.insert(seq);
+            }
         }
     }
 
-    will.set_all_values(&best.sequences());
+    class
 }
 
 
+
+
+fn swap(will : &mut Williamson, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
+    
+    let (a,b,c,d) = will.sequences();
+
+    let (seq1, seq2) = match (&seqtag1, &seqtag2) {
+        (SequenceTag::A, SequenceTag::B) => {(a, b)},
+        (SequenceTag::A, SequenceTag::C) => {(a, c)},
+        (SequenceTag::A, SequenceTag::D) => {(a, d)},
+        (SequenceTag::B, SequenceTag::C) => {(b, c)},
+        (SequenceTag::B, SequenceTag::D) => {(b, d)},
+        (SequenceTag::C, SequenceTag::D) => {(c, d)},
+        _ => {panic!("Incorrect tags entered !")}
+    };
+
+    will.set_sequence(seq2, &seqtag1);
+    will.set_sequence(seq1, &seqtag2);
+}
 
 pub fn equivalent_reorder(seq : &Williamson) -> Vec<Williamson> {
     // computes all equivalent sequences by reorder
 
-    let mut res = vec![];
+    let mut res = vec![seq.clone()];
 
-    let (a,b,c,d) = seq.sequences();
+    let couples = [(SequenceTag::A, SequenceTag::B), (SequenceTag::A, SequenceTag::C), (SequenceTag::A, SequenceTag::D), (SequenceTag::B, SequenceTag::C), (SequenceTag::B, SequenceTag::D), (SequenceTag::C, SequenceTag::D)];
 
-    for quad in [a,b,c,d].iter().permutations(4) {
-        let mut s = Williamson::new(seq.size());
-        let values = (quad[0].clone(), quad[1].clone(), quad[2].clone(), quad[3].clone());
-        s.set_all_values(&values);
-        res.push(s);
+    for (couple1, couple2) in iproduct!(couples.clone(), couples) {
+        let mut new_seq = seq.clone();
+        
+        let (seq11, seq12) = couple1;
+        let (seq21, seq22) = couple2;
+        if !(seq11 == seq21 && seq12 == seq22){
+            swap(&mut new_seq, seq11, seq12);
+            swap(&mut new_seq, seq21, seq22);
+        }
+
+        res.push(new_seq);
+    
     }
 
     res
@@ -162,7 +208,7 @@ pub fn equivalent_reorder(seq : &Williamson) -> Vec<Williamson> {
 
 
 
-pub fn equivalent_shift(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_uniform_shift(seq : &Williamson) -> Vec<Williamson> {
     // computes all equivalent sequences by shift
 
     let mut res = vec![seq.clone()];
@@ -212,11 +258,19 @@ pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
 
     let mut res = vec![];
 
-    for quads in iproduct!([a.clone(), negated(&a)], [b.clone(), negated(&b)], [c.clone(), negated(&c)], [d.clone(), negated(&d)]) {
-        // this macro does the cartesian product of whatever sequences is inside
-        // The result is looping over all possible quadruplets or their negated counterpart
+    for tag_couple in [(SequenceTag::A, SequenceTag::B), (SequenceTag::A, SequenceTag::C), (SequenceTag::A, SequenceTag::D), (SequenceTag::B, SequenceTag::C), (SequenceTag::B, SequenceTag::D), (SequenceTag::C, SequenceTag::D)] {
+        // this loops through all the couples of a,b,c,d (ordered couples)
+        let quad = match tag_couple {
+            (SequenceTag::A, SequenceTag::B) => {(negated(&a.clone()), negated(&b.clone()), c.clone(), d.clone())},
+            (SequenceTag::A, SequenceTag::C) => {(negated(&a.clone()), b.clone(), negated(&c.clone()), d.clone())},
+            (SequenceTag::A, SequenceTag::D) => {(negated(&a.clone()), b.clone(), c.clone(), negated(&d.clone()))},
+            (SequenceTag::B, SequenceTag::C) => {(a.clone(), negated(&b.clone()), negated(&c.clone()), d.clone())},
+            (SequenceTag::B, SequenceTag::D) => {(a.clone(), negated(&b.clone()), c.clone(), negated(&d.clone()))},
+            (SequenceTag::C, SequenceTag::D) => {(a.clone(), b.clone(), negated(&c.clone()), negated(&d.clone()))},
+            _ => {panic!("Incorrect tags entered !")}
+        };
         let mut s = Williamson::new(seq.size());
-        s.set_all_values(&quads);
+        s.set_all_values(&quad);
 
         res.push(s);
     }
@@ -226,6 +280,10 @@ pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
 
 
 pub fn equivalent_alternated_negation(seq : &Williamson) -> Vec<Williamson> {
+
+    if seq.size() % 2 == 1 {
+        return vec![seq.clone()];
+    }
 
     let frequency = 2;
 
