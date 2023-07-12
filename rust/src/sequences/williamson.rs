@@ -1,7 +1,7 @@
 use super::sequence::{QS, QPLUS};
 
 
-#[derive(Eq,PartialEq,PartialOrd,Ord)]
+#[derive(Eq,PartialEq,PartialOrd,Ord, Clone)]
 pub enum SequenceTag { // enum for choosing a specific sequence
     A, B, C, D
 }
@@ -37,7 +37,7 @@ pub static QUADRUPLETS : [(i8,i8,i8,i8); 16] = [ // a table of all quadruplets p
 
 
 
-#[derive(Clone)]
+#[derive(Clone, PartialEq, Eq, Hash)]
 pub struct Williamson {
     size : usize,
     a: Vec<i8>,
@@ -267,5 +267,20 @@ impl ToString for Williamson{
 }
 
 
+pub fn seq_less_than(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> bool {
 
+    let mut index = 0;
+    while index < seq1.len() {
+        if seq1[index] < seq2[index] {
+            return true;
+        }
+        else if seq1[index] > seq2[index] {
+            return false;
+        }
+        else {
+            index += 1;
+        }
+    }
 
+    false
+}
