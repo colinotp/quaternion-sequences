@@ -136,13 +136,23 @@ pub fn generate_other_quadruplets(quad : &Quad) -> Vec<Quad> {
     
     // generate all permutations and filter them
     let quad_vec = vec![quad.0,quad.1,quad.2,quad.3];
-    let squares_list = quad_vec.iter()
-        .permutations(4) // generate all permutations of size 4
-        .map(|q| (*q[0], *q[1], *q[2], *q[3])) // convert them to Quad
-        .unique_by(|q| equivalent(&q)) // take one unique elements of the equivalence class
-        .collect(); // converts the iterator to a vec
-    
-    squares_list
+
+    let mut isomorphism = vec![];
+
+    for perm in quad_vec.iter().permutations(4) {
+        let quad = (*perm[0], *perm[1], *perm[2], *perm[3]);
+        isomorphism.push(quad);
+    }
+
+    let mut result = vec![];
+    for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q)).collect::<Vec<Quad>>() {
+        result.push(elm.clone());
+        let mut nega_elm = elm.clone();
+        nega_elm.0 = - nega_elm.0;
+        result.push(nega_elm)
+    }
+
+    result.into_iter().unique().collect()
 }
 
 

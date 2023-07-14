@@ -168,12 +168,12 @@ fn swap(will : &mut Williamson, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     let (a,b,c,d) = will.sequences();
 
     let (seq1, seq2) = match (&seqtag1, &seqtag2) {
-        (SequenceTag::A, SequenceTag::B) => {(a, b)},
-        (SequenceTag::A, SequenceTag::C) => {(a, c)},
-        (SequenceTag::A, SequenceTag::D) => {(a, d)},
-        (SequenceTag::B, SequenceTag::C) => {(b, c)},
-        (SequenceTag::B, SequenceTag::D) => {(b, d)},
-        (SequenceTag::C, SequenceTag::D) => {(c, d)},
+        (SequenceTag::X, SequenceTag::Y) => {(a, b)},
+        (SequenceTag::X, SequenceTag::Z) => {(a, c)},
+        (SequenceTag::X, SequenceTag::W) => {(a, d)},
+        (SequenceTag::Y, SequenceTag::Z) => {(b, c)},
+        (SequenceTag::Y, SequenceTag::W) => {(b, d)},
+        (SequenceTag::Z, SequenceTag::W) => {(c, d)},
         _ => {panic!("Incorrect tags entered !")}
     };
 
@@ -186,7 +186,7 @@ pub fn equivalent_reorder(seq : &Williamson) -> Vec<Williamson> {
 
     let mut res = vec![seq.clone()];
 
-    let couples = [(SequenceTag::A, SequenceTag::B), (SequenceTag::A, SequenceTag::C), (SequenceTag::A, SequenceTag::D), (SequenceTag::B, SequenceTag::C), (SequenceTag::B, SequenceTag::D), (SequenceTag::C, SequenceTag::D)];
+    let couples = [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)];
 
     for (couple1, couple2) in iproduct!(couples.clone(), couples) {
         let mut new_seq = seq.clone();
@@ -258,15 +258,15 @@ pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
 
     let mut res = vec![];
 
-    for tag_couple in [(SequenceTag::A, SequenceTag::B), (SequenceTag::A, SequenceTag::C), (SequenceTag::A, SequenceTag::D), (SequenceTag::B, SequenceTag::C), (SequenceTag::B, SequenceTag::D), (SequenceTag::C, SequenceTag::D)] {
+    for tag_couple in [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)] {
         // this loops through all the couples of a,b,c,d (ordered couples)
         let quad = match tag_couple {
-            (SequenceTag::A, SequenceTag::B) => {(negated(&a.clone()), negated(&b.clone()), c.clone(), d.clone())},
-            (SequenceTag::A, SequenceTag::C) => {(negated(&a.clone()), b.clone(), negated(&c.clone()), d.clone())},
-            (SequenceTag::A, SequenceTag::D) => {(negated(&a.clone()), b.clone(), c.clone(), negated(&d.clone()))},
-            (SequenceTag::B, SequenceTag::C) => {(a.clone(), negated(&b.clone()), negated(&c.clone()), d.clone())},
-            (SequenceTag::B, SequenceTag::D) => {(a.clone(), negated(&b.clone()), c.clone(), negated(&d.clone()))},
-            (SequenceTag::C, SequenceTag::D) => {(a.clone(), b.clone(), negated(&c.clone()), negated(&d.clone()))},
+            (SequenceTag::X, SequenceTag::Y) => {(negated(&a.clone()), negated(&b.clone()), c.clone(), d.clone())},
+            (SequenceTag::X, SequenceTag::Z) => {(negated(&a.clone()), b.clone(), negated(&c.clone()), d.clone())},
+            (SequenceTag::X, SequenceTag::W) => {(negated(&a.clone()), b.clone(), c.clone(), negated(&d.clone()))},
+            (SequenceTag::Y, SequenceTag::Z) => {(a.clone(), negated(&b.clone()), negated(&c.clone()), d.clone())},
+            (SequenceTag::Y, SequenceTag::W) => {(a.clone(), negated(&b.clone()), c.clone(), negated(&d.clone()))},
+            (SequenceTag::Z, SequenceTag::W) => {(a.clone(), b.clone(), negated(&c.clone()), negated(&d.clone()))},
             _ => {panic!("Incorrect tags entered !")}
         };
         let mut s = Williamson::new(seq.size());

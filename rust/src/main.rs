@@ -6,7 +6,6 @@ use std::fs::File;
 use std::io::{self, BufRead, Write};
 use std::path::Path;
 
-use find::find_optim::find_q24;
 use sequences::matrices::QHM;
 use time::*;
 
@@ -126,6 +125,20 @@ fn convert_qs_to_matrices() {
 }
 
 
+fn find_matching_algorithm(p : usize) {
+
+    let now = Instant::now();
+    let result = find_with_rowsum::find_matching(p);
+    let elapsed_time = now.elapsed().as_seconds_f32();
+
+    for elm in &result {
+        println!("{}", elm.to_qs().to_string_raw());
+    } 
+    
+    let count = result.len();
+    eprintln!("For n = {p}, the function took: {elapsed_time} seconds and found {count} sequences");
+}
+
 
 fn main() {
     let args : Vec<String> = std::env::args().collect();
@@ -135,9 +148,10 @@ fn main() {
         //find_pqs(None);
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
-        convert_qs_to_matrices();
+        //convert_qs_to_matrices();
         //find_unique_williamson_type_of_size(9);
         //find_q24(8, None);
+        find_matching_algorithm(12);
     }
     else if count == 2 {
         match &args[1] {

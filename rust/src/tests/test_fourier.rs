@@ -3,7 +3,7 @@
 mod tests {
     use num_complex::Complex64;
 
-    use crate::sequences::{fourier::{dft_sequence}, rowsum::generate_sequences_with_rowsum};
+    use crate::sequences::{fourier::dft_sequence, rowsum::generate_sequences_with_rowsum};
 
 
     #[test]

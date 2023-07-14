@@ -2,6 +2,7 @@
 use fftw::array::AlignedVec;
 use fftw::plan::*;
 use fftw::types::*;
+use itertools::iproduct;
 use num_complex::Complex;
 
 pub fn dft_sequence(seq : &Vec<i8>) -> Vec<Complex<f64>>{
@@ -25,6 +26,21 @@ pub fn iter_over_filtered_dft<'a>(sequences : &'a Vec<Vec<i8>>, bound : f64) -> 
             let dft = dft_sequence(seq);
             for elm in dft {
                 if elm.norm_sqr() > bound_sqr {return false;}
+            }
+            true
+        })
+}
+
+
+pub fn iter_over_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, sequences2 : &'a Vec<Vec<i8>>, bound : f64) -> impl std::iter::Iterator<Item = (&'a Vec<i8>, &'a Vec<i8>)> {
+    let bound_sqr = bound * bound;
+    let couples = iproduct!(sequences1, sequences2);
+    couples
+        .filter(move |(seq1, seq2)| {
+            let dft1 = dft_sequence(seq1);
+            let dft2 = dft_sequence(seq2);
+            for (elm1, elm2) in dft1.iter().zip(dft2.iter()) {
+                if elm1.norm_sqr() + elm2.norm_sqr() > bound_sqr {return false;}
             }
             true
         })

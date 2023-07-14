@@ -1,17 +1,17 @@
 use super::sequence::{QS, QPLUS};
 
 
-#[derive(Eq,PartialEq,PartialOrd,Ord, Clone)]
+#[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Hash, Debug)]
 pub enum SequenceTag { // enum for choosing a specific sequence
-    A, B, C, D
+    X, Y, Z, W
 }
 
 pub fn tag_to_string(tag : &SequenceTag) -> String{
     match *tag {
-        SequenceTag::A => {"A".to_string()}
-        SequenceTag::B => {"B".to_string()}
-        SequenceTag::C => {"C".to_string()}
-        SequenceTag::D => {"D".to_string()}
+        SequenceTag::X => {"A".to_string()}
+        SequenceTag::Y => {"B".to_string()}
+        SequenceTag::Z => {"C".to_string()}
+        SequenceTag::W => {"D".to_string()}
     }
 }
 
@@ -73,10 +73,10 @@ impl Williamson{
 
     pub fn sequence(&self, seqtag : SequenceTag) -> Vec<i8>{
         match seqtag {
-            SequenceTag::A => {self.a.clone()}
-            SequenceTag::B => {self.b.clone()}
-            SequenceTag::C => {self.c.clone()}
-            SequenceTag::D => {self.d.clone()}
+            SequenceTag::X => {self.a.clone()}
+            SequenceTag::Y => {self.b.clone()}
+            SequenceTag::Z => {self.c.clone()}
+            SequenceTag::W => {self.d.clone()}
         }
     }
 
@@ -101,20 +101,20 @@ impl Williamson{
     pub fn set_sequence(&mut self, seq : Vec<i8>, tag : &SequenceTag){
         // sets a value for a specific sequence
         match &tag {
-            SequenceTag::A => self.a = seq,
-            SequenceTag::B => self.b = seq,
-            SequenceTag::C => self.c = seq,
-            SequenceTag::D => self.d = seq
+            SequenceTag::X => self.a = seq,
+            SequenceTag::Y => self.b = seq,
+            SequenceTag::Z => self.c = seq,
+            SequenceTag::W => self.d = seq
         }
     }
 
     pub fn set_single_value(&mut self, value : i8, tag : &SequenceTag, index: usize){
         // sets a value for a specific sequence and specific index
         match &tag {
-            SequenceTag::A => self.a[index] = value,
-            SequenceTag::B => self.b[index] = value,
-            SequenceTag::C => self.c[index] = value,
-            SequenceTag::D => self.d[index] = value
+            SequenceTag::X => self.a[index] = value,
+            SequenceTag::Y => self.b[index] = value,
+            SequenceTag::Z => self.c[index] = value,
+            SequenceTag::W => self.d[index] = value
         }
     }
 

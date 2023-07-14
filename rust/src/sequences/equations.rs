@@ -28,43 +28,43 @@ fn equations_williamson_type(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i
     let mut result = "".to_string();
     
     match (tag1, tag2) { // ! In case of multiple sequences, make sure the same sequences are on the same side !!!
-        (SequenceTag::A, SequenceTag::B) => {// x1 ... is D, ... xn is C
-            result += &additional_comment(&SequenceTag::D, &SequenceTag::C);
+        (SequenceTag::X, SequenceTag::Y) => {// x1 ... is D, ... xn is C
+            result += &additional_comment(&SequenceTag::W, &SequenceTag::Z);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::LeftMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.2);
         }
-        (SequenceTag::A, SequenceTag::C) => {// x1 ... is D, ... xn is B
-            result += &additional_comment(&SequenceTag::D, &SequenceTag::B);
+        (SequenceTag::X, SequenceTag::Z) => {// x1 ... is D, ... xn is B
+            result += &additional_comment(&SequenceTag::W, &SequenceTag::Y);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::LeftMinus, AddType::Plus);
             result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.1);
         }
-        (SequenceTag::A, SequenceTag::D) => {// x1 ... is B, ... xn is C
-            result += &additional_comment(&SequenceTag::B, &SequenceTag::C);
+        (SequenceTag::X, SequenceTag::W) => {// x1 ... is B, ... xn is C
+            result += &additional_comment(&SequenceTag::Y, &SequenceTag::Z);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.1, rowsum.2);
         }
-        (SequenceTag::B, SequenceTag::C) => {// x1 ... is D, ... xn is A
-            result += &additional_comment(&SequenceTag::D, &SequenceTag::A);
+        (SequenceTag::Y, SequenceTag::Z) => {// x1 ... is D, ... xn is A
+            result += &additional_comment(&SequenceTag::W, &SequenceTag::X);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq2, OpType::RightMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::LeftMinus, OpType::LeftMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.3, rowsum.0);
         }
-        (SequenceTag::B, SequenceTag::D) => {// x1 ... is A, ... xn is C
-            result += &additional_comment(&SequenceTag::A, &SequenceTag::C);
+        (SequenceTag::Y, SequenceTag::W) => {// x1 ... is A, ... xn is C
+            result += &additional_comment(&SequenceTag::X, &SequenceTag::Z);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::LeftMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::RightMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::RightMinus, AddType::Plus);
             result += &equations_rowsum(seq1.len(), rowsum.0, rowsum.2);
         }
-        (SequenceTag::C, SequenceTag::D) => {// x1 ... is A, ... xn is B
-            result += &additional_comment(&SequenceTag::A, &SequenceTag::B);
+        (SequenceTag::Z, SequenceTag::W) => {// x1 ... is A, ... xn is B
+            result += &additional_comment(&SequenceTag::X, &SequenceTag::Y);
             result += &equations_crosscorrelation(&seq2, OpType::LeftMinus, &seq1, OpType::RightMinus, AddType::Plus);
             result += &equations_crosscorrelation(&seq1, OpType::LeftMinus, &seq2, OpType::LeftMinus, AddType::Plus);
             result += &equations_nonlinear_crosscorrelation(&seq1, &seq2, OpType::RightMinus, OpType::LeftMinus, AddType::Plus);

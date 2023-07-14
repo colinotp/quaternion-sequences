@@ -5,3 +5,4 @@ mod test_fourier;
 mod test_equation;
 mod test_matrices;
 mod test_equivalence;
+mod test_matching;
