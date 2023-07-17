@@ -2,7 +2,8 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{find::find_with_rowsum::sort, sequences::{matching::{verify_cross_correlation, compute_auto_correlations, compute_complementary_auto_correlations, compute_cross_correlations, compute_complementary_cross_correlations}, self, williamson::{Williamson, SequenceTag, periodic_autocorrelation}}};
+    use crate::{find::find_with_rowsum::sort, sequences::matching::{verify_cross_correlation, compute_auto_correlations, compute_complementary_auto_correlations, compute_cross_correlations, compute_complementary_cross_correlations}};
+    use crate::sequences::williamson::SequenceTag;
 
 
     #[test]

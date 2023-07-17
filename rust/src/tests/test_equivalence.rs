@@ -30,7 +30,7 @@ mod tests {
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_reorder(&will);
         assert_eq!(equivalent.len(), 24);
@@ -53,7 +53,7 @@ mod tests {
         let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_uniform_shift(&will);
         assert!(equivalent.len() == 10);
@@ -75,7 +75,7 @@ mod tests {
         let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_negate(&will);
         assert!(equivalent.len() == 16);
@@ -96,7 +96,7 @@ mod tests {
         let seq_w = vec![-1,-1, 1,-1,-1,1, 1,1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_alternated_negation(&will);
         assert!(equivalent.len() == 2);
@@ -154,7 +154,7 @@ mod tests {
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_automorphism(&will);
         // assert_eq!(equivalent.len(), factorial(size));
@@ -176,7 +176,7 @@ mod tests {
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         for elm in generate_equivalence_class(&will) {
             println!("{}", elm.to_qs().to_string_raw());

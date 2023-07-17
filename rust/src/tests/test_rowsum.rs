@@ -28,8 +28,8 @@ mod tests {
         let tests = vec![(4,3), (6,4), (2,1), (4,0), (7,3)];
         
         for (n,k) in tests{
-            let seq : Vec<i8> = vec![-1;n];
-            let res = gen_seq_rec(&seq, k, 0);
+            let mut seq : Vec<i8> = vec![-1;n];
+            let res = gen_seq_rec(&mut seq, k, 0);
             assert_eq!(res.len(), choose(n,k));
         }
     }
@@ -37,7 +37,7 @@ mod tests {
 
     #[test]
     fn test_rowsum_generate(){
-        let tests = vec![(4,2), (6,4), (7,3), (4,0)];
+        let tests = vec![(4,2), (6,4), (7,-3), (4,0)];
         
         for (n,r) in tests{
             let res = generate_sequences_with_rowsum(r, n);
