@@ -161,7 +161,7 @@ mod tests {
         let seq_w = vec![-1,-1,-1, 1,1,-1,1, 1];
 
         let mut will = Williamson::new(size);
-        will.set_all_values(&(seq_x, seq_y, seq_z, seq_w));
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         
         assert!(will.to_qs().is_perfect());
     }
