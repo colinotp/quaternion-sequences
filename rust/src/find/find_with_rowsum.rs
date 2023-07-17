@@ -161,10 +161,10 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
                 // If we found matches, we test them all
                 let (seq3, seq4) = (*ref_seq3, *ref_seq4); // The sequences are behind two references
 
-                if verify_cross_correlation(&[&seq1, &seq2, seq3, seq4], &tags) {
+                if verify_cross_correlation(&[seq1, seq2, seq3, seq4], &tags) {
 
                     let mut will = Williamson::new(p);
-                    will.set_all_values(&(seq1.clone(), seq2.clone(), seq3.clone(), seq4.clone()));
+                    will.set_all_values((seq1, seq2, seq3, seq4));
 
                     matches.push(will)
                 }

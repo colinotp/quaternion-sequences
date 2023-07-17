@@ -255,22 +255,23 @@ pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
     // computes all equivalent sequences by negation
 
     let (a,b,c,d) = seq.sequences();
+    let (nega_a,nega_b,nega_c,nega_d) = (negated(&a), negated(&b), negated(&c), negated(&d));
 
     let mut res = vec![];
 
     for tag_couple in [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)] {
         // this loops through all the couples of a,b,c,d (ordered couples)
         let quad = match tag_couple {
-            (SequenceTag::X, SequenceTag::Y) => {(negated(&a.clone()), negated(&b.clone()), c.clone(), d.clone())},
-            (SequenceTag::X, SequenceTag::Z) => {(negated(&a.clone()), b.clone(), negated(&c.clone()), d.clone())},
-            (SequenceTag::X, SequenceTag::W) => {(negated(&a.clone()), b.clone(), c.clone(), negated(&d.clone()))},
-            (SequenceTag::Y, SequenceTag::Z) => {(a.clone(), negated(&b.clone()), negated(&c.clone()), d.clone())},
-            (SequenceTag::Y, SequenceTag::W) => {(a.clone(), negated(&b.clone()), c.clone(), negated(&d.clone()))},
-            (SequenceTag::Z, SequenceTag::W) => {(a.clone(), b.clone(), negated(&c.clone()), negated(&d.clone()))},
+            (SequenceTag::X, SequenceTag::Y) => {(&nega_a, &nega_b, &c, &d)},
+            (SequenceTag::X, SequenceTag::Z) => {(&nega_a, &b, &nega_c, &d)},
+            (SequenceTag::X, SequenceTag::W) => {(&nega_a, &b, &c, &nega_d)},
+            (SequenceTag::Y, SequenceTag::Z) => {(&a, &nega_b, &nega_c, &d)},
+            (SequenceTag::Y, SequenceTag::W) => {(&a, &nega_b, &c, &nega_d)},
+            (SequenceTag::Z, SequenceTag::W) => {(&a, &b, &nega_c, &nega_d)},
             _ => {panic!("Incorrect tags entered !")}
         };
         let mut s = Williamson::new(seq.size());
-        s.set_all_values(&quad);
+        s.set_all_values(quad);
 
         res.push(s);
     }
@@ -291,10 +292,10 @@ pub fn equivalent_alternated_negation(seq : &Williamson) -> Vec<Williamson> {
 
     let mut res = vec![];
 
-    let quads = (alt_negated(&a, frequency), alt_negated(&b, frequency), alt_negated(&c, frequency), alt_negated(&d, frequency));
+    let quads = (&alt_negated(&a, frequency), &alt_negated(&b, frequency), &alt_negated(&c, frequency), &alt_negated(&d, frequency));
 
     let mut s = Williamson::new(seq.size());
-    s.set_all_values(&quads);
+    s.set_all_values(quads);
 
     res.push(seq.clone());
     res.push(s);
@@ -341,9 +342,9 @@ pub fn equivalent_automorphism(seq : &Williamson) -> Vec<Williamson> {
 
         let (a,b,c,d) = seq.sequences();
 
-        let quad = (permute(&a, *k), permute(&b, *k), permute(&c, *k), permute(&d, *k));
+        let quad = (&permute(&a, *k), &permute(&b, *k), &permute(&c, *k), &permute(&d, *k));
 
-        will.set_all_values(&quad);
+        will.set_all_values(quad);
 
         result.push(will);
 

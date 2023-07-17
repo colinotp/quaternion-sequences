@@ -52,6 +52,8 @@ fn find_minimum(class : &HashSet<Williamson>) -> Williamson {
 
 pub fn find(size : usize) -> String{
     let sequences = find_aux(size);
+    
+    eprintln!("The function found {} sequences before equivalences", sequences.len());
 
     let mut classes : Vec<HashSet<Williamson>> = vec![];
 
@@ -69,6 +71,15 @@ pub fn find(size : usize) -> String{
         }
     }
 
+    let count : usize = classes.iter().map(|c| c.len()).sum();
+    for c in &classes {
+        for elm in c {
+            assert!(elm.to_qs().is_perfect());
+            eprintln!("{}", elm.to_qs().to_string_raw());
+        }
+    }
+    eprintln!("The function found a total of {count} sequences without any equivalences");
+
     classes.iter()
         .map(|c| find_minimum(c))
         .map(|w| w.to_qs().to_string_raw())
@@ -81,7 +92,7 @@ pub fn find_aux(size : usize) -> Vec<Williamson>{
 
     let mut result = vec![];
 
-    find_recursive(&mut will, size, 1, &mut result);
+    find_recursive(&mut will, size, 0, &mut result);
 
     result
 }
@@ -94,10 +105,41 @@ fn find_recursive(will : &mut Williamson, size : usize, index : usize, sequences
         }
         return;
     }
+    
 
     for value_to_test in QUADRUPLETS.iter(){
-        let mut will1 = will.clone();
-        will1.set_sequence_value(value_to_test, index);
-        find_recursive(&mut will1, size, index+1, sequences);
+        will.set_sequence_value(value_to_test, index);
+        find_recursive(will, size, index+1, sequences);
     }
+}
+
+
+
+
+
+pub fn reduce_to_equivalence(sequences : &Vec<Williamson>) -> Vec<Williamson> {
+
+    
+    let mut classes : Vec<HashSet<Williamson>> = vec![];
+
+    for seq in sequences {
+        let mut new_seq = true;
+        for class in &classes {
+            if class.contains(&seq) {
+                new_seq = false;
+                break;
+            }
+        }
+        if new_seq {
+            let new_class = generate_equivalence_class(&seq);
+            classes.push(new_class);
+        }
+    }
+    
+    let count : usize = classes.iter().map(|c| c.len()).sum();
+    eprintln!("The function found a total of {count} sequences without any equivalences");
+
+    classes.iter()
+        .map(|c| find_minimum(c))
+        .collect()
 }

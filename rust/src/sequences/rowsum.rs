@@ -32,7 +32,7 @@ pub fn rowsum(seq : Vec<i8>) -> isize {
 pub fn generate_sequences_with_rowsum(rowsum: isize, size : usize) -> Vec<Vec<i8>> {
     // generates all sequences of length size and whose sum equals rowsum
 
-    if (rowsum % 2) as usize != size % 2 {
+    if (rowsum.abs() % 2) as usize != size % 2 {
         // no combination will work
         return vec![];
     }
@@ -41,16 +41,16 @@ pub fn generate_sequences_with_rowsum(rowsum: isize, size : usize) -> Vec<Vec<i8
     let nb_ones = (size as isize + rowsum)/2;
 
     // and we call the recursive function
-    let seq : Vec<i8> = vec![-1;size];
-    gen_seq_rec(&seq, nb_ones as usize, 0)
+    let mut seq : Vec<i8> = vec![-1;size];
+    gen_seq_rec(&mut seq, nb_ones as usize, 0)
 }
 
 
-pub fn gen_seq_rec(seq : &Vec<i8>, remaining_ones : usize, current_pos : usize) -> Vec<Vec<i8>> {
+pub fn gen_seq_rec(seq : &mut Vec<i8>, remaining_ones : usize, current_pos : usize) -> Vec<Vec<i8>> {
 
     if remaining_ones == 0 {
         // We're done ! There are no more ones to place
-        return vec![seq.to_vec()];
+        return vec![seq.clone()];
     }
     if current_pos + remaining_ones > seq.len() {
         // We can't possibly fit the remaining ones in the rest of the sequence, so this is impossible
@@ -58,12 +58,13 @@ pub fn gen_seq_rec(seq : &Vec<i8>, remaining_ones : usize, current_pos : usize) 
     }
 
     // Either there's a -1 in position current_pos...
-    let mut modified_seq = seq.clone();
-    modified_seq[current_pos] = 1;
-    let mut results1 = gen_seq_rec(&modified_seq, remaining_ones - 1, current_pos + 1);
-
-    // or there's not.
     let mut results2 = gen_seq_rec(seq, remaining_ones, current_pos + 1);
+    
+    // or there's not.
+    seq[current_pos] = 1;
+    let mut results1 = gen_seq_rec(seq, remaining_ones - 1, current_pos + 1);
+
+    seq[current_pos] = -1; // We reset the sequence to it's original state
 
     // We concatenate both results
     results1.append(&mut results2);

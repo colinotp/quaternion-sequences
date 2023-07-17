@@ -89,7 +89,7 @@ impl Williamson{
         (self.a[index], self.b[index], self.c[index], self.d[index])
     }
 
-    pub fn set_all_values(&mut self, values : &(Vec<i8>,Vec<i8>,Vec<i8>,Vec<i8>)){
+    pub fn set_all_values(&mut self, values : (&Vec<i8>,&Vec<i8>,&Vec<i8>,&Vec<i8>)){
         // sets the sequences to specific values
         let (a,b,c,d) = values;
         self.a = a.clone();

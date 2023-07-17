@@ -13,6 +13,7 @@ mod sequences;
 mod tests;
 mod find;
 use crate::find::*;
+use crate::find::find_unique::reduce_to_equivalence;
 use crate::sequences::{sequence::*, symmetries::*};
 
 fn find_pqs(symmetry : Option<Symmetry>){
@@ -128,15 +129,25 @@ fn convert_qs_to_matrices() {
 fn find_matching_algorithm(p : usize) {
 
     let now = Instant::now();
-    let result = find_with_rowsum::find_matching(p);
-    let elapsed_time = now.elapsed().as_seconds_f32();
-
-    for elm in &result {
-        println!("{}", elm.to_qs().to_string_raw());
-    } 
-    
+    let sequences = find_with_rowsum::find_matching(p);
+    eprintln!("The function found {} sequences before equivalences in {} seconds", sequences.len(), now.elapsed().as_seconds_f32());
+    let result = reduce_to_equivalence(&sequences);
     let count = result.len();
+    let elapsed_time = now.elapsed().as_seconds_f32();
     eprintln!("For n = {p}, the function took: {elapsed_time} seconds and found {count} sequences");
+
+
+    let s = &("./results/sequences/matches/".to_string() + &p.to_string() + &".seq");
+    let path = Path::new(s);
+    let mut f = File::create(path).expect("Invalid file ?");
+
+    let mut result_string = "".to_string();
+    for seq in result {
+        result_string += &seq.to_qs().to_string_raw();
+        result_string += &"\n";
+    }
+    f.write(result_string.as_bytes()).expect("Error when writing in the file");
+    
 }
 
 
@@ -151,7 +162,7 @@ fn main() {
         //convert_qs_to_matrices();
         //find_unique_williamson_type_of_size(9);
         //find_q24(8, None);
-        find_matching_algorithm(12);
+        find_matching_algorithm(7);
     }
     else if count == 2 {
         match &args[1] {
@@ -172,6 +183,7 @@ fn main() {
             s if s == "wts" => {find_williamson_type_of_size(i)}
             s if s == "unique" => {find_unique_williamson_type_of_size(i)}
             s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
+            s if s == "matching" => {find_matching_algorithm(i)}
             _ => {}
         }
     }
