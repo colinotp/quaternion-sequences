@@ -1,0 +1,19 @@
+   Compiling rust v0.1.0 (C:\Users\paulc\Documents\recherche\Mitacs\quaternion-sequences\rust)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.26s
+     Running `target\debug\rust.exe matching 4`
+(0, 0, 0, 4)
+(2, 2, 2, 2)
+(-2, 2, 2, 2)
+generated 3 different rowsums
+The function took: 0.0000842 seconds to generate sequences with rowsums: 4, 0, 0, 0
+The function took: 0.0045208 seconds to create the matching table
+The function took: 0.002027 seconds to go through the other set of pairs
+The function took: 0.0000441 seconds to generate sequences with rowsums: 2, 2, 2, 2
+The function took: 0.0008661 seconds to create the matching table
+The function took: 0.0024422 seconds to go through the other set of pairs
+The function took: 0.000051 seconds to generate sequences with rowsums: 2, 2, 2, -2
+The function took: 0.0008663 seconds to create the matching table
+The function took: 0.0022656 seconds to go through the other set of pairs
+The function found 100 sequences before equivalences in 0.0179041 seconds
+The function found a total of 896 sequences without any equivalences
+For n = 4, the function took: 0.554694 seconds and found 7 sequences

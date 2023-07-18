@@ -1,0 +1,18 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.20s
+     Running `target\debug\rust.exe matching 10`
+(0, 0, 2, 6)
+(2, 2, 4, 4)
+(-2, 2, 4, 4)
+generated 3 different rowsums
+The function took: 0.000465 seconds to generate sequences with rowsums: 6, 2, 0, 0
+The function took: 1.8717988 seconds to create the matching table
+The function took: 0.482856 seconds to go through the other set of pairs
+The function took: 0.0003986 seconds to generate sequences with rowsums: 4, 4, 2, 2
+The function took: 1.2846977 seconds to create the matching table
+The function took: 0.7752744 seconds to go through the other set of pairs
+The function took: 0.0004153 seconds to generate sequences with rowsums: 4, 4, 2, -2
+The function took: 1.278621 seconds to create the matching table
+The function took: 0.759925 seconds to go through the other set of pairs
+The function found 782 sequences before equivalences in 6.4614625 seconds
+The function found a total of 38400 sequences without any equivalences
+For n = 10, the function took: 31.675735 seconds and found 28 sequences

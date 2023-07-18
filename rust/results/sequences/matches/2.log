@@ -1,0 +1,10 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.20s
+     Running `target\debug\rust.exe matching 2`
+(0, 0, 2, 2)
+generated 1 different rowsums
+The function took: 0.0000106 seconds to generate sequences with rowsums: 2, 2, 0, 0
+The function took: 0.0007589 seconds to create the matching table
+The function took: 0.0000315 seconds to go through the other set of pairs
+The function found 3 sequences before equivalences in 0.0017599 seconds
+The function found a total of 96 sequences without any equivalences
+For n = 2, the function took: 0.0352869 seconds and found 2 sequences

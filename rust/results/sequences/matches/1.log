@@ -1,0 +1,14 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.22s
+     Running `target\debug\rust.exe matching 1`
+(1, 1, 1, 1)
+(-1, 1, 1, 1)
+generated 2 different rowsums
+The function took: 0.0000088 seconds to generate sequences with rowsums: 1, 1, 1, 1
+The function took: 0.0009677 seconds to create the matching table
+The function took: 0.0000229 seconds to go through the other set of pairs
+The function took: 0.0000045 seconds to generate sequences with rowsums: 1, 1, 1, -1
+The function took: 0.0000235 seconds to create the matching table
+The function took: 0.0000196 seconds to go through the other set of pairs
+The function found 0 sequences before equivalences in 0.0023162 seconds
+The function found a total of 0 sequences without any equivalences
+For n = 1, the function took: 0.0024086 seconds and found 0 sequences
