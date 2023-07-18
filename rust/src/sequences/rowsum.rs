@@ -145,6 +145,7 @@ pub fn generate_other_quadruplets(quad : &Quad) -> Vec<Quad> {
         isomorphism.push(quad);
     }
 
+    // filtering and adding negated elements
     let mut result = vec![];
     for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q)).collect::<Vec<Quad>>() {
         result.push(elm.clone());
@@ -212,24 +213,16 @@ fn better_than(q1 : &Quad, q2 : &Quad) -> bool {
 
 fn equivalent(quad : &Quad) -> Quad {
     // finds the representative of the equivalence class that quad belongs to
-    let mut final_quad = quad;
+    let mut final_quad = quad.clone();
 
-    let mut test_quad1 = quad.clone(); // at the start, this is 1 2 3 4
-    swap(&mut test_quad1, 0, 1); 
-    swap(&mut test_quad1, 2, 3); // 2 1 4 3
-    if better_than(&test_quad1, final_quad) {final_quad = &test_quad1}
+    for swaps in [(0,1,2,3), (0,2,1,3), (0,3,1,2), (0,1,1,2), (0,1,1,3), (0,2,1,2), (0,2,2,3), (0,3,1,3), (0,3,2,3), (1,2,2,3), (1,3,2,3)] {
+        let mut test_quad = quad.clone(); // at the start, this is 1 2 3 4
+        swap(&mut test_quad, swaps.0, swaps.1); 
+        swap(&mut test_quad, swaps.2, swaps.3); // 2 1 4 3
+        if better_than(&test_quad, &final_quad) {final_quad = test_quad.clone()}
+    }
 
-    let mut test_quad2 = test_quad1.clone();
-    swap(&mut test_quad2, 0, 2);
-    swap(&mut test_quad2, 1, 3); // 4 3 2 1
-    if better_than(&test_quad2, final_quad) {final_quad = &test_quad2}
-
-    let mut test_quad3 = test_quad2.clone();
-    swap(&mut test_quad3, 0, 1);
-    swap(&mut test_quad3, 2, 3); // 3 4 1 2
-    if better_than(&test_quad3, final_quad) {final_quad = &test_quad3}
-
-    *final_quad
+    final_quad
 }
 
 

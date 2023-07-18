@@ -80,26 +80,24 @@ mod tests {
     fn test_gen_quads(){
 
         let quads = generate_other_quadruplets(&(1,1,5,7));
-        assert_eq!(quads.len(), 3);
+        assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (1,1,5,7));
-        assert_eq!(quads[1], (1,5,1,7));
-        assert_eq!(quads[2], (1,5,7,1));
+        assert_eq!(quads[1], (-1,1,5,7));
         
         let quads = generate_other_quadruplets(&(1,3,3,7));
-        assert_eq!(quads.len(), 3);
+        assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (1,3,3,7));
-        assert_eq!(quads[1], (1,3,7,3));
-        assert_eq!(quads[2], (1,7,3,3));
+        assert_eq!(quads[1], (-1,3,3,7));
 
         let quads = generate_other_quadruplets(&(3,3,3,8));
-        assert_eq!(quads.len(), 1);
+        assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (3,3,3,8));
+        assert_eq!(quads[1], (-3,3,3,8));
 
         let quads = generate_other_quadruplets(&(3,3,5,5));
-        assert_eq!(quads.len(), 3);
+        assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (3,3,5,5));
-        assert_eq!(quads[1], (3,5,3,5));
-        assert_eq!(quads[2], (3,5,5,3));
+        assert_eq!(quads[1], (-3,3,5,5));
     }
 
 

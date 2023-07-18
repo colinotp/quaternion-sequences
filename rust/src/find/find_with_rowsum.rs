@@ -1,4 +1,4 @@
-use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env};
+use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env, time::Instant};
 
 
 use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft, iter_over_filtered_couples}, equations::generate_equations, williamson::{SequenceTag, tag_to_string, Williamson}, symmetries::SequenceType, matching::{generate_matching_table, MatchData, compute_complementary_auto_correlations, compute_complementary_cross_correlations, verify_cross_correlation}};
@@ -125,29 +125,41 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
     // all the possible rowsums of p
     let rowsums = generate_rowsums(p);
     for rs in &rowsums {
-        println!("{:?}", rs);
+        eprintln!("{:?}", rs);
     }
-    println!("generated {} different rowsums", rowsums.len());
+    eprintln!("generated {} different rowsums", rowsums.len());
 
     for rs in rowsums {
         let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
         let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
-
+        
+        let now = Instant::now();
         // We generate all the sequences possible for each rowsums
-        let sequences_1 = generate_sequences_with_rowsum(rowsums[0], p);
-        let sequences_2 = generate_sequences_with_rowsum(rowsums[1], p);
-        let sequences_3 = generate_sequences_with_rowsum(rowsums[2], p);
-        let sequences_4 = generate_sequences_with_rowsum(rowsums[3], p);
+        let sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
+        let sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
+        let sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
+        let sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
+        
+        let elapsed_time = now.elapsed().as_secs_f32();
+        eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
 
+        
+        let now = Instant::now();
         // We create the matching table : all the sequences that give the same auto-correlation and cross-correlation values are put in the same entry, in a list
-        let match_table = generate_matching_table(&sequences_3, &sequences_4, &(tags[2].clone(), tags[3].clone()), p);
+        let match_table = generate_matching_table(&sequences_2, &sequences_3, &(tags[2].clone(), tags[3].clone()), p);
 
-        for (seq1, seq2) in iter_over_filtered_couples(&sequences_1, &sequences_2, 4.*p as f64) {
+        let elapsed_time = now.elapsed().as_secs_f32();
+        eprintln!("The function took: {elapsed_time} seconds to create the matching table");
+
+
+        
+        let now = Instant::now();
+        for (seq0, seq1) in iter_over_filtered_couples(&sequences_0, &sequences_1, 4.*p as f64) {
             // We iterate over the couples of sequences, but we filter out some with the dft checks
 
             // We compute the auto and cross correlation values when considered on the other side of the equation
-            let autoc_values = compute_complementary_auto_correlations(seq1, seq2, p);
-            let crossc_values = compute_complementary_cross_correlations(seq1, seq2, &(tags[0].clone(), tags[1].clone()));
+            let autoc_values = compute_complementary_auto_correlations(seq0, seq1, p);
+            let crossc_values = compute_complementary_cross_correlations(seq0, seq1, &(tags[0].clone(), tags[1].clone()));
 
             // We construct a new MatchData to find all the sequences that match using the Match Table
             let match_data = MatchData::new(autoc_values, crossc_values);
@@ -157,20 +169,27 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
                 continue; // There are no matches found
             }
 
-            for (ref_seq3, ref_seq4) in possible_matches.unwrap() {
+            for (ref_seq2, ref_seq3) in possible_matches.unwrap() {
                 // If we found matches, we test them all
-                let (seq3, seq4) = (*ref_seq3, *ref_seq4); // The sequences are behind two references
+                let (seq2, seq3) = (*ref_seq2, *ref_seq3); // The sequences are behind two references
 
-                if verify_cross_correlation(&[seq1, seq2, seq3, seq4], &tags) {
+                if verify_cross_correlation(&[seq0, seq1, seq2, seq3], &tags) {
 
                     let mut will = Williamson::new(p);
-                    will.set_all_values((seq1, seq2, seq3, seq4));
+                    will.set_sequence(&seq0, &tags[0]);
+                    will.set_sequence(&seq1, &tags[1]);
+                    will.set_sequence(&seq2, &tags[2]);
+                    will.set_sequence(&seq3, &tags[3]);
 
                     matches.push(will)
                 }
             }
 
         }
+
+        
+        let elapsed_time = now.elapsed().as_secs_f32();
+        eprintln!("The function took: {elapsed_time} seconds to go through the other set of pairs");
     }
 
     matches

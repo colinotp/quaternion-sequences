@@ -98,13 +98,13 @@ impl Williamson{
         self.d = d.clone();
     }
 
-    pub fn set_sequence(&mut self, seq : Vec<i8>, tag : &SequenceTag){
+    pub fn set_sequence(&mut self, seq : &Vec<i8>, tag : &SequenceTag){
         // sets a value for a specific sequence
         match &tag {
-            SequenceTag::X => self.a = seq,
-            SequenceTag::Y => self.b = seq,
-            SequenceTag::Z => self.c = seq,
-            SequenceTag::W => self.d = seq
+            SequenceTag::X => self.a = seq.clone(),
+            SequenceTag::Y => self.b = seq.clone(),
+            SequenceTag::Z => self.c = seq.clone(),
+            SequenceTag::W => self.d = seq.clone()
         }
     }
 

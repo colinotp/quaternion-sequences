@@ -177,8 +177,8 @@ fn swap(will : &mut Williamson, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
         _ => {panic!("Incorrect tags entered !")}
     };
 
-    will.set_sequence(seq2, &seqtag1);
-    will.set_sequence(seq1, &seqtag2);
+    will.set_sequence(&seq2, &seqtag1);
+    will.set_sequence(&seq1, &seqtag2);
 }
 
 pub fn equivalent_reorder(seq : &Williamson) -> Vec<Williamson> {
