@@ -143,6 +143,7 @@ fn find_matching_algorithm(p : usize) {
 
     let mut result_string = "".to_string();
     for seq in result {
+        assert!(&seq.to_qs().is_perfect());
         result_string += &seq.to_qs().to_string_raw();
         result_string += &"\n";
     }

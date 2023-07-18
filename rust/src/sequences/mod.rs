@@ -7,3 +7,4 @@ pub mod equations;
 pub mod matrices;
 pub mod equivalence;
 pub mod matching;
+pub mod product;
