@@ -1,0 +1,31 @@
+   Compiling rust v0.1.0 (C:\Users\paulc\Documents\recherche\Mitacs\quaternion-sequences\rust)
+    Finished dev [unoptimized + debuginfo] target(s) in 1.15s
+     Running `target\debug\rust.exe matching 13`
+(1, 1, 1, 7)
+(-1, 1, 1, 7)
+(1, 1, 5, 5)
+(-1, 1, 5, 5)
+(3, 3, 3, 5)
+(-3, 3, 3, 5)
+generated 6 different rowsums
+The function took: 0.0123787 seconds to generate sequences with rowsums: 7, 1, 1, 1
+The function took: 120.820854 seconds to create the matching table
+The function took: 21.07708 seconds to go through the other set of pairs
+The function took: 0.0041724 seconds to generate sequences with rowsums: 7, 1, 1, -1
+The function took: 120.93331 seconds to create the matching table
+The function took: 21.19827 seconds to go through the other set of pairs
+The function took: 0.0026151 seconds to generate sequences with rowsums: 5, 5, 1, 1
+The function took: 121.413475 seconds to create the matching table
+The function took: 21.97142 seconds to go through the other set of pairs
+The function took: 0.0035826 seconds to generate sequences with rowsums: 5, 5, 1, -1
+The function took: 120.70206 seconds to create the matching table
+The function took: 21.72307 seconds to go through the other set of pairs
+The function took: 0.002525 seconds to generate sequences with rowsums: 5, 3, 3, 3
+The function took: 67.82829 seconds to create the matching table
+The function took: 37.971333 seconds to go through the other set of pairs
+The function took: 0.0024909 seconds to generate sequences with rowsums: 5, 3, 3, -3
+The function took: 67.89452 seconds to create the matching table
+The function took: 38.05026 seconds to go through the other set of pairs
+The function found 1872 sequences before equivalences in 781.9323 seconds
+The function found a total of 67392 sequences without any equivalences
+For n = 13, the function took: 839.2315 seconds and found 12 sequences
