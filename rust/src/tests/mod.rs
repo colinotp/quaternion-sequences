@@ -7,3 +7,4 @@ mod test_matrices;
 mod test_equivalence;
 mod test_matching;
 mod test_product;
+mod test_mum;

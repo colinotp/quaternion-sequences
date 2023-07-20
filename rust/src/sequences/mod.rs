@@ -8,3 +8,4 @@ pub mod matrices;
 pub mod equivalence;
 pub mod matching;
 pub mod product;
+pub mod mum;
