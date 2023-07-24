@@ -1,5 +1,6 @@
 use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env, time::Instant};
 
+use memory_stats::memory_stats;
 
 use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft, iter_over_filtered_couples}, equations::generate_equations, williamson::{SequenceTag, tag_to_string, Williamson}, symmetries::SequenceType, matching::{generate_matching_table, MatchData, compute_complementary_auto_correlations, compute_complementary_cross_correlations, verify_cross_correlation}};
 
@@ -116,6 +117,16 @@ pub fn sort(quad : &Quad) -> (Vec<isize>, Vec<usize>){
     (tab, indices)
 }
 
+pub fn print_memory_usage(message : &str) {
+    println!("{}",message);
+    if let Some(usage) = memory_stats() {
+        eprintln!("physical memory usage: {} bytes", usage.physical_mem);
+        eprintln!("virtual memory usage: {} bytes ", usage.virtual_mem);
+    } else {
+        eprintln!("Couldn't get the current memory usage :(");
+    }
+}
+
 
 pub fn find_matching(p : usize) -> Vec<Williamson>{
 
@@ -129,7 +140,9 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
     }
     eprintln!("generated {} different rowsums", rowsums.len());
 
+
     for rs in rowsums {
+        eprintln!("\n");
         let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
         let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
         
@@ -147,6 +160,8 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
         let now = Instant::now();
         // We create the matching table : all the sequences that give the same auto-correlation and cross-correlation values are put in the same entry, in a list
         let match_table = generate_matching_table(&sequences_2, &sequences_3, &(tags[2].clone(), tags[3].clone()), p);
+
+        print_memory_usage("memory usage after matching table creation:");
 
         let elapsed_time = now.elapsed().as_secs_f32();
         eprintln!("The function took: {elapsed_time} seconds to create the matching table");
