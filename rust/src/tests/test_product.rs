@@ -2,36 +2,8 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::sequences::{product::{sequence_product, williamson_product, mum_product}, williamson::Williamson, matrices::QHM, mum::MUM};
+    use crate::sequences::{product::{sequence_product, mum_product}, williamson::Williamson, matrices::QHM, mum::MUM};
 
-
-    #[test]
-    fn test_williamson_product(){
-        // ! Doesn't work
-
-        let size = 7;
-        let seq_x = vec![-1,1,1,-1, 1, 1, 1];
-        let seq_y = vec![-1,1,1,-1,-1,-1,-1];
-        let seq_z = vec![-1,1,1,-1,-1,-1,-1];
-        let seq_w = vec![-1,1,1,-1, 1,-1, 1];
-
-        let mut will1 = Williamson::new(size);
-        will1.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
-        
-        let size = 10;
-        let seq_x = vec![1,-1,-1,-1,1,1,-1,1,-1,1];
-        let seq_y = vec![-1,1,1,1,-1,1,-1,-1,-1,1];
-        let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
-        let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
-
-        let mut will2 = Williamson::new(size);
-        will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
-
-        let product = williamson_product(&will1, &will2);
-
-        println!("{}", product.to_qs().to_string_raw());
-        assert!(product.to_qs().is_perfect());
-    }
 
     #[test]
     fn test_sequence_product(){

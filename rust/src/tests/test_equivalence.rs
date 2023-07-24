@@ -21,7 +21,7 @@ mod tests {
 
     #[test]
     fn equ_reorder() {
-
+        // TODO : fix
         
         let size = 7;
         let seq_x = vec![-1,1,1,-1, 1, 1, 1];
@@ -66,6 +66,7 @@ mod tests {
 
     #[test]
     fn equ_negate() {
+        // TODO : fix
 
         let size = 10;
         // rowsum: 0,0,2,6

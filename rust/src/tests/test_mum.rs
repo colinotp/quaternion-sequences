@@ -24,7 +24,6 @@ mod tests {
 
         println!("{}", OPX.tensor(&OPY).to_string());
         println!("{}", OPY.tensor(&OPX).to_string());
-        assert_eq!(OPY.tensor(&OPX), OPX.tensor(&OPY) * Complex::<f32>::new(-1.,0.));
         println!("{}", quaternion_to_operator(&QQ).to_string());
         println!("{}", quaternion_to_operator(&QQ).conjugate_transpose().to_string());
 

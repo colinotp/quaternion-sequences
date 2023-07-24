@@ -107,13 +107,11 @@ mod tests {
 
         let rowsums = generate_rowsums(17);
         
-        assert_eq!(rowsums.len(), 6);
+        assert_eq!(rowsums.len(), 4);
         assert_eq!(rowsums[0], (1,3,3,7));
-        assert_eq!(rowsums[1], (1,3,7,3));
-        assert_eq!(rowsums[2], (1,7,3,3));
-        assert_eq!(rowsums[3], (3,3,5,5));
-        assert_eq!(rowsums[4], (3,5,3,5));
-        assert_eq!(rowsums[5], (3,5,5,3));
+        assert_eq!(rowsums[1], (-1,3,3,7));
+        assert_eq!(rowsums[2], (3,3,5,5));
+        assert_eq!(rowsums[3], (-3,3,5,5));
     }
 
 
