@@ -2,3 +2,5 @@
 */out
 .vscode/
 *.opb
+*.pair
+rust/results/pairs/wts/*/*/*.seq

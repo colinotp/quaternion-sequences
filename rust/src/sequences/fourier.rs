@@ -45,3 +45,19 @@ pub fn iter_over_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, sequences2 
             true
         })
 }
+
+
+
+pub fn iter_over_enumerate_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, sequences2 : &'a Vec<Vec<i8>>, bound : f64) -> impl std::iter::Iterator<Item = ((usize, &'a Vec<i8>), (usize, &'a Vec<i8>))> {
+    let bound_sqr = bound * bound;
+    let couples = iproduct!(sequences1.iter().enumerate(), sequences2.iter().enumerate());
+    couples
+        .filter(move |((_, seq1), (_, seq2))| {
+            let dft1 = dft_sequence(seq1);
+            let dft2 = dft_sequence(seq2);
+            for (elm1, elm2) in dft1.iter().zip(dft2.iter()) {
+                if elm1.norm_sqr() + elm2.norm_sqr() > bound_sqr {return false;}
+            }
+            true
+        })
+}

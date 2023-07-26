@@ -163,7 +163,7 @@ fn main() {
         //convert_qs_to_matrices();
         //find_unique_williamson_type_of_size(9);
         //find_q24(8, None);
-        find_matching_algorithm(7);
+        find_write::write_pairs(7);
     }
     else if count == 2 {
         match &args[1] {
@@ -185,6 +185,7 @@ fn main() {
             s if s == "unique" => {find_unique_williamson_type_of_size(i)}
             s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
             s if s == "matching" => {find_matching_algorithm(i)}
+            s if s == "pairs" => {find_write::write_pairs(i)}
             _ => {}
         }
     }

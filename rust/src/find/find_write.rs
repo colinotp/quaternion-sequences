@@ -1,0 +1,321 @@
+use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error, path::Path, str::Chars};
+use memory_stats::memory_stats;
+
+use crate::{sequences::{williamson::{SequenceTag, tag_to_string}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, compute_auto_correlations}, symmetries::SequenceType}, read_lines};
+
+
+
+pub fn sort(quad : &Quad) -> (Vec<isize>, Vec<usize>){
+
+    let mut tab = vec![quad.0, quad.1, quad.2, quad.3];
+    let mut indices = vec![0,1,2,3];
+
+    for i in 0..4 {
+        
+        let (mut maxi, mut index) = (tab[i], i);
+        for j in i+1..4 {
+            if tab[j] > maxi {(maxi, index) = (tab[j], j)}
+        }
+        (tab[i], tab[index]) = (tab[index], tab[i]);
+        (indices[i], indices[index]) = (indices[index], indices[i]);
+    }
+
+    (tab, indices)
+}
+
+pub fn print_memory_usage(message : &str) {
+    println!("{}",message);
+    if let Some(usage) = memory_stats() {
+        eprintln!("physical memory usage: {} bytes", usage.physical_mem);
+        eprintln!("virtual memory usage: {} bytes ", usage.virtual_mem);
+    } else {
+        eprintln!("Couldn't get the current memory usage :(");
+    }
+}
+
+
+
+fn index_to_tag(index: usize) -> SequenceTag {
+    match index {
+        0 => {SequenceTag::X}
+        1 => {SequenceTag::Y}
+        2 => {SequenceTag::Z}
+        3 => {SequenceTag::W}
+        _ => {panic!("incorrect index")}
+    }
+}
+
+pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_path : &String) {
+
+    let path = folder_path.clone() + &"/seq_" + &tag_to_string(tag) + ".seq";
+    let mut f = File::create(path).expect("Invalid file ?");
+
+    for seq in sequences {
+        f.write((sequence_to_string(seq) + &"\n").as_bytes()).expect("Error when writing in the file");
+    }
+}
+
+
+
+
+pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), p : usize, folder_path : &String) {
+
+    let path = folder_path.clone() + &"/pair_" + &tag_to_string(&tags.0) + &tag_to_string(&tags.1) + ".pair";
+    let mut f = File::create(path).expect("Invalid file ?");
+
+
+    // We iterate over the couples of sequences, but we filter out some with the dft checks
+    for ((index0, seq0), (index1, seq1)) in iter_over_enumerate_filtered_couples(sequences.0, sequences.1, 4.*p as f64){
+        let mut result = "".to_string();
+
+        // We compute the auto and cross correlation values when considered on the other side of the equation
+        let autoc_values = compute_auto_correlations(seq0, seq1);
+        let crossc_values = compute_cross_correlations(seq0, seq1, &(tags.0.clone(), tags.1.clone()));
+        
+        // We add these values to the current line
+        for a in autoc_values {
+            result += &(a.to_string() + &" ");
+        }
+        
+        for c in crossc_values {
+            result += &(c.to_string() + &" ");
+        }
+
+        result += &(" : ".to_string() + &index0.to_string() + " " + &index1.to_string() + &"\n");
+
+
+        f.write(result.as_bytes()).expect("Error when writing in the file");
+    }
+
+}
+
+
+pub fn write_pairs(p : usize) {
+
+    // all the possible rowsums of p
+    let rowsums = generate_rowsums(p);
+    for rs in &rowsums {
+        eprintln!("{:?}", rs);
+    }
+    eprintln!("generated {} different rowsums", rowsums.len());
+
+    let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
+    let folder = match seqtype {
+        SequenceType::WilliamsonType => {"wts"}
+        _ => {panic!("not implemented yet")} // TODO
+    };
+
+
+    for rs in rowsums {
+        eprintln!("\n");
+        let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
+        let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
+        
+        let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"-" + &rowsums[1].to_string();
+        println!("{}",folder_path);
+        fs::create_dir_all(&folder_path).expect("Error when creating the dir");
+        
+        let now = Instant::now();
+        // We generate all the sequences possible for each rowsums
+        let sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
+        let sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
+        let sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
+        let sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
+
+        write_sequences(&sequences_0, &tags[0], &folder_path);
+        write_sequences(&sequences_1, &tags[1], &folder_path);
+        write_sequences(&sequences_2, &tags[2], &folder_path);
+        write_sequences(&sequences_3, &tags[3], &folder_path);
+        
+        let elapsed_time = now.elapsed().as_secs_f32();
+        eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+        
+
+        let now = Instant::now();
+
+        write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path);
+        write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path);
+        
+        let elapsed_time = now.elapsed().as_secs_f32();
+        eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs");
+    }
+}
+
+
+
+
+
+
+
+
+pub fn join_pairs(p : usize) {
+
+
+    let find_i = fs::read_dir("./results/pairs/wts/find_".to_string() + &p.to_string()).unwrap();
+    eprintln!("{}", "./results/pairs/wts/find_".to_string() + &p.to_string());
+
+    for rowsum_x_y in find_i {
+        let directory = rowsum_x_y.unwrap();
+
+        // We read the files in the directory to get back our 4 sets of sequences
+        let sequences = get_sequences_from_dir(&directory);
+
+        let (pathnames, order) = get_order_from_dir(&directory);
+
+        join_pairs_files(&pathnames, &order, &sequences);
+    }
+}
+
+
+pub fn get_sequences_from_dir(directory : &DirEntry) -> (Vec<Vec<i8>>,Vec<Vec<i8>>,Vec<Vec<i8>>,Vec<Vec<i8>>) {
+
+    let mut sequence_x = vec![];
+    let mut sequence_y = vec![];
+    let mut sequence_z = vec![];
+    let mut sequence_w = vec![];
+
+    for file in fs::read_dir(directory.path().display().to_string()).unwrap() {
+        let f = file.unwrap();
+        let pathname = f.path().display().to_string();
+        if pathname.ends_with(".seq") {
+            // We loop through files with extension .seq
+            eprintln!("Name: {}", pathname);
+
+            let filename = pathname.split("/").last().expect("No last element ???");
+            eprintln!("Name: {}", filename);
+            match filename {
+                "seq_X.seq" => {sequence_x = file_to_sequences(&pathname)}
+                "seq_Y.seq" => {sequence_y = file_to_sequences(&pathname)}
+                "seq_Z.seq" => {sequence_z = file_to_sequences(&pathname)}
+                "seq_W.seq" => {sequence_w = file_to_sequences(&pathname)}
+                _ => {panic!("Unexpected file enging in .seq")}
+            }
+        }
+    }
+
+    (sequence_x, sequence_y, sequence_z, sequence_w)
+}
+
+
+pub fn file_to_sequences(filename : &String) -> Vec<Vec<i8>> {
+
+    let mut seq = vec![];
+
+    for line in read_lines(filename).expect("Error when reading file") {
+        if let Ok(s) = line {
+            seq.push(string_to_sequence(&s));
+        }
+    }
+
+    seq
+}
+
+pub fn string_to_sequence(s : &String) -> Vec<i8>{
+    let mut res = vec![];
+
+    for elm in s.chars() {
+        match elm {
+            '+' => {res.push(1);}
+            '-' => {res.push(-1);}
+            _ => {panic!("Unexpected entry during string to sequence conversion")}
+        }
+    }
+
+    res
+}
+
+
+
+pub fn get_order_from_dir(directory : &DirEntry) -> ((String, String), (SequenceTag, SequenceTag, SequenceTag, SequenceTag)){
+
+    let mut filenames = vec![];
+    let mut pathnames = vec![];
+
+    for file in fs::read_dir(directory.path().display().to_string()).unwrap() {
+        let f = file.unwrap();
+        let pathname = f.path().display().to_string();
+        if pathname.ends_with(".pair") {
+            // We loop through files with extension .pair
+            eprintln!("Name: {}", pathname);
+            pathnames.push(pathname.clone());
+
+            let filename = pathname.split("/").last().expect("No last element ???");
+            eprintln!("Name: {}", filename);
+            filenames.push(filename.to_string());
+        }
+    }
+
+    assert!(filenames.len() == 2, "too many .pair files !");
+
+    let (tag1, tag2) = get_tag_from_filename(&filenames[0]);
+    let (tag3, tag4) = get_tag_from_filename(&filenames[1]);
+
+
+    ((pathnames[0].to_string(), pathnames[1].to_string()),(tag1, tag2, tag3, tag4))
+}
+
+pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
+
+    let tag1 = match filename.chars().nth(5).expect("File name not long enough") {
+        'X' => {SequenceTag::X}
+        'Y' => {SequenceTag::Y}
+        'Z' => {SequenceTag::Z}
+        'W' => {SequenceTag::W}
+        _ => {panic!("Unexpected character")}
+    };
+    let tag2 = match filename.chars().nth(6).expect("File name not long enough") {
+        'X' => {SequenceTag::X}
+        'Y' => {SequenceTag::Y}
+        'Z' => {SequenceTag::Z}
+        'W' => {SequenceTag::W}
+        _ => {panic!("Unexpected character")}
+    };
+
+    (tag1, tag2)
+}
+
+
+
+
+
+
+pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) {
+
+    let (file12, file34) = filenames;
+
+    let mut lines12 = read_lines(file12).expect("Invalid vile somehow ?");
+    let mut lines34 = read_lines(file34).expect("Invalid vile somehow ?");
+
+    let mut seq12 = lines12.next();
+    let mut seq34 = lines34.next();
+
+    while seq12.is_some() && seq34.is_some() {
+        // We loop until there's no more lines to read
+
+        let (line_12, indices) = get_line_from(&seq12);
+        
+        let current_line = line_12.clone();
+
+        while current_line == line_12 {
+
+        }
+
+
+    }
+
+}
+
+
+pub fn get_line_from(seq : &Option<Result<String, Error>>) -> (String, (usize, usize)) {
+
+    let s = seq.as_ref().unwrap().as_ref().expect("Error when reading file").clone();
+    let mut s_parts = s.split(" : ");
+
+    let line = s_parts.next().expect("Expected something before ':' !").to_string();
+    let mut indices_parts = s_parts.next().expect("Expected something after ':' !").split(" ");
+    let indices = (indices_parts.next().expect("Expected something !").parse().expect("Expected a number !"), indices_parts.next().expect("Expected something !").parse().expect("Expected a number !"));
+
+    (line, indices)
+}
+
+
