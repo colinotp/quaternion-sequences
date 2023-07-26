@@ -1,7 +1,6 @@
 
 #[cfg(test)]
 mod tests {
-    use num_complex::Complex;
 
     use crate::sequences::{mum::*, sequence::*, matrices::QHM, williamson::Williamson};
 

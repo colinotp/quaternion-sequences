@@ -2,7 +2,7 @@
 mod tests {
     use cgmath::Quaternion;
 
-    use crate::sequences::{sequence::QS, matrices::QHM};
+    use crate::sequences::{sequence::QS, matrices::{QHM, HM}, williamson::Williamson, symmetries::SequenceType, matrix_equivalence::generate_equivalence_class};
 
 
 
@@ -25,4 +25,47 @@ mod tests {
         println!("{}", qhm.to_string());
 
     }
+
+    #[test]
+    fn matrix_from_will() {
+        let size = 3;
+        let seq_x = vec![-1,-1, 1];
+        let seq_y = vec![-1,-1,-1];
+        let seq_z = vec![-1,-1,-1];
+        let seq_w = vec![-1,-1,-1];
+
+        let mut will = Williamson::new(size);
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
+
+        let hm = HM::from_williamson(will, SequenceType::WilliamsonType);
+
+        println!("{}", hm.to_string());
+
+    }
+
+
+    #[test]
+    fn matrix_equivalence() {
+        // ! WAY TOO LONG !
+
+        let size = 1;
+        let seq_x = vec![-1];
+        let seq_y = vec![-1];
+        let seq_z = vec![-1];
+        let seq_w = vec![-1];
+
+        let mut will = Williamson::new(size);
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
+
+        let hm = HM::from_williamson(will, SequenceType::WilliamsonType);
+
+        let equ = generate_equivalence_class(&hm);
+        for mat in &equ {
+            println!("{}", mat.to_string());
+        }
+
+        println!("found {} equivalent matrices", equ.len());
+
+    }
+
 }

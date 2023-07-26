@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{find::find_with_rowsum::sort, sequences::matching::{verify_cross_correlation, compute_auto_correlations, compute_complementary_auto_correlations, compute_cross_correlations, compute_complementary_cross_correlations}};
+    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::matching::{verify_cross_correlation, compute_auto_correlations, compute_complementary_auto_correlations, compute_cross_correlations, compute_complementary_cross_correlations}};
     use crate::sequences::williamson::SequenceTag;
 
 
@@ -53,7 +53,6 @@ mod tests {
 
     #[test]
     fn test_autocorrelation() {
-        let size = 10;
         let seq_x = vec![1,-1,-1,-1,1,1,-1,1,-1,1];
         let seq_y = vec![-1,1,1,1,-1,1,-1,-1,-1,1];
         let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
@@ -74,6 +73,12 @@ mod tests {
         assert_eq!(compute_cross_correlations(&seq_x, &seq_y, &(SequenceTag::X, SequenceTag::Y)), compute_complementary_cross_correlations(&seq_z, &seq_w, &(SequenceTag::Z, SequenceTag::W)));
         assert_eq!(compute_cross_correlations(&seq_w, &seq_y, &(SequenceTag::W, SequenceTag::Y)), compute_complementary_cross_correlations(&seq_z, &seq_x, &(SequenceTag::Z, SequenceTag::X)));
 
+    }
+
+
+    #[test]
+    fn test_join() {
+        join_pairs(7);
     }
 
 }
