@@ -173,7 +173,7 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
             // We iterate over the couples of sequences, but we filter out some with the dft checks
 
             // We compute the auto and cross correlation values when considered on the other side of the equation
-            let autoc_values = compute_complementary_auto_correlations(seq0, seq1, p);
+            let autoc_values = compute_complementary_auto_correlations(seq0, seq1);
             let crossc_values = compute_complementary_cross_correlations(seq0, seq1, &(tags[0].clone(), tags[1].clone()));
 
             // We construct a new MatchData to find all the sequences that match using the Match Table

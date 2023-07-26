@@ -1,4 +1,6 @@
-use super::sequence::{QS, QPLUS};
+use cgmath::Quaternion;
+
+use super::sequence::{QS, QPLUS, Q24};
 
 
 #[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Hash, Debug)]
@@ -8,10 +10,10 @@ pub enum SequenceTag { // enum for choosing a specific sequence
 
 pub fn tag_to_string(tag : &SequenceTag) -> String{
     match *tag {
-        SequenceTag::X => {"A".to_string()}
-        SequenceTag::Y => {"B".to_string()}
-        SequenceTag::Z => {"C".to_string()}
-        SequenceTag::W => {"D".to_string()}
+        SequenceTag::X => {"X".to_string()}
+        SequenceTag::Y => {"Y".to_string()}
+        SequenceTag::Z => {"Z".to_string()}
+        SequenceTag::W => {"W".to_string()}
     }
 }
 
@@ -33,6 +35,18 @@ pub static QUADRUPLETS : [(i8,i8,i8,i8); 16] = [ // a table of all quadruplets p
     (1,-1,1,1), 
     (-1,1,-1,-1)
 ];
+
+pub fn quaternion_to_quad(quat : &Quaternion<f32>) -> (i8, i8, i8, i8) {
+
+    let mut iterator = Q24.iter().enumerate().filter(|(_,q)| *q == quat);
+    let index = iterator.next();
+
+    match index {
+        None => {panic!("Unrecognized quaternion!")}
+        Some((i,_)) => {QUADRUPLETS[i]}
+    }
+}
+
 
 
 
@@ -125,6 +139,28 @@ impl Williamson{
         self.c[index] = value.2;
         self.d[index] = value.3;
     }
+
+
+    pub fn from_pqs(pqs : &QS) -> Williamson {
+
+        let mut will = Williamson::new(pqs.size());
+
+        let (mut seqx, mut seqy, mut seqz, mut seqw) = (vec![], vec![], vec![], vec![]);
+
+        for elm in pqs.values() {
+            let (x,y,z,w) = quaternion_to_quad(&elm);
+            seqx.push(x);
+            seqy.push(y);
+            seqz.push(z);
+            seqw.push(w);
+        }
+
+        will.set_all_values((&seqx, &seqy, &seqz, &seqw));
+
+        will
+    }
+
+
 
 
     pub fn is_periodic_complementary(&self) -> bool{
