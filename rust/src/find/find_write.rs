@@ -74,6 +74,10 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         EquationSide::RIGHT => {|x : isize| -x}
     };
 
+    // Instead of writing each line one by one n the file, we use a buffer to write them by chunks of 1000 lines
+    let mut buffer = "".to_string();
+    let mut buffer_counter = 0;
+
     // We iterate over the couples of sequences, but we filter out some with the dft checks
     for ((index0, seq0), (index1, seq1)) in iter_over_enumerate_filtered_couples(sequences.0, sequences.1, 4.*p as f64){
         let mut result = "".to_string();
@@ -93,9 +97,18 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
         result += &(":_".to_string() + &index0.to_string() + "_" + &index1.to_string() + &"\n");
 
+        buffer += &result;
+        buffer_counter += 1;
 
-        f.write(result.as_bytes()).expect("Error when writing in the file");
+        if buffer_counter > 1000 {
+            f.write(buffer.as_bytes()).expect("Error when writing in the file");
+            buffer = "".to_string();
+            buffer_counter = 0;
+        }
+
     }
+    
+    f.write(buffer.as_bytes()).expect("Error when writing in the file");
 
 }
 
@@ -121,7 +134,7 @@ pub fn write_pairs(p : usize) {
         let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
         let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
         
-        let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"-" + &rowsums[1].to_string() + &"-" + &rowsums[2].to_string() + &"-" + &rowsums[3].to_string();
+        let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"_" + &rowsums[1].to_string() + &"_" + &rowsums[2].to_string() + &"_" + &rowsums[3].to_string();
         println!("{}",folder_path);
         fs::create_dir_all(&folder_path).expect("Error when creating the dir");
         
