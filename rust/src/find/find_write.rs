@@ -121,7 +121,7 @@ pub fn write_pairs(p : usize) {
         let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
         let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
         
-        let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"-" + &rowsums[1].to_string();
+        let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"-" + &rowsums[1].to_string() + &"-" + &rowsums[2].to_string() + &"-" + &rowsums[3].to_string();
         println!("{}",folder_path);
         fs::create_dir_all(&folder_path).expect("Error when creating the dir");
         
@@ -314,7 +314,6 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
         
         let current_seq = seq12.clone();
         if seq12 == seq34 {
-            println!("{}", current_seq);
 
             // Store every sequence with the same values of auto/cross correlation
             let mut possible_matching_12 = vec![];
@@ -339,7 +338,7 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
                 let sequences = get_sequences(sequences, order, &indices);
                 let mut will = Williamson::new(sequences.0.len());
                 will.set_all_values(sequences);
-                println!("{}", will.to_qs().to_string());
+                
                 if will.to_qs().is_perfect() {
                     result.push(will);
                 }
