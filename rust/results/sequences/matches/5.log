@@ -1,14 +1,24 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.20s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.15s
      Running `target\debug\rust.exe matching 5`
 (1, 1, 3, 3)
 (-1, 1, 3, 3)
 generated 2 different rowsums
-The function took: 0.0000288 seconds to generate sequences with rowsums: 3, 3, 1, 1
-The function took: 0.0022831 seconds to create the matching table
-The function took: 0.0011967 seconds to go through the other set of pairs
-The function took: 0.0000243 seconds to generate sequences with rowsums: 3, 3, 1, -1
-The function took: 0.0015949 seconds to create the matching table
-The function took: 0.0012133 seconds to go through the other set of pairs
-The function found 18 sequences before equivalences in 0.0078056 seconds
+
+
+The function took: 0.000023 seconds to generate sequences with rowsums: 3, 3, 1, 1
+memory usage after matching table creation:
+physical memory usage: 6705152 bytes
+virtual memory usage: 1142784 bytes 
+The function took: 0.0019373 seconds to create the matching table
+The function took: 0.0010903 seconds to go through the other set of pairs
+
+
+The function took: 0.0000258 seconds to generate sequences with rowsums: 3, 3, 1, -1
+memory usage after matching table creation:
+physical memory usage: 6721536 bytes
+virtual memory usage: 1150976 bytes 
+The function took: 0.0012877 seconds to create the matching table
+The function took: 0.0008818 seconds to go through the other set of pairs
+The function found 18 sequences before equivalences in 0.0060348 seconds
 The function found a total of 960 sequences without any equivalences
-For n = 5, the function took: 0.6021536 seconds and found 2 sequences
+For n = 5, the function took: 0.4784331 seconds and found 2 sequences

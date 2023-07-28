@@ -1,18 +1,33 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.20s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
      Running `target\debug\rust.exe matching 10`
 (0, 0, 2, 6)
 (2, 2, 4, 4)
 (-2, 2, 4, 4)
 generated 3 different rowsums
-The function took: 0.000465 seconds to generate sequences with rowsums: 6, 2, 0, 0
-The function took: 1.8717988 seconds to create the matching table
-The function took: 0.482856 seconds to go through the other set of pairs
-The function took: 0.0003986 seconds to generate sequences with rowsums: 4, 4, 2, 2
-The function took: 1.2846977 seconds to create the matching table
-The function took: 0.7752744 seconds to go through the other set of pairs
-The function took: 0.0004153 seconds to generate sequences with rowsums: 4, 4, 2, -2
-The function took: 1.278621 seconds to create the matching table
-The function took: 0.759925 seconds to go through the other set of pairs
-The function found 782 sequences before equivalences in 6.4614625 seconds
+
+
+The function took: 0.000459 seconds to generate sequences with rowsums: 6, 2, 0, 0
+memory usage after matching table creation:
+physical memory usage: 9818112 bytes
+virtual memory usage: 4411392 bytes 
+The function took: 1.314275 seconds to create the matching table
+The function took: 0.3623503 seconds to go through the other set of pairs
+
+
+The function took: 0.0002808 seconds to generate sequences with rowsums: 4, 4, 2, 2
+memory usage after matching table creation:
+physical memory usage: 10412032 bytes
+virtual memory usage: 4939776 bytes 
+The function took: 0.9762135 seconds to create the matching table
+The function took: 0.6301214 seconds to go through the other set of pairs
+
+
+The function took: 0.0003047 seconds to generate sequences with rowsums: 4, 4, 2, -2
+memory usage after matching table creation:
+physical memory usage: 10399744 bytes
+virtual memory usage: 4997120 bytes 
+The function took: 0.97159576 seconds to create the matching table
+The function took: 0.574009 seconds to go through the other set of pairs
+The function found 782 sequences before equivalences in 4.834429 seconds
 The function found a total of 38400 sequences without any equivalences
-For n = 10, the function took: 31.675735 seconds and found 28 sequences
+For n = 10, the function took: 27.01418 seconds and found 28 sequences

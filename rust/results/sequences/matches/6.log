@@ -1,10 +1,15 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.19s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.18s
      Running `target\debug\rust.exe matching 6`
 (0, 2, 2, 4)
 generated 1 different rowsums
-The function took: 0.0000569 seconds to generate sequences with rowsums: 4, 2, 2, 0
-The function took: 0.007705 seconds to create the matching table
-The function took: 0.0072297 seconds to go through the other set of pairs
-The function found 46 sequences before equivalences in 0.016205 seconds
+
+
+The function took: 0.0000408 seconds to generate sequences with rowsums: 4, 2, 2, 0
+memory usage after matching table creation:
+physical memory usage: 6737920 bytes
+virtual memory usage: 1179648 bytes 
+The function took: 0.0050214 seconds to create the matching table
+The function took: 0.0038196 seconds to go through the other set of pairs
+The function found 46 sequences before equivalences in 0.0098263 seconds
 The function found a total of 4608 sequences without any equivalences
-For n = 6, the function took: 2.819922 seconds and found 8 sequences
+For n = 6, the function took: 2.5333176 seconds and found 8 sequences

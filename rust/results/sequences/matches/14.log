@@ -1,15 +1,24 @@
-   Compiling rust v0.1.0 (C:\Users\paulc\Documents\recherche\Mitacs\quaternion-sequences\rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.01s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.15s
      Running `target\debug\rust.exe matching 14`
 (0, 2, 4, 6)
 (0, 2, 6, 4)
 generated 2 different rowsums
-The function took: 0.0053303 seconds to generate sequences with rowsums: 6, 4, 2, 0
-The function took: 394.14935 seconds to create the matching table
-The function took: 79.16804 seconds to go through the other set of pairs
-The function took: 0.0044597 seconds to generate sequences with rowsums: 6, 4, 2, 0
-The function took: 402.24323 seconds to create the matching table
-The function took: 81.885315 seconds to go through the other set of pairs
-The function found 6276 sequences before equivalences in 957.8164 seconds
+
+
+The function took: 0.0038838 seconds to generate sequences with rowsums: 6, 4, 2, 0
+memory usage after matching table creation:
+physical memory usage: 359419904 bytes
+virtual memory usage: 362106880 bytes 
+The function took: 326.8648 seconds to create the matching table
+The function took: 65.15633 seconds to go through the other set of pairs
+
+
+The function took: 0.0039168 seconds to generate sequences with rowsums: 6, 4, 2, 0
+memory usage after matching table creation:
+physical memory usage: 363810816 bytes
+virtual memory usage: 369094656 bytes 
+The function took: 325.7236 seconds to create the matching table
+The function took: 67.29952 seconds to go through the other set of pairs
+The function found 6276 sequences before equivalences in 785.40845 seconds
 The function found a total of 612864 sequences without any equivalences
-For n = 14, the function took: 1340.2418 seconds and found 96 sequences
+For n = 14, the function took: 1152.1072 seconds and found 96 sequences

@@ -186,6 +186,7 @@ fn main() {
             s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
             s if s == "matching" => {find_matching_algorithm(i)}
             s if s == "pairs" => {find_write::write_pairs(i)}
+            s if s == "join" => {find_write::join_pairs(i)}
             _ => {}
         }
     }

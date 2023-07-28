@@ -1,23 +1,42 @@
-   Compiling rust v0.1.0 (C:\Users\paulc\Documents\recherche\Mitacs\quaternion-sequences\rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.00s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
      Running `target\debug\rust.exe matching 15`
 (1, 1, 3, 7)
 (-1, 1, 3, 7)
 (1, 3, 5, 5)
 (-1, 3, 5, 5)
 generated 4 different rowsums
-The function took: 0.009314 seconds to generate sequences with rowsums: 7, 3, 1, 1
-The function took: 1742.7727 seconds to create the matching table
-The function took: 283.6643 seconds to go through the other set of pairs
-The function took: 0.0087279 seconds to generate sequences with rowsums: 7, 3, 1, -1
-The function took: 1746.366 seconds to create the matching table
-The function took: 284.49976 seconds to go through the other set of pairs
-The function took: 0.007772 seconds to generate sequences with rowsums: 5, 5, 3, 1
-The function took: 1393.8833 seconds to create the matching table
-The function took: 387.56464 seconds to go through the other set of pairs
-The function took: 0.0097093 seconds to generate sequences with rowsums: 5, 5, 3, -1
-The function took: 1378.5145 seconds to create the matching table
-The function took: 374.24878 seconds to go through the other set of pairs
-The function found 696 sequences before equivalences in 7597.005 seconds
+
+
+The function took: 0.0079104 seconds to generate sequences with rowsums: 7, 3, 1, 1
+memory usage after matching table creation:
+physical memory usage: 1362395136 bytes
+virtual memory usage: 1393020928 bytes 
+The function took: 1525.5518 seconds to create the matching table
+The function took: 253.48685 seconds to go through the other set of pairs
+
+
+The function took: 0.007843 seconds to generate sequences with rowsums: 7, 3, 1, -1
+memory usage after matching table creation:
+physical memory usage: 1375977472 bytes
+virtual memory usage: 1407447040 bytes 
+The function took: 1418.3523 seconds to create the matching table
+The function took: 232.62013 seconds to go through the other set of pairs
+
+
+The function took: 0.007132 seconds to generate sequences with rowsums: 5, 5, 3, 1
+memory usage after matching table creation:
+physical memory usage: 1497571328 bytes
+virtual memory usage: 1539473408 bytes 
+The function took: 1126.5911 seconds to create the matching table
+The function took: 308.93024 seconds to go through the other set of pairs
+
+
+The function took: 0.0071498 seconds to generate sequences with rowsums: 5, 5, 3, -1
+memory usage after matching table creation:
+physical memory usage: 1497178112 bytes
+virtual memory usage: 1545220096 bytes 
+The function took: 1125.4126 seconds to create the matching table
+The function took: 316.02274 seconds to go through the other set of pairs
+The function found 696 sequences before equivalences in 6311.5996 seconds
 The function found a total of 69120 sequences without any equivalences
-For n = 15, the function took: 7648.661 seconds and found 14 sequences
+For n = 15, the function took: 6358.4214 seconds and found 14 sequences

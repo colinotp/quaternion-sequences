@@ -1,19 +1,33 @@
-   Compiling rust v0.1.0 (C:\Users\paulc\Documents\recherche\Mitacs\quaternion-sequences\rust)
-    Finished dev [unoptimized + debuginfo] target(s) in 1.26s
+    Finished dev [unoptimized + debuginfo] target(s) in 0.17s
      Running `target\debug\rust.exe matching 4`
 (0, 0, 0, 4)
 (2, 2, 2, 2)
 (-2, 2, 2, 2)
 generated 3 different rowsums
-The function took: 0.0000842 seconds to generate sequences with rowsums: 4, 0, 0, 0
-The function took: 0.0045208 seconds to create the matching table
-The function took: 0.002027 seconds to go through the other set of pairs
-The function took: 0.0000441 seconds to generate sequences with rowsums: 2, 2, 2, 2
-The function took: 0.0008661 seconds to create the matching table
-The function took: 0.0024422 seconds to go through the other set of pairs
-The function took: 0.000051 seconds to generate sequences with rowsums: 2, 2, 2, -2
-The function took: 0.0008663 seconds to create the matching table
-The function took: 0.0022656 seconds to go through the other set of pairs
-The function found 100 sequences before equivalences in 0.0179041 seconds
+
+
+The function took: 0.0000193 seconds to generate sequences with rowsums: 4, 0, 0, 0
+memory usage after matching table creation:
+physical memory usage: 6709248 bytes
+virtual memory usage: 1150976 bytes 
+The function took: 0.0010307 seconds to create the matching table
+The function took: 0.0003495 seconds to go through the other set of pairs
+
+
+The function took: 0.0000094 seconds to generate sequences with rowsums: 2, 2, 2, 2
+memory usage after matching table creation:
+physical memory usage: 6725632 bytes
+virtual memory usage: 1159168 bytes 
+The function took: 0.0002039 seconds to create the matching table
+The function took: 0.000411 seconds to go through the other set of pairs
+
+
+The function took: 0.0000097 seconds to generate sequences with rowsums: 2, 2, 2, -2
+memory usage after matching table creation:
+physical memory usage: 6737920 bytes
+virtual memory usage: 1175552 bytes 
+The function took: 0.000204 seconds to create the matching table
+The function took: 0.0004023 seconds to go through the other set of pairs
+The function found 100 sequences before equivalences in 0.0035856 seconds
 The function found a total of 896 sequences without any equivalences
-For n = 4, the function took: 0.554694 seconds and found 7 sequences
+For n = 4, the function took: 0.39995238 seconds and found 7 sequences

@@ -134,6 +134,7 @@ impl Williamson{
 
     pub fn set_sequence_value(&mut self, value : &(i8, i8, i8, i8), index: usize){
         // sets a value for all 4 sequences on a specific index
+        // EXPECTED ORDER IS X Y Z W
         self.a[index] = value.0;
         self.b[index] = value.1;
         self.c[index] = value.2;

@@ -118,7 +118,7 @@ pub fn sort(quad : &Quad) -> (Vec<isize>, Vec<usize>){
 }
 
 pub fn print_memory_usage(message : &str) {
-    println!("{}",message);
+    eprintln!("{}",message);
     if let Some(usage) = memory_stats() {
         eprintln!("physical memory usage: {} bytes", usage.physical_mem);
         eprintln!("virtual memory usage: {} bytes ", usage.virtual_mem);

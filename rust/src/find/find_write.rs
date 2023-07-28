@@ -1,8 +1,14 @@
-use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error, path::Path, str::Chars};
+use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
+use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{sequences::{williamson::{SequenceTag, tag_to_string}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, compute_auto_correlations}, symmetries::SequenceType}, read_lines};
+use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::SequenceType}, read_lines, find::find_unique::reduce_to_equivalence};
 
+
+
+pub enum EquationSide {
+    LEFT, RIGHT
+}
 
 
 pub fn sort(quad : &Quad) -> (Vec<isize>, Vec<usize>){
@@ -24,7 +30,7 @@ pub fn sort(quad : &Quad) -> (Vec<isize>, Vec<usize>){
 }
 
 pub fn print_memory_usage(message : &str) {
-    println!("{}",message);
+    eprintln!("{}",message);
     if let Some(usage) = memory_stats() {
         eprintln!("physical memory usage: {} bytes", usage.physical_mem);
         eprintln!("virtual memory usage: {} bytes ", usage.virtual_mem);
@@ -58,11 +64,15 @@ pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_pat
 
 
 
-pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), p : usize, folder_path : &String) {
+pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), p : usize, folder_path : &String, side : EquationSide) {
 
     let path = folder_path.clone() + &"/pair_" + &tag_to_string(&tags.0) + &tag_to_string(&tags.1) + ".pair";
     let mut f = File::create(path).expect("Invalid file ?");
 
+    let op = match side {
+        EquationSide::LEFT => {|x : isize| x}
+        EquationSide::RIGHT => {|x : isize| -x}
+    };
 
     // We iterate over the couples of sequences, but we filter out some with the dft checks
     for ((index0, seq0), (index1, seq1)) in iter_over_enumerate_filtered_couples(sequences.0, sequences.1, 4.*p as f64){
@@ -74,14 +84,14 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         
         // We add these values to the current line
         for a in autoc_values {
-            result += &(a.to_string() + &" ");
+            result += &(op(a).to_string() + &"_");
         }
         
         for c in crossc_values {
-            result += &(c.to_string() + &" ");
+            result += &(op(c).to_string() + &"_");
         }
 
-        result += &(" : ".to_string() + &index0.to_string() + " " + &index1.to_string() + &"\n");
+        result += &(":_".to_string() + &index0.to_string() + "_" + &index1.to_string() + &"\n");
 
 
         f.write(result.as_bytes()).expect("Error when writing in the file");
@@ -133,8 +143,8 @@ pub fn write_pairs(p : usize) {
 
         let now = Instant::now();
 
-        write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path);
-        write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path);
+        write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path, EquationSide::LEFT);
+        write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
         
         let elapsed_time = now.elapsed().as_secs_f32();
         eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs");
@@ -150,6 +160,7 @@ pub fn write_pairs(p : usize) {
 
 pub fn join_pairs(p : usize) {
 
+    let mut result = vec![];
 
     let find_i = fs::read_dir("./results/pairs/wts/find_".to_string() + &p.to_string()).unwrap();
     eprintln!("{}", "./results/pairs/wts/find_".to_string() + &p.to_string());
@@ -161,9 +172,13 @@ pub fn join_pairs(p : usize) {
         let sequences = get_sequences_from_dir(&directory);
 
         let (pathnames, order) = get_order_from_dir(&directory);
+        eprintln!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
 
-        join_pairs_files(&pathnames, &order, &sequences);
+        result.append(&mut join_pairs_files(&pathnames, &order, &sequences));
     }
+
+    println!("count before equivalences {}", result.len());
+    println!("count after equivalences {}", reduce_to_equivalence(&result).len());
 }
 
 
@@ -179,16 +194,16 @@ pub fn get_sequences_from_dir(directory : &DirEntry) -> (Vec<Vec<i8>>,Vec<Vec<i8
         let pathname = f.path().display().to_string();
         if pathname.ends_with(".seq") {
             // We loop through files with extension .seq
-            eprintln!("Name: {}", pathname);
+            // eprintln!("Name: {}", pathname);
 
-            let filename = pathname.split("/").last().expect("No last element ???");
-            eprintln!("Name: {}", filename);
+            let filename = pathname.split("\\").last().expect("No last element ???");
+            // eprintln!("Name: {}", filename);
             match filename {
                 "seq_X.seq" => {sequence_x = file_to_sequences(&pathname)}
                 "seq_Y.seq" => {sequence_y = file_to_sequences(&pathname)}
                 "seq_Z.seq" => {sequence_z = file_to_sequences(&pathname)}
                 "seq_W.seq" => {sequence_w = file_to_sequences(&pathname)}
-                _ => {panic!("Unexpected file enging in .seq")}
+                _ => {panic!("Unexpected file ending in .seq : {filename}")}
             }
         }
     }
@@ -234,13 +249,13 @@ pub fn get_order_from_dir(directory : &DirEntry) -> ((String, String), (Sequence
     for file in fs::read_dir(directory.path().display().to_string()).unwrap() {
         let f = file.unwrap();
         let pathname = f.path().display().to_string();
-        if pathname.ends_with(".pair") {
+        if pathname.ends_with(".pair.sorted") {
             // We loop through files with extension .pair
-            eprintln!("Name: {}", pathname);
+            // eprintln!("Name: {}", pathname);
             pathnames.push(pathname.clone());
 
-            let filename = pathname.split("/").last().expect("No last element ???");
-            eprintln!("Name: {}", filename);
+            let filename = pathname.split("\\").last().expect("No last element ???");
+            // eprintln!("Name: {}", filename);
             filenames.push(filename.to_string());
         }
     }
@@ -261,14 +276,14 @@ pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
         'Y' => {SequenceTag::Y}
         'Z' => {SequenceTag::Z}
         'W' => {SequenceTag::W}
-        _ => {panic!("Unexpected character")}
+        _ => {panic!("Unexpected character : {}",filename.chars().nth(5).unwrap())}
     };
     let tag2 = match filename.chars().nth(6).expect("File name not long enough") {
         'X' => {SequenceTag::X}
         'Y' => {SequenceTag::Y}
         'Z' => {SequenceTag::Z}
         'W' => {SequenceTag::W}
-        _ => {panic!("Unexpected character")}
+        _ => {panic!("Unexpected character : {}",filename.chars().nth(6).unwrap())}
     };
 
     (tag1, tag2)
@@ -279,43 +294,113 @@ pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
 
 
 
-pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) {
+pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) -> Vec<Williamson> {
+
+    let mut result = vec![];
 
     let (file12, file34) = filenames;
 
     let mut lines12 = read_lines(file12).expect("Invalid vile somehow ?");
     let mut lines34 = read_lines(file34).expect("Invalid vile somehow ?");
 
-    let mut seq12 = lines12.next();
-    let mut seq34 = lines34.next();
+    let mut line12 = lines12.next();
+    let mut line34 = lines34.next();
 
-    while seq12.is_some() && seq34.is_some() {
+    while line12.is_some() && line34.is_some() {
         // We loop until there's no more lines to read
 
-        let (line_12, indices) = get_line_from(&seq12);
+        let (mut seq12, mut indices12) = get_line_from(&line12);
+        let (mut seq34, mut indices34) = get_line_from(&line34);
         
-        let current_line = line_12.clone();
+        let current_seq = seq12.clone();
+        if seq12 == seq34 {
+            println!("{}", current_seq);
 
-        while current_line == line_12 {
+            // Store every sequence with the same values of auto/cross correlation
+            let mut possible_matching_12 = vec![];
+            while line12.is_some() && current_seq == seq12 {
+                line12 = lines12.next();
+                possible_matching_12.push(indices12);
+                (seq12, indices12) = get_line_from(&line12);
+            }
+
+            // Store every sequence here as well
+            let mut possible_matching_34 = vec![];
+            while line34.is_some() && current_seq == seq34 {
+                line34 = lines34.next();
+                possible_matching_34.push(indices34);
+                (seq34, indices34) = get_line_from(&line34);
+            }
+
+            // Loop through the possible matches
+            for ((i1, i2),(i3, i4)) in iproduct!(possible_matching_12, possible_matching_34) {
+                let indices = (i1, i2, i3, i4);
+                // test if the sequence is of type seqtype, add them to the result files if it is
+                let sequences = get_sequences(sequences, order, &indices);
+                let mut will = Williamson::new(sequences.0.len());
+                will.set_all_values(sequences);
+                println!("{}", will.to_qs().to_string());
+                if will.to_qs().is_perfect() {
+                    result.push(will);
+                }
+
+            }
+
 
         }
-
+        else if seq12 < seq34 {
+            line12 = lines12.next();
+        }
+        else {
+            line34 = lines34.next();
+        }
 
     }
 
+    result
 }
 
 
 pub fn get_line_from(seq : &Option<Result<String, Error>>) -> (String, (usize, usize)) {
 
     let s = seq.as_ref().unwrap().as_ref().expect("Error when reading file").clone();
-    let mut s_parts = s.split(" : ");
+    let mut s_parts = s.split("_:_");
 
     let line = s_parts.next().expect("Expected something before ':' !").to_string();
-    let mut indices_parts = s_parts.next().expect("Expected something after ':' !").split(" ");
+    let mut indices_parts = s_parts.next().expect("Expected something after ':' !").split("_");
     let indices = (indices_parts.next().expect("Expected something !").parse().expect("Expected a number !"), indices_parts.next().expect("Expected something !").parse().expect("Expected a number !"));
 
     (line, indices)
 }
 
 
+pub fn get_sequences<'a>(sequences : &'a (Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>), order : &'a (SequenceTag, SequenceTag, SequenceTag, SequenceTag), indices : &'a (usize, usize, usize, usize)) -> (&'a Vec<i8>, &'a Vec<i8>, &'a Vec<i8>, &'a Vec<i8>) {
+
+    let seqx = get_sequence_aux(sequences, order, indices, SequenceTag::X);
+    let seqy = get_sequence_aux(sequences, order, indices, SequenceTag::Y);
+    let seqz = get_sequence_aux(sequences, order, indices, SequenceTag::Z);
+    let seqw = get_sequence_aux(sequences, order, indices, SequenceTag::W);
+
+    (seqx, seqy, seqz, seqw)
+}
+
+
+fn get_sequence_aux<'a>(sequences : &'a (Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>), order : &'a (SequenceTag, SequenceTag, SequenceTag, SequenceTag), indices : &(usize, usize, usize, usize), tag : SequenceTag)  -> &'a Vec<i8>{
+
+    let (tag1, tag2, tag3 ,tag4) = order;
+
+    let index = match tag {
+        _ if tag == *tag1 => {indices.0}
+        _ if tag == *tag2 => {indices.1}
+        _ if tag == *tag3 => {indices.2}
+        _ if tag == *tag4 => {indices.3}
+        _ => {panic!("Problem with order !")}
+    };
+
+    match tag {
+        SequenceTag::X => {&sequences.0[index]},
+        SequenceTag::Y => {&sequences.1[index]},
+        SequenceTag::Z => {&sequences.2[index]},
+        SequenceTag::W => {&sequences.3[index]},
+    }
+}
