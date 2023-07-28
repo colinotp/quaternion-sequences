@@ -22,7 +22,7 @@ start=`date +%s`
 start2=`date +%s`
 cargo run pairs $n
 end2=`date +%s`
-echo Sorting the files took `expr $end2 - $start2` seconds.
+echo Creating the sequences took `expr $end2 - $start2` seconds.
 
 # sorting the files
 start2=`date +%s`
@@ -34,7 +34,7 @@ echo Sorting the files took `expr $end2 - $start2` seconds.
 start2=`date +%s`
 cargo run join $n
 end2=`date +%s`
-echo Sorting the files took `expr $end2 - $start2` seconds.
+echo Matching the sequences took `expr $end2 - $start2` seconds.
 
 end=`date +%s`
 echo Execution time was `expr $end - $start` seconds.
