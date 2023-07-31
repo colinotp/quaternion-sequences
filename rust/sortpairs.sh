@@ -1,5 +1,10 @@
 #! /bin/sh
 
+if [ ! -e tmp/ ]
+then
+	mkdir tmp/
+fi
+
 type=$1
 n=$2
 
@@ -13,7 +18,7 @@ do
 		for filename in $dirname/*.pair;
 		do
 			echo $filename
-			sort $filename > $filename.sorted
+			sort -S 2G -T tmp/ $filename > $filename.sorted
 		done
 	fi
 done
