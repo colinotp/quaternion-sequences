@@ -86,6 +86,18 @@ fn find_unique_williamson_type_of_size(i : usize){
     f.write(result.as_bytes()).expect("Error when writing in the file");
 }
 
+fn find_write_wts(i : usize){
+
+    let result = find_write::join_pairs(i);
+
+    let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq");
+    let path = Path::new(s);
+    let mut f = File::create(path).expect("Invalid file ?");
+    
+    let res_string = result.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+
+    f.write(res_string.as_bytes()).expect("Error when writing in the file");
+}
 
 
 
@@ -186,7 +198,7 @@ fn main() {
             s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
             s if s == "matching" => {find_matching_algorithm(i)}
             s if s == "pairs" => {find_write::write_pairs(i)}
-            s if s == "join" => {find_write::join_pairs(i)}
+            s if s == "join" => {find_write_wts(i)}
             _ => {}
         }
     }

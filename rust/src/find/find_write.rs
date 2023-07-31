@@ -130,7 +130,6 @@ pub fn write_pairs(p : usize) {
 
 
     for rs in rowsums {
-        eprintln!("\n");
         let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
         let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
         
@@ -160,7 +159,7 @@ pub fn write_pairs(p : usize) {
         write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
         
         let elapsed_time = now.elapsed().as_secs_f32();
-        eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs");
+        eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
     }
 }
 
@@ -171,7 +170,7 @@ pub fn write_pairs(p : usize) {
 
 
 
-pub fn join_pairs(p : usize) {
+pub fn join_pairs(p : usize) -> Vec<Williamson>{
 
     let mut result = vec![];
 
@@ -181,17 +180,23 @@ pub fn join_pairs(p : usize) {
     for rowsum_x_y in find_i {
         let directory = rowsum_x_y.unwrap();
 
-        // We read the files in the directory to get back our 4 sets of sequences
-        let sequences = get_sequences_from_dir(&directory);
-
-        let (pathnames, order) = get_order_from_dir(&directory);
-        eprintln!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
-
-        result.append(&mut join_pairs_files(&pathnames, &order, &sequences));
+        if directory.metadata().unwrap().is_dir() {
+            // We read the files in the directory to get back our 4 sets of sequences
+            let sequences = get_sequences_from_dir(&directory);
+    
+            let (pathnames, order) = get_order_from_dir(&directory);
+            eprintln!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
+    
+            result.append(&mut join_pairs_files(&pathnames, &order, &sequences));
+        }
     }
 
-    println!("count before equivalences {}", result.len());
-    println!("count after equivalences {}", reduce_to_equivalence(&result).len());
+    eprintln!("\ncount before equivalences {}", result.len());
+    let reduced = reduce_to_equivalence(&result);
+    eprintln!("count after equivalences {}", reduced.len());
+
+    reduced
+
 }
 
 
@@ -273,7 +278,7 @@ pub fn get_order_from_dir(directory : &DirEntry) -> ((String, String), (Sequence
         }
     }
 
-    assert!(filenames.len() == 2, "too many .pair files !");
+    assert!(filenames.len() == 2, "too many or not enough .pair.sorted files !");
 
     let (tag1, tag2) = get_tag_from_filename(&filenames[0]);
     let (tag3, tag4) = get_tag_from_filename(&filenames[1]);
@@ -331,17 +336,17 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
             // Store every sequence with the same values of auto/cross correlation
             let mut possible_matching_12 = vec![];
             while line12.is_some() && current_seq == seq12 {
-                line12 = lines12.next();
                 possible_matching_12.push(indices12);
                 (seq12, indices12) = get_line_from(&line12);
+                line12 = lines12.next();
             }
 
             // Store every sequence here as well
             let mut possible_matching_34 = vec![];
             while line34.is_some() && current_seq == seq34 {
-                line34 = lines34.next();
                 possible_matching_34.push(indices34);
                 (seq34, indices34) = get_line_from(&line34);
+                line34 = lines34.next();
             }
 
             // Loop through the possible matches
@@ -374,6 +379,8 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
 
 
 pub fn get_line_from(seq : &Option<Result<String, Error>>) -> (String, (usize, usize)) {
+
+    assert!(seq.is_some());
 
     let s = seq.as_ref().unwrap().as_ref().expect("Error when reading file").clone();
     let mut s_parts = s.split("_:_");

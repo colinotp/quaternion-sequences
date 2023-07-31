@@ -16,25 +16,37 @@ fi
 
 n=$1
 
+foldername="./results/pairs/wts/find_$n"
+filename="$foldername/result.log"
+
+if [ ! -e $foldername ]
+then
+	mkdir $foldername
+fi
+
 start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-cargo run pairs $n
+cargo run pairs $n &> $filename
 end2=`date +%s`
-echo Creating the sequences took `expr $end2 - $start2` seconds.
+echo Creating the sequences took `expr $end2 - $start2` seconds. 
+echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # sorting the files
 start2=`date +%s`
-./sortpairs.sh wts $n
+./sortpairs.sh wts $n &>> $filename
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.
+echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
-cargo run join $n
+cargo run join $n &>> $filename
 end2=`date +%s`
 echo Matching the sequences took `expr $end2 - $start2` seconds.
+echo -e Matching the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 end=`date +%s`
-echo Execution time was `expr $end - $start` seconds.
+echo Total execution time was `expr $end - $start` seconds.
+echo -e Total execution time was `expr $end - $start` seconds. >> $filename
