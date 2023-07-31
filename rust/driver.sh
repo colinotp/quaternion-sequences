@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # This driver computes the perfect Williamson Type sequences for the given n:
 # ./driver.sh n
@@ -28,7 +28,7 @@ start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-cargo run pairs $n &> $filename
+./target/release/rust pairs $n &> $filename
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. 
 echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
@@ -42,7 +42,7 @@ echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filen
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
-cargo run join $n &>> $filename
+./target/release/rust join $n &>> $filename
 end2=`date +%s`
 echo Matching the sequences took `expr $end2 - $start2` seconds.
 echo -e Matching the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename

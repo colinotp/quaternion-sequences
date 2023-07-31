@@ -214,7 +214,7 @@ pub fn get_sequences_from_dir(directory : &DirEntry) -> (Vec<Vec<i8>>,Vec<Vec<i8
             // We loop through files with extension .seq
             // eprintln!("Name: {}", pathname);
 
-            let filename = pathname.split("\\").last().expect("No last element ???");
+            let filename = pathname.split("/").last().expect("No last element ???");
             // eprintln!("Name: {}", filename);
             match filename {
                 "seq_X.seq" => {sequence_x = file_to_sequences(&pathname)}
@@ -272,8 +272,8 @@ pub fn get_order_from_dir(directory : &DirEntry) -> ((String, String), (Sequence
             // eprintln!("Name: {}", pathname);
             pathnames.push(pathname.clone());
 
-            let filename = pathname.split("\\").last().expect("No last element ???");
-            // eprintln!("Name: {}", filename);
+            let filename = pathname.split("/").last().expect("No last element ???");
+            //eprintln!("Name: {}", filename);
             filenames.push(filename.to_string());
         }
     }
