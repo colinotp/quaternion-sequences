@@ -1,0 +1,44 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.14s
+     Running `target\debug\rust.exe pairs 4`
+(0, 0, 0, 4)
+(2, 2, 2, 2)
+(-2, 2, 2, 2)
+generated 3 different rowsums
+results/pairs/wts/find_4/rowsum_4_0_0_0
+The function took: 0.012767 seconds to generate sequences with rowsums: 4, 0, 0, 0
+The function took: 0.0061799 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_4/rowsum_2_2_2_2
+The function took: 0.0118245 seconds to generate sequences with rowsums: 2, 2, 2, 2
+The function took: 0.0053522 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_4/rowsum_2_2_2_-2
+The function took: 0.0129888 seconds to generate sequences with rowsums: 2, 2, 2, -2
+The function took: 0.0052796 seconds to go through the two sets of pairs
+
+Creating the sequences took 0 seconds. 
+ 
+
+results/pairs/wts/find_4/rowsum_2_2_2_-2/pair_WX.pair
+results/pairs/wts/find_4/rowsum_2_2_2_-2/pair_YZ.pair
+results/pairs/wts/find_4/rowsum_2_2_2_2/pair_XY.pair
+results/pairs/wts/find_4/rowsum_2_2_2_2/pair_ZW.pair
+results/pairs/wts/find_4/rowsum_4_0_0_0/pair_WY.pair
+results/pairs/wts/find_4/rowsum_4_0_0_0/pair_ZX.pair
+Sorting the files took 1 seconds. 
+ 
+
+    Finished dev [unoptimized + debuginfo] target(s) in 0.14s
+     Running `target\debug\rust.exe join 4`
+./results/pairs/wts/find_4
+Folder rowsum_2_2_2_-2 : sequences have order (W, X, Y, Z)
+Folder rowsum_2_2_2_2 : sequences have order (X, Y, Z, W)
+Folder rowsum_4_0_0_0 : sequences have order (W, Y, Z, X)
+
+count before equivalences 115
+The function found a total of 896 sequences without any equivalences
+count after equivalences 7
+Matching the sequences took 1 seconds. 
+ 
+
+Total execution time was 2 seconds.

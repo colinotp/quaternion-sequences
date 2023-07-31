@@ -1,0 +1,28 @@
+    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
+     Running `target\debug\rust.exe pairs 6`
+(0, 2, 2, 4)
+generated 1 different rowsums
+results/pairs/wts/find_6/rowsum_4_2_2_0
+The function took: 0.0164322 seconds to generate sequences with rowsums: 4, 2, 2, 0
+The function took: 0.0171351 seconds to go through the two sets of pairs
+
+Creating the sequences took 0 seconds. 
+ 
+
+results/pairs/wts/find_6/rowsum_4_2_2_0/pair_WY.pair
+results/pairs/wts/find_6/rowsum_4_2_2_0/pair_ZX.pair
+Sorting the files took 1 seconds. 
+ 
+
+    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
+     Running `target\debug\rust.exe join 6`
+./results/pairs/wts/find_6
+Folder rowsum_4_2_2_0 : sequences have order (W, Y, Z, X)
+
+count before equivalences 55
+The function found a total of 4608 sequences without any equivalences
+count after equivalences 8
+Matching the sequences took 2 seconds. 
+ 
+
+Total execution time was 3 seconds.
