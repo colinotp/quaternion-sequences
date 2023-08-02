@@ -1,0 +1,40 @@
+(0, 0, 0, 8)
+(4, 4, 4, 4)
+(-4, 4, 4, 4)
+generated 3 different rowsums
+results/pairs/wts/find_16/rowsum_8_0_0_0
+The function took: 0.08007697 seconds to generate sequences with rowsums: 8, 0, 0, 0
+The function took: 2455.5981 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_16/rowsum_4_4_4_4
+The function took: 0.082942955 seconds to generate sequences with rowsums: 4, 4, 4, 4
+The function took: 1638.4445 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_16/rowsum_4_4_4_-4
+The function took: 0.26964548 seconds to generate sequences with rowsums: 4, 4, 4, -4
+The function took: 1656.5603 seconds to go through the two sets of pairs
+
+Creating the sequences took 5751 seconds. 
+ 
+
+results/pairs/wts/find_16/rowsum_4_4_4_-4/pair_WX.pair
+results/pairs/wts/find_16/rowsum_4_4_4_-4/pair_YZ.pair
+results/pairs/wts/find_16/rowsum_4_4_4_4/pair_XY.pair
+results/pairs/wts/find_16/rowsum_4_4_4_4/pair_ZW.pair
+results/pairs/wts/find_16/rowsum_8_0_0_0/pair_WY.pair
+results/pairs/wts/find_16/rowsum_8_0_0_0/pair_ZX.pair
+Sorting the files took 666 seconds. 
+ 
+
+./results/pairs/wts/find_16
+Folder rowsum_8_0_0_0 : sequences have order (Z, X, W, Y)
+Folder rowsum_4_4_4_4 : sequences have order (X, Y, Z, W)
+Folder rowsum_4_4_4_-4 : sequences have order (Y, Z, W, X)
+
+count before equivalences 234400
+The function found a total of 1867776 sequences without any equivalences
+count after equivalences 216
+Matching the sequences took 737 seconds. 
+ 
+
+Total execution time was 7154 seconds.

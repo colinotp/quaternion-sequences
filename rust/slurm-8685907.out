@@ -1,0 +1,2 @@
+Creating the sequences took 2499 seconds.
+slurmstepd: error: *** JOB 8685907 ON cdr1534 CANCELLED AT 2023-07-31T15:23:33 DUE TO TIME LIMIT ***

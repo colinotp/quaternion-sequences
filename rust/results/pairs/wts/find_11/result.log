@@ -1,0 +1,32 @@
+(1, 3, 3, 5)
+(-1, 3, 3, 5)
+generated 2 different rowsums
+results/pairs/wts/find_11/rowsum_5_3_3_1
+The function took: 0.030338291 seconds to generate sequences with rowsums: 5, 3, 3, 1
+The function took: 2.1179283 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_11/rowsum_5_3_3_-1
+The function took: 0.02822774 seconds to generate sequences with rowsums: 5, 3, 3, -1
+The function took: 2.0752077 seconds to go through the two sets of pairs
+
+Creating the sequences took 4 seconds. 
+ 
+
+results/pairs/wts/find_11/rowsum_5_3_3_-1/pair_WY.pair
+results/pairs/wts/find_11/rowsum_5_3_3_-1/pair_ZX.pair
+results/pairs/wts/find_11/rowsum_5_3_3_1/pair_WY.pair
+results/pairs/wts/find_11/rowsum_5_3_3_1/pair_ZX.pair
+Sorting the files took 0 seconds. 
+ 
+
+./results/pairs/wts/find_11
+Folder rowsum_5_3_3_-1 : sequences have order (Z, X, W, Y)
+Folder rowsum_5_3_3_1 : sequences have order (Z, X, W, Y)
+
+count before equivalences 256
+The function found a total of 21120 sequences without any equivalences
+count after equivalences 4
+Matching the sequences took 4 seconds. 
+ 
+
+Total execution time was 8 seconds.

@@ -1,0 +1,30 @@
+(1, 1, 3, 7)
+(-1, 1, 3, 7)
+(1, 3, 5, 5)
+(-1, 3, 5, 5)
+generated 4 different rowsums
+results/pairs/wts/find_15/rowsum_7_3_1_1
+The function took: 0.1475912 seconds to generate sequences with rowsums: 7, 3, 1, 1
+The function took: 675.1328 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_15/rowsum_7_3_1_-1
+The function took: 0.51423436 seconds to generate sequences with rowsums: 7, 3, 1, -1
+The function took: 674.1847 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_15/rowsum_5_5_3_1
+The function took: 0.5497339 seconds to generate sequences with rowsums: 5, 5, 3, 1
+The function took: 575.22644 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_15/rowsum_5_5_3_-1
+The function took: 0.3829544 seconds to generate sequences with rowsums: 5, 5, 3, -1
+The function took: 572.1324 seconds to go through the two sets of pairs
+
+Creating the sequences took 2499 seconds. 
+ 
+
+results/pairs/wts/find_15/rowsum_5_5_3_-1/pair_YX.pair
+results/pairs/wts/find_15/rowsum_5_5_3_-1/pair_ZW.pair
+results/pairs/wts/find_15/rowsum_5_5_3_1/pair_YX.pair
+results/pairs/wts/find_15/rowsum_5_5_3_1/pair_ZW.pair
+results/pairs/wts/find_15/rowsum_7_3_1_-1/pair_WZ.pair
+results/pairs/wts/find_15/rowsum_7_3_1_-1/pair_YX.pair

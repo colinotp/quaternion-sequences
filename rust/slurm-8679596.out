@@ -1,0 +1,5 @@
+Creating the sequences took 2257 seconds.
+Sorting the files took 176 seconds.
+Matching the sequences took 1 seconds.
+Total execution time was 2434 seconds.
+slurmstepd: error: Detected 4 oom_kill events in StepId=8679596.batch. Some of the step tasks have been OOM Killed.
