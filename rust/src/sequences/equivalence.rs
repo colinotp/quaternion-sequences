@@ -161,6 +161,20 @@ pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
 }
 
 
+pub fn generate_equivalence_classes(wills : &Vec<Williamson>) -> Vec<Williamson> {
+
+    let mut result = vec![];
+
+    for w in wills {
+        let class = generate_equivalence_class(w);
+        for elm in class {
+            result.push(elm);
+        }
+    }
+
+    result
+}
+
 
 
 fn swap(will : &mut Williamson, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {

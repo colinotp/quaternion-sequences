@@ -159,7 +159,7 @@ impl HM {
         hm
     }
 
-    pub fn from_williamson(will : Williamson, seqtype : SequenceType) -> HM {
+    pub fn from_williamson(will : &Williamson, seqtype : SequenceType) -> HM {
 
         let size = will.size();
         let mut hm = HM::new(4*size);
@@ -180,13 +180,13 @@ impl HM {
                 hm.copy_block_to(&matz, 2*size, size, &OpMat::NONE);
                 hm.copy_block_to(&maty, 3*size, size, &OpMat::MINUS);
                 hm.copy_block_to(&maty, 0, 2*size, &OpMat::NONE);
-                hm.copy_block_to(&matz, size, 2*size, &OpMat::NONE);
+                hm.copy_block_to(&matz, size, 2*size, &OpMat::MINUS);
                 hm.copy_block_to(&matw, 2*size, 2*size, &OpMat::MINUS);
-                hm.copy_block_to(&matx, 3*size, 2*size, &OpMat::MINUS);
+                hm.copy_block_to(&matx, 3*size, 2*size, &OpMat::NONE);
                 hm.copy_block_to(&matz, 0, 3*size, &OpMat::NONE);
-                hm.copy_block_to(&maty, size, 3*size, &OpMat::MINUS);
+                hm.copy_block_to(&maty, size, 3*size, &OpMat::NONE);
                 hm.copy_block_to(&matx, 2*size, 3*size, &OpMat::MINUS);
-                hm.copy_block_to(&matw, 3*size, 3*size, &OpMat::NONE);
+                hm.copy_block_to(&matw, 3*size, 3*size, &OpMat::MINUS);
             }
             _ => {panic!("Not Implemented yet !!!")}
         }
@@ -277,12 +277,66 @@ impl HM {
         for row in 0..self.size {
             result += "| ";
             for col in 0..self.size {
-                result += &(self.matrix[row][col].to_string() + &" ");
+                if self.matrix[row][col] == 1 {
+                    result += &"+ ";
+                }
+                else {
+                    result += &"- "
+                }
             }
             result += "|\n";
 
 
         }
+
+        result
+    }
+
+    pub fn to_string_magma(&self) -> String {
+
+        let mut result = "M := Matrix([".to_string();
+
+        for row in 0..self.size-1 {
+            result += "[";
+            for col in 0..self.size-1 {
+                if self.matrix[row][col] == 1 {
+                    result += &"1,";
+                }
+                else {
+                    result += &"-1,"
+                }
+            }
+            if self.matrix[row][self.size-1] == 1 {
+                result += &"1";
+            }
+            else {
+                result += &"-1"
+            }
+
+
+            result += "],";
+        }
+
+
+        result += "[";
+        for col in 0..self.size-1 {
+            if self.matrix[self.size-1][col] == 1 {
+                result += &"1,";
+            }
+            else {
+                result += &"-1,"
+            }
+        }
+        if self.matrix[self.size-1][self.size-1] == 1 {
+            result += &"1";
+        }
+        else {
+            result += &"-1"
+        }
+
+        result += "]";
+
+        result += &"]);";
 
         result
     }

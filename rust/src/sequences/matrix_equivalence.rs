@@ -1,106 +1,102 @@
-use std::collections::HashSet;
+use std::{path::Path, fs::File, io::Write, env};
 
 use itertools::Itertools;
+use petgraph::{Graph, graph::NodeIndex, Undirected};
 
-use super::matrices::HM;
+use crate::{sequences::{equivalence::generate_equivalence_classes, williamson::Williamson, symmetries::SequenceType}, read_lines};
+
+use super::{matrices::HM, sequence::QS};
 
 
+use graph_canon::{self, CanonLabeling};
 
-pub fn generate_equivalence_class(hm : &HM) -> HashSet<HM> {
-    // This function generates the representative of the equivalence class that seq belongs to
+
+pub fn graph_from_hm(mat : &HM) -> Graph<i32,i32,Undirected> {
+    let mut g = Graph::new_undirected();
     
-    let mut class = HashSet::new();
-    class.insert(hm.clone());
+    let size = mat.size();
 
-    loop {
-        let mut new = HashSet::new();
+    for _ in 0..4*size{
+        g.add_node(0);
+    }
 
-        for seq in &class {
-            for equivalence in [equivalent_negate_col, equivalent_negate_row, equivalent_swapping_col, equivalent_swapping_row] {
-                for equ in equivalence(&seq){
-                    if !class.contains(&equ) {
-                        new.insert(equ);
-                    }
-                }
+    for row in 0..size {
+        for col in 0..size {
+            if mat.get(row,col) == 1 {
+                g.add_edge(NodeIndex::new(row), NodeIndex::new(2*size+col), 0);
+                g.add_edge(NodeIndex::new(size + row), NodeIndex::new(3*size+col), 0);
             }
-
-        }
-
-        if new.len() == 0 {break;}
-        else {
-            println!("{} matrices added", new.len());
-            for seq in new {
-                class.insert(seq);
+            else{
+                g.add_edge(NodeIndex::new(row), NodeIndex::new(3*size+col), 0);
+                g.add_edge(NodeIndex::new(size + row), NodeIndex::new(2*size+col), 0);
             }
         }
     }
 
-    class
+    g
+}
+
+
+pub fn are_isomorphic(g1 : Graph<i32,i32,Undirected>, g2 : Graph<i32,i32,Undirected>) -> bool {
+
+    let canon1 = graph_canon::CanonLabeling::new(&g1);
+    let canon2 = graph_canon::CanonLabeling::new(&g2);
+
+    canon1 == canon2    
+}
+
+fn canon_hm(mat : &HM) -> CanonLabeling {
+    graph_canon::CanonLabeling::new(&graph_from_hm(mat))
+}
+
+
+pub fn reduce_to_hadamard_equivalence( mats : &Vec<HM>) -> Vec<&HM> {
+    let mut i = 0;
+    mats.iter().unique_by(|mat|{println!("{i}"); i+= 1;canon_hm(mat)}).collect_vec()
 }
 
 
 
+pub fn hadamard_equivalence_from_file(pathname : String) {
 
-pub fn equivalent_swapping_row(hm : &HM) -> Vec<HM> {
+    let mut seqs = vec![];
 
-    let mut res = vec![];
-
-    for perm in (0..hm.size()).permutations(2) {
-        let (i,j) = (perm[0], perm[1]);
-        let mut new_hm = hm.clone();
-        for index in 0..hm.size() {
-            new_hm.set_value(i, index, hm.get(j, index));
-            new_hm.set_value(j, index, hm.get(i, index));
-        }
-        res.push(new_hm);
+    println!("{:?}",env::current_dir());
+    println!("{pathname}");
+    for line_res in read_lines(&pathname).expect("error reading the file") {
+        let line = line_res.expect("Error reading line");
+        println!("{}", &line);
+        seqs.push(QS::from_str(&line.to_string()));
     }
 
-    res
-}
+    let wills = seqs.iter().map(|s| Williamson::from_pqs(s)).collect();
+    let all = generate_equivalence_classes(&wills);
 
-pub fn equivalent_swapping_col(hm : &HM) -> Vec<HM> {
-    
-    let mut res = vec![];
+    println!("generated all sequences");
 
-    for perm in (0..hm.size()).permutations(2) {
-        let (i,j) = (perm[0], perm[1]);
-        let mut new_hm = hm.clone();
-        for index in 0..hm.size() {
-            new_hm.set_value(index, i, hm.get(j, index));
-            new_hm.set_value(index, j, hm.get(i, index));
-        }
-        res.push(new_hm);
+    for elm in &all {
+        assert!(elm.to_qs().is_perfect());
     }
 
-    res
-}
+    let liste: Vec<HM> = all.iter().map(|w| HM::from_williamson(w,SequenceType::WilliamsonType)).collect();
 
-pub fn equivalent_negate_row(hm : &HM) -> Vec<HM> {
+    println!("generated all matrices");
 
-    let mut res = vec![];
+    let equ = reduce_to_hadamard_equivalence(&liste);
+    println!("number of matrices up to equivalence : {}", equ.len());
 
-    for row in 0..hm.size() {
-        let mut new_hm = hm.clone();
-        for index in 0..hm.size() {
-            new_hm.set_value(row, index, -hm.get(row, index));
-        }
-        res.push(new_hm);
+    let result_name = pathname.split(".").next().expect("No first element").to_string() + &".mat";
+
+    println!("{result_name}");
+    let path = Path::new(&result_name);
+    let mut result_file = File::create(path).expect("Invalid file ?");
+
+    let mut result_string = "".to_string();
+    for mat in equ {
+        result_string += &mat.to_string_magma();
+        result_string += &"\n";
     }
 
-    res
-}
+    result_file.write(result_string.as_bytes()).expect("Error when writing in the file");
 
-pub fn equivalent_negate_col(hm : &HM) -> Vec<HM> {
-
-    let mut res = vec![];
-
-    for col in 0..hm.size() {
-        let mut new_hm = hm.clone();
-        for index in 0..hm.size() {
-            new_hm.set_value(index, col, -hm.get(index, col));
-        }
-        res.push(new_hm);
-    }
-
-    res
 }

@@ -7,6 +7,7 @@ use std::io::{self, BufRead, Write};
 use std::path::Path;
 
 use sequences::matrices::QHM;
+use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 use time::*;
 
 mod sequences;
@@ -175,7 +176,8 @@ fn main() {
         //convert_qs_to_matrices();
         //find_unique_williamson_type_of_size(9);
         //find_q24(8, None);
-        find_write::write_pairs(7);
+        //find_write::write_pairs(7);
+        hadamard_equivalence_from_file("results/pairs/wts/find_13/result.seq".to_string());
     }
     else if count == 2 {
         match &args[1] {
@@ -199,6 +201,7 @@ fn main() {
             s if s == "matching" => {find_matching_algorithm(i)}
             s if s == "pairs" => {find_write::write_pairs(i)}
             s if s == "join" => {find_write_wts(i)}
+            s if s == "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq".to_string())}
             _ => {}
         }
     }
