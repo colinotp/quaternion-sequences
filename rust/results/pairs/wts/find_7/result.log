@@ -1,25 +1,23 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.13s
-     Running `target\debug\rust.exe pairs 7`
 (1, 1, 1, 5)
 (-1, 1, 1, 5)
 (1, 3, 3, 3)
 (-1, 3, 3, 3)
 generated 4 different rowsums
 results/pairs/wts/find_7/rowsum_5_1_1_1
-The function took: 0.0125646 seconds to generate sequences with rowsums: 5, 1, 1, 1
-The function took: 0.0351601 seconds to go through the two sets of pairs
+The function took: 0.000464624 seconds to generate sequences with rowsums: 5, 1, 1, 1
+The function took: 0.011737885 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_7/rowsum_5_1_1_-1
-The function took: 0.0124077 seconds to generate sequences with rowsums: 5, 1, 1, -1
-The function took: 0.0336458 seconds to go through the two sets of pairs
+The function took: 0.000505561 seconds to generate sequences with rowsums: 5, 1, 1, -1
+The function took: 0.014796835 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_7/rowsum_3_3_3_1
-The function took: 0.0127705 seconds to generate sequences with rowsums: 3, 3, 3, 1
-The function took: 0.031497 seconds to go through the two sets of pairs
+The function took: 0.000407322 seconds to generate sequences with rowsums: 3, 3, 3, 1
+The function took: 0.007361459 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_7/rowsum_3_3_3_-1
-The function took: 0.0154961 seconds to generate sequences with rowsums: 3, 3, 3, -1
-The function took: 0.0323953 seconds to go through the two sets of pairs
+The function took: 0.000268571 seconds to generate sequences with rowsums: 3, 3, 3, -1
+The function took: 0.006558838 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  
@@ -32,21 +30,19 @@ results/pairs/wts/find_7/rowsum_5_1_1_-1/pair_WY.pair
 results/pairs/wts/find_7/rowsum_5_1_1_-1/pair_ZX.pair
 results/pairs/wts/find_7/rowsum_5_1_1_1/pair_WY.pair
 results/pairs/wts/find_7/rowsum_5_1_1_1/pair_ZX.pair
-Sorting the files took 1 seconds. 
+Sorting the files took 0 seconds. 
  
 
-    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
-     Running `target\debug\rust.exe join 7`
 ./results/pairs/wts/find_7
-Folder rowsum_3_3_3_-1 : sequences have order (W, X, Y, Z)
+Folder rowsum_5_1_1_-1 : sequences have order (Z, X, W, Y)
 Folder rowsum_3_3_3_1 : sequences have order (W, X, Y, Z)
-Folder rowsum_5_1_1_-1 : sequences have order (W, Y, Z, X)
-Folder rowsum_5_1_1_1 : sequences have order (W, Y, Z, X)
+Folder rowsum_5_1_1_1 : sequences have order (Z, X, W, Y)
+Folder rowsum_3_3_3_-1 : sequences have order (W, X, Y, Z)
 
 count before equivalences 254
 The function found a total of 6720 sequences without any equivalences
 count after equivalences 6
-Matching the sequences took 5 seconds. 
+Matching the sequences took 1 seconds. 
  
 
-Total execution time was 6 seconds.
+Total execution time was 1 seconds.
