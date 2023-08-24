@@ -1,0 +1,15 @@
+(0, 0, 6, 6)
+(0, 2, 2, 8)
+(2, 4, 4, 6)
+(-2, 4, 4, 6)
+generated 4 different rowsums
+results/pairs/wts/find_18/rowsum_6_6_0_0
+The function took: 0.32683772 seconds to generate sequences with rowsums: 6, 6, 0, 0
+The function took: 107951.26 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_18/rowsum_8_2_2_0
+The function took: 0.42756963 seconds to generate sequences with rowsums: 8, 2, 2, 0
+The function took: 93711.54 seconds to go through the two sets of pairs
+
+results/pairs/wts/find_18/rowsum_6_4_4_2
+The function took: 2.1788542 seconds to generate sequences with rowsums: 6, 4, 4, 2

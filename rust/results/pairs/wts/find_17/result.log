@@ -4,31 +4,44 @@
 (-3, 3, 5, 5)
 generated 4 different rowsums
 results/pairs/wts/find_17/rowsum_7_3_3_1
-The function took: 2.1383204 seconds to generate sequences with rowsums: 7, 3, 3, 1
-The function took: 17030.785 seconds to go through the two sets of pairs
+The function took: 0.3471109 seconds to generate sequences with rowsums: 7, 3, 3, 1
+The function took: 19912.055 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_17/rowsum_7_3_3_-1
-The function took: 2.5970678 seconds to generate sequences with rowsums: 7, 3, 3, -1
-The function took: 17115.23 seconds to go through the two sets of pairs
+The function took: 0.23061207 seconds to generate sequences with rowsums: 7, 3, 3, -1
+The function took: 19680.238 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_17/rowsum_5_5_3_3
-The function took: 5.275165 seconds to generate sequences with rowsums: 5, 5, 3, 3
-The function took: 15197.964 seconds to go through the two sets of pairs
+The function took: 0.30038396 seconds to generate sequences with rowsums: 5, 5, 3, 3
+The function took: 17558.871 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_17/rowsum_5_5_3_-3
-The function took: 0.12698817 seconds to generate sequences with rowsums: 5, 5, 3, -3
-The function took: 15419.712 seconds to go through the two sets of pairs
+The function took: 0.22908236 seconds to generate sequences with rowsums: 5, 5, 3, -3
+The function took: 17635.318 seconds to go through the two sets of pairs
 
-Creating the sequences took 64775 seconds. 
+Creating the sequences took 74788 seconds. 
  
 
 results/pairs/wts/find_17/rowsum_5_5_3_-3/pair_YX.pair
 results/pairs/wts/find_17/rowsum_5_5_3_-3/pair_ZW.pair
 results/pairs/wts/find_17/rowsum_5_5_3_3/pair_XY.pair
-sort: write failed: tmp//sortoI1ERv: Disk quota exceeded
 results/pairs/wts/find_17/rowsum_5_5_3_3/pair_ZW.pair
 results/pairs/wts/find_17/rowsum_7_3_3_-1/pair_WY.pair
 results/pairs/wts/find_17/rowsum_7_3_3_-1/pair_ZX.pair
-sort: write failed: tmp//sort7fHUAV: Disk quota exceeded
 results/pairs/wts/find_17/rowsum_7_3_3_1/pair_WY.pair
 results/pairs/wts/find_17/rowsum_7_3_3_1/pair_ZX.pair
+Sorting the files took 18107 seconds. 
+
+
+./results/pairs/wts/find_17
+Folder rowsum_5_5_3_-3 : sequences have order (Y, X, Z, W)
+Folder rowsum_7_3_3_-1 : sequences have order (Z, X, W, Y)
+Folder rowsum_5_5_3_3 : sequences have order (Z, W, X, Y)
+Folder rowsum_7_3_3_1 : sequences have order (Z, X, W, Y)
+
+count before equivalences 1204
+The function found a total of 91392 sequences without any equivalences
+count after equivalences 8
+Matching the sequences took 1871 seconds. 
+
+Total execution time was 94766 seconds.

@@ -6,6 +6,34 @@ use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, ro
 
 
 
+pub fn quad_to_string(q : (isize, isize, isize, isize)) -> String {
+
+    let (a,b,c,d) = q;
+    a.to_string() + &" " + &b.to_string() + &" " + &c.to_string() + &" " + &d.to_string() + &"\n"
+}
+
+pub fn write_rowsums(p : usize) {
+
+    let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
+    let folder = match seqtype {
+        SequenceType::WilliamsonType => {"wts"}
+        _ => {panic!("not implemented yet")} // TODO
+    };
+
+    let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string();
+    let path = folder_path.clone() + &"/rowsums.quad";
+    let mut f = File::create(path).expect("Invalid file ?");
+
+    let rs = generate_rowsums(p);
+
+    let s = rs.iter().map(|e| quad_to_string(*e)).fold("".to_string(), |a,b| a + &b);
+
+    f.write(s.as_bytes()).expect("Error writing file");
+}
+
+
+
+
 pub enum EquationSide {
     LEFT, RIGHT
 }
@@ -130,40 +158,43 @@ pub fn write_pairs(p : usize) {
 
 
     for rs in rowsums {
-        let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
-        let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
-        
-        let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"_" + &rowsums[1].to_string() + &"_" + &rowsums[2].to_string() + &"_" + &rowsums[3].to_string();
-        println!("{}",folder_path);
-        fs::create_dir_all(&folder_path).expect("Error when creating the dir");
-        
-        let now = Instant::now();
-        // We generate all the sequences possible for each rowsums
-        let sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
-        let sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
-        let sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
-        let sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
-
-        write_sequences(&sequences_0, &tags[0], &folder_path);
-        write_sequences(&sequences_1, &tags[1], &folder_path);
-        write_sequences(&sequences_2, &tags[2], &folder_path);
-        write_sequences(&sequences_3, &tags[3], &folder_path);
-        
-        let elapsed_time = now.elapsed().as_secs_f32();
-        eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
-        
-
-        let now = Instant::now();
-
-        write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path, EquationSide::LEFT);
-        write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
-        
-        let elapsed_time = now.elapsed().as_secs_f32();
-        eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
+        write_pairs_rowsum(folder.to_string(), rs, p);
     }
 }
 
+pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize) {
+    
+    let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
+    let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
+    
+    let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"_" + &rowsums[1].to_string() + &"_" + &rowsums[2].to_string() + &"_" + &rowsums[3].to_string();
+    println!("{}",folder_path);
+    fs::create_dir_all(&folder_path).expect("Error when creating the dir");
+    
+    let now = Instant::now();
+    // We generate all the sequences possible for each rowsums
+    let sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
+    let sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
+    let sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
+    let sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
 
+    write_sequences(&sequences_0, &tags[0], &folder_path);
+    write_sequences(&sequences_1, &tags[1], &folder_path);
+    write_sequences(&sequences_2, &tags[2], &folder_path);
+    write_sequences(&sequences_3, &tags[3], &folder_path);
+    
+    let elapsed_time = now.elapsed().as_secs_f32();
+    eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+    
+
+    let now = Instant::now();
+
+    write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path, EquationSide::LEFT);
+    write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+    
+    let elapsed_time = now.elapsed().as_secs_f32();
+    eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
+}
 
 
 
