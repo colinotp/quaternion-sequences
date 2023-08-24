@@ -7,7 +7,6 @@ use std::io::{self, BufRead, Write};
 use std::path::Path;
 
 use sequences::matrices::QHM;
-use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 use time::*;
 
 mod sequences;
@@ -177,7 +176,6 @@ fn main() {
         //find_unique_williamson_type_of_size(9);
         //find_q24(8, None);
         //find_write::write_pairs(7);
-        hadamard_equivalence_from_file("results/pairs/wts/find_13/result.seq".to_string());
     }
     else if count == 2 {
         match &args[1] {
@@ -201,7 +199,31 @@ fn main() {
             s if s == "matching" => {find_matching_algorithm(i)}
             s if s == "pairs" => {find_write::write_pairs(i)}
             s if s == "join" => {find_write_wts(i)}
-            s if s == "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq".to_string())}
+            s if s == "rowsums" => {find_write::write_rowsums(i)}
+            _ => {}
+        }
+    }
+    else if count == 7 {
+        println!("hey");
+
+        let p = match str::parse::<usize>(&args[2]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let a = match str::parse::<isize>(&args[3]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let b = match str::parse::<isize>(&args[4]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let c = match str::parse::<isize>(&args[5]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let d = match str::parse::<isize>(&args[6]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+
+        match &args[1] {
+            s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p)}
             _ => {}
         }
     }
