@@ -1,15 +1,13 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.16s
-     Running `target\debug\rust.exe pairs 5`
 (1, 1, 3, 3)
 (-1, 1, 3, 3)
 generated 2 different rowsums
 results/pairs/wts/find_5/rowsum_3_3_1_1
-The function took: 0.0156618 seconds to generate sequences with rowsums: 3, 3, 1, 1
-The function took: 0.0123793 seconds to go through the two sets of pairs
+The function took: 0.15124488 seconds to generate sequences with rowsums: 3, 3, 1, 1
+The function took: 0.03031559 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_5/rowsum_3_3_1_-1
-The function took: 0.0179499 seconds to generate sequences with rowsums: 3, 3, 1, -1
-The function took: 0.009329 seconds to go through the two sets of pairs
+The function took: 0.108763 seconds to generate sequences with rowsums: 3, 3, 1, -1
+The function took: 0.15993816 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  
@@ -21,16 +19,14 @@ results/pairs/wts/find_5/rowsum_3_3_1_1/pair_ZW.pair
 Sorting the files took 0 seconds. 
  
 
-    Finished dev [unoptimized + debuginfo] target(s) in 0.17s
-     Running `target\debug\rust.exe join 5`
 ./results/pairs/wts/find_5
 Folder rowsum_3_3_1_-1 : sequences have order (Y, X, Z, W)
-Folder rowsum_3_3_1_1 : sequences have order (X, Y, Z, W)
+Folder rowsum_3_3_1_1 : sequences have order (Z, W, X, Y)
 
 count before equivalences 22
 The function found a total of 960 sequences without any equivalences
 count after equivalences 2
-Matching the sequences took 1 seconds. 
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 2 seconds.
+Total execution time was 0 seconds.

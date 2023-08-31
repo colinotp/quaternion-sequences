@@ -1,22 +1,20 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.15s
-     Running `target\debug\rust.exe pairs 10`
 (0, 0, 2, 6)
 (2, 2, 4, 4)
 (-2, 2, 4, 4)
 generated 3 different rowsums
 results/pairs/wts/find_10/rowsum_6_2_0_0
-The function took: 0.0235685 seconds to generate sequences with rowsums: 6, 2, 0, 0
-The function took: 2.18075 seconds to go through the two sets of pairs
+The function took: 0.05370774 seconds to generate sequences with rowsums: 6, 2, 0, 0
+The function took: 0.74231213 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_10/rowsum_4_4_2_2
-The function took: 0.020249 seconds to generate sequences with rowsums: 4, 4, 2, 2
-The function took: 1.8143536 seconds to go through the two sets of pairs
+The function took: 0.02102368 seconds to generate sequences with rowsums: 4, 4, 2, 2
+The function took: 0.5745513 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_10/rowsum_4_4_2_-2
-The function took: 0.0159263 seconds to generate sequences with rowsums: 4, 4, 2, -2
-The function took: 1.5933576 seconds to go through the two sets of pairs
+The function took: 0.032389656 seconds to generate sequences with rowsums: 4, 4, 2, -2
+The function took: 0.5801951 seconds to go through the two sets of pairs
 
-Creating the sequences took 6 seconds. 
+Creating the sequences took 2 seconds. 
  
 
 results/pairs/wts/find_10/rowsum_4_4_2_-2/pair_YX.pair
@@ -28,17 +26,15 @@ results/pairs/wts/find_10/rowsum_6_2_0_0/pair_YX.pair
 Sorting the files took 0 seconds. 
  
 
-    Finished dev [unoptimized + debuginfo] target(s) in 0.14s
-     Running `target\debug\rust.exe join 10`
 ./results/pairs/wts/find_10
+Folder rowsum_4_4_2_2 : sequences have order (Z, W, X, Y)
+Folder rowsum_6_2_0_0 : sequences have order (Y, X, W, Z)
 Folder rowsum_4_4_2_-2 : sequences have order (Y, X, Z, W)
-Folder rowsum_4_4_2_2 : sequences have order (X, Y, Z, W)
-Folder rowsum_6_2_0_0 : sequences have order (W, Z, Y, X)
 
 count before equivalences 819
 The function found a total of 38400 sequences without any equivalences
 count after equivalences 28
-Matching the sequences took 24 seconds. 
+Matching the sequences took 5 seconds. 
  
 
-Total execution time was 30 seconds.
+Total execution time was 7 seconds.

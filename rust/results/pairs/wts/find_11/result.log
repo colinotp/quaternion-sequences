@@ -2,14 +2,14 @@
 (-1, 3, 3, 5)
 generated 2 different rowsums
 results/pairs/wts/find_11/rowsum_5_3_3_1
-The function took: 0.030338291 seconds to generate sequences with rowsums: 5, 3, 3, 1
-The function took: 2.1179283 seconds to go through the two sets of pairs
+The function took: 0.14801042 seconds to generate sequences with rowsums: 5, 3, 3, 1
+The function took: 2.3132458 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_11/rowsum_5_3_3_-1
-The function took: 0.02822774 seconds to generate sequences with rowsums: 5, 3, 3, -1
-The function took: 2.0752077 seconds to go through the two sets of pairs
+The function took: 0.007695719 seconds to generate sequences with rowsums: 5, 3, 3, -1
+The function took: 2.230978 seconds to go through the two sets of pairs
 
-Creating the sequences took 4 seconds. 
+Creating the sequences took 5 seconds. 
  
 
 results/pairs/wts/find_11/rowsum_5_3_3_-1/pair_WY.pair
@@ -29,4 +29,4 @@ count after equivalences 4
 Matching the sequences took 4 seconds. 
  
 
-Total execution time was 8 seconds.
+Total execution time was 9 seconds.

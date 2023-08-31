@@ -1,8 +1,8 @@
 (0, 2, 2, 4)
 generated 1 different rowsums
 results/pairs/wts/find_6/rowsum_4_2_2_0
-The function took: 0.000327179 seconds to generate sequences with rowsums: 4, 2, 2, 0
-The function took: 0.002838558 seconds to go through the two sets of pairs
+The function took: 0.07874165 seconds to generate sequences with rowsums: 4, 2, 2, 0
+The function took: 0.04476955 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  

@@ -3,18 +3,18 @@
 (-2, 2, 2, 2)
 generated 3 different rowsums
 results/pairs/wts/find_4/rowsum_4_0_0_0
-The function took: 0.012648044 seconds to generate sequences with rowsums: 4, 0, 0, 0
-The function took: 0.06988895 seconds to go through the two sets of pairs
+The function took: 0.013003034 seconds to generate sequences with rowsums: 4, 0, 0, 0
+The function took: 0.013196784 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_4/rowsum_2_2_2_2
-The function took: 0.024146259 seconds to generate sequences with rowsums: 2, 2, 2, 2
-The function took: 0.027485028 seconds to go through the two sets of pairs
+The function took: 0.015769176 seconds to generate sequences with rowsums: 2, 2, 2, 2
+The function took: 0.001946602 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_4/rowsum_2_2_2_-2
-The function took: 0.009657053 seconds to generate sequences with rowsums: 2, 2, 2, -2
-The function took: 0.018767942 seconds to go through the two sets of pairs
+The function took: 0.060723424 seconds to generate sequences with rowsums: 2, 2, 2, -2
+The function took: 0.001886441 seconds to go through the two sets of pairs
 
-Creating the sequences took 0 seconds. 
+Creating the sequences took 1 seconds. 
  
 
 results/pairs/wts/find_4/rowsum_2_2_2_-2/pair_WX.pair
@@ -27,9 +27,9 @@ Sorting the files took 0 seconds.
  
 
 ./results/pairs/wts/find_4
-Folder rowsum_2_2_2_2 : sequences have order (X, Y, Z, W)
-Folder rowsum_2_2_2_-2 : sequences have order (Y, Z, W, X)
 Folder rowsum_4_0_0_0 : sequences have order (Z, X, W, Y)
+Folder rowsum_2_2_2_-2 : sequences have order (Y, Z, W, X)
+Folder rowsum_2_2_2_2 : sequences have order (Z, W, X, Y)
 
 count before equivalences 115
 The function found a total of 896 sequences without any equivalences
