@@ -167,7 +167,7 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
     let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
     let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
     
-    let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &rowsums[0].to_string() + &"_" + &rowsums[1].to_string() + &"_" + &rowsums[2].to_string() + &"_" + &rowsums[3].to_string();
+    let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
     println!("{}",folder_path);
     fs::create_dir_all(&folder_path).expect("Error when creating the dir");
     
