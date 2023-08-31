@@ -3,4 +3,4 @@
 #SBATCH --mem=8000M
 #SBATCH --account=def-cbright
 
-./driver.sh 18
+./driver.sh 14

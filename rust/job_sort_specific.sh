@@ -1,6 +1,6 @@
 #! /bin/bash
-#SBATCH --time=3:00:00
-#SBATCH --mem=4000M
+#SBATCH --time=20:00:00
+#SBATCH --mem=8000M
 #SBATCH --account=def-cbright
 
 if [ $# -eq 1 ]
