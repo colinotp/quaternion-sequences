@@ -138,7 +138,7 @@ pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
         let mut new = HashSet::new();
 
         for seq in &class {
-            for equivalence in [equivalent_reorder, equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism] {
+            for equivalence in [equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism] {
                 for equ in equivalence(&seq){
                     if !class.contains(&equ) {
                         new.insert(equ);

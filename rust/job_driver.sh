@@ -1,6 +1,6 @@
 #! /bin/bash
-#SBATCH --time=70:00:00
+#SBATCH --time=2:00:00
 #SBATCH --mem=8000M
 #SBATCH --account=def-cbright
 
-./driver.sh 14
+./driver.sh 16
