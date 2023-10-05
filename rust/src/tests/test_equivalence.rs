@@ -4,6 +4,8 @@
 mod tests {
 
     use crate::sequences::{williamson::{Williamson, QUADRUPLETS}, equivalence::*};
+    use crate::sequences::sequence::*;
+    use crate::read_lines;
 
     #[test]
     fn test_coprime() {
@@ -184,5 +186,33 @@ mod tests {
             assert!(elm.to_qs().is_perfect());
         }
 
+    }
+
+    #[test]
+    fn test_wts_qts() {
+        for n in 17..18{
+            
+            let filepath="results/pairs/wts/find_".to_string() + &n.to_string() + &"/result.seq";
+
+            let mut sequences = vec![];
+
+            for line in read_lines(filepath).expect("Invalid file") {
+                sequences.push(Williamson::from_pqs(&QS::from_str(&line.expect("error reading line"))));
+            }
+
+            let mut total = vec![];
+
+            for seq in sequences {
+                let mut v = generate_equivalence_class(&seq).into_iter().collect();
+                total.append(&mut v);
+            }
+
+            println!("{}",total.len());
+            for seq in total {
+                assert!(seq.verify_cross_correlation());
+                assert!(seq.is_amicable());
+            }
+
+        }
     }
 }
