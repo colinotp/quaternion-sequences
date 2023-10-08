@@ -51,8 +51,7 @@ fn canon_hm(mat : &HM) -> CanonLabeling {
 
 
 pub fn reduce_to_hadamard_equivalence( mats : &Vec<HM>) -> Vec<&HM> {
-    let mut i = 0;
-    mats.iter().unique_by(|mat|{println!("{i}"); i+= 1;canon_hm(mat)}).collect_vec()
+    mats.iter().unique_by(|mat|{canon_hm(mat)}).collect_vec()
 }
 
 

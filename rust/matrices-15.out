@@ -1,0 +1,21 @@
+Ok("/scratch/colinot/quaternion-sequences/rust")
+results/pairs/wts/find_15/result.seq
+YXYIYXYxxYyyYxx
+YXXXXYxQXxIxXQx
+YXXXXYxZXxIxXZx
+YXQXXQXYxzZ+Zzx
+YXZXXZXYxqQJQqx
+YXZQJQZXYzZxxZz
+YXQZ+ZQXYqQxxQq
++J+Q+J+jj+--+jj
++JJJJ+jIJjQjJIj
++JJJJ+jKJjQjJKj
++JIJJIJ+jkKYKkj
++JKJJKJ+jiIXIij
++JKIXIKJ+kKjjKk
++JIKYKIJ+iIjjIi
+generated all sequences
+generated all matrices
+number of matrices up to equivalence : 4
+results/pairs/wts/find_15/result.mat
+Converting to matrices up to Hadamard equivalence took 85669 seconds.

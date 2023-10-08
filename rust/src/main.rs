@@ -15,6 +15,7 @@ mod find;
 use crate::find::*;
 use crate::find::find_unique::reduce_to_equivalence;
 use crate::sequences::{sequence::*, symmetries::*};
+use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 
 fn find_pqs(symmetry : Option<Symmetry>){
     for i in 1..18{
@@ -111,10 +112,10 @@ where P: AsRef<Path>, { // compact code to read a file
 
 fn convert_qs_to_matrices() {
     for i in 1.. {
-        println!("{}", &("./results/sequences/unique_wts/".to_string() + &i.to_string() + &".seq"));
-        if let Ok(lines) = read_lines(&("./results/sequences/unique_wts/".to_string() + &i.to_string() + &".seq")) {
+        println!("{}", &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq"));
+        if let Ok(lines) = read_lines(&("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq")) {
             // Consumes the iterator, returns an (Optional) String
-            let s = &("./results/sequences/qhm/".to_string() + &i.to_string() + &".mat");
+            let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.qhm");
             let path = Path::new(s);
             let mut f = File::create(path).expect("Invalid file ?");
 
@@ -172,7 +173,7 @@ fn main() {
         //find_pqs(None);
         //find_williamson();
         //find_pqs(Some(Symmetry::I));
-        //convert_qs_to_matrices();
+        convert_qs_to_matrices();
         //find_unique_williamson_type_of_size(9);
         //find_q24(8, None);
         //find_write::write_pairs(7);
@@ -199,6 +200,7 @@ fn main() {
             s if s == "matching" => {find_matching_algorithm(i)}
             s if s == "pairs" => {find_write::write_pairs(i)}
             s if s == "join" => {find_write_wts(i)}
+            s if s == "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq".to_string())}
             s if s == "rowsums" => {find_write::write_rowsums(i)}
             _ => {}
         }
