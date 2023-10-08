@@ -99,10 +99,20 @@ mod tests {
 
         let qs_product = sequence_product(&qs1, &qs2);
 
+        println!("{}", qs1.to_string());
+        println!("{}", qs2.to_string());
+        println!("{}", qs_product.to_string());
+
         let qhm1 = QHM::from_pqs(qs1).dephased();
         let mum1= MUM::from_qhm(&qhm1);
         let qhm2 = QHM::from_pqs(qs2).dephased();
         let mum2= MUM::from_qhm(&qhm2);
+
+
+        println!("{}", qhm1.to_string());
+        println!("{}", qhm2.to_string());
+        println!("{}", mum1.to_string());
+        println!("{}", mum2.to_string());
 
         let qhm_product = QHM::from_pqs(qs_product).dephased();
 
@@ -111,6 +121,12 @@ mod tests {
 
         println!("MUM product result: length: {}, matrix size: {}", from_mum_product.length(), from_mum_product.matrix_size());
         println!("PQS product result: length: {}, matrix size: {}", from_qs_product.length(), from_qs_product.matrix_size());
+
+        println!("{}",from_mum_product.to_string());
+        println!("{}",from_qs_product.to_string());
+
+
+        assert!(false);
     }
 
 

@@ -182,8 +182,8 @@ impl MUM {
                 let basis_elm = computational_basis(qhm.size(), j, k);
                 q_b = q_b + &quaternion_to_operator(&quat).tensor(&basis_elm);
             }
-            // we normalize by 1/size
-            sequence.push(q_b * Complex::new(1./matrix_size as f32, 0.));
+            // ! REMOVES TEMPORARILY we normalize by 1/size 
+            sequence.push(q_b /* * Complex::new(1./matrix_size as f32, 0.)*/);
         }
 
         MUM {matrix_size, sequence}

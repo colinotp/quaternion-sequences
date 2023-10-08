@@ -51,16 +51,16 @@ impl QHM {
 
 
     pub fn dephase(&mut self) {
-        // dephase the rows
-        for inv_row in 0..self.size {
-            for col in 0..self.size {
+        // dephase the columns
+        for col in 0..self.size {
+            for inv_row in 0..self.size {
                 let row = self.size - 1 - inv_row;
-                self.matrix[row][col] = self.matrix[0][col].conjugate()*self.matrix[row][col];
+                self.matrix[row][col] = self.matrix[row][col]*self.matrix[0][col].conjugate();
             }
         }
-        // dephase the columns
-        for inv_col in 0..self.size {
-            for row in 0..self.size {
+        // dephase the rows
+        for row in 0..self.size {
+            for inv_col in 0..self.size {
                 let col = self.size - 1 - inv_col;
                 self.matrix[row][col] = self.matrix[row][0].conjugate()*self.matrix[row][col];
             }
@@ -71,18 +71,18 @@ impl QHM {
     pub fn dephased(&self) -> QHM{
         let mut new_mat = vec![vec![Quaternion::<f32>::new(0.,0.,0.,0.);self.size]; self.size];
 
-        // dephase the rows
-        for inv_row in 0..self.size {
-            for col in 0..self.size {
+        // dephase the columns
+        for col in 0..self.size {
+            for inv_row in 0..self.size {
                 let row = self.size - 1 - inv_row;
-                new_mat[row][col] = self.matrix[0][col].conjugate()*self.matrix[row][col];
+                new_mat[row][col] = self.matrix[row][col]*self.matrix[0][col].conjugate();
             }
         }
-        // dephase the columns
-        for inv_col in 0..self.size {
-            for row in 0..self.size {
+        // dephase the rows
+        for row in 0..self.size {
+            for inv_col in 0..self.size {
                 let col = self.size - 1 - inv_col;
-                new_mat[row][col] = self.matrix[row][0].conjugate()*self.matrix[row][col];
+                new_mat[row][col] = new_mat[row][0].conjugate()*new_mat[row][col];
             }
         }
 
