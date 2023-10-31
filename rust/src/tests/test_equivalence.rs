@@ -5,6 +5,7 @@ mod tests {
 
     use crate::sequences::{williamson::{Williamson, QUADRUPLETS}, equivalence::*};
     use crate::sequences::sequence::*;
+    use crate::find::find_unique::reduce_to_equivalence;
     use crate::read_lines;
 
     #[test]
@@ -185,8 +186,34 @@ mod tests {
             println!("{}", elm.to_qs().to_string_raw());
             assert!(elm.to_qs().is_perfect());
         }
-
     }
+
+
+    #[test]
+    fn test_class_size() {
+        let i=16;
+
+        println!("{}", &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq"));
+        if let Ok(lines) = read_lines(&("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq")) {
+            // Consumes the iterator, returns an (Optional) String
+
+            let mut sequences = vec![];
+            for line in lines {
+                if let Ok(pqs) = line {
+                    let seq = Williamson::from_pqs(&QS::from_str(&pqs));
+                    sequences.push(seq);
+                }
+            }
+
+            let reducted_sequences = reduce_to_equivalence(&sequences);
+
+            println!("{}", sequences.len());
+            println!("{}", reducted_sequences.len());
+        }
+
+        assert!(false);
+    }
+
 
     #[test]
     fn test_wts_qts() {

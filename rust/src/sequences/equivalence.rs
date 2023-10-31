@@ -138,7 +138,7 @@ pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
         let mut new = HashSet::new();
 
         for seq in &class {
-            for equivalence in [equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism] {
+            for equivalence in [equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism, equivalent_reverse] {
                 for equ in equivalence(&seq){
                     if !class.contains(&equ) {
                         new.insert(equ);
@@ -234,6 +234,20 @@ pub fn equivalent_uniform_shift(seq : &Williamson) -> Vec<Williamson> {
         }
         res.push(s);
     }
+
+    res
+}
+
+pub fn equivalent_reverse(seq : &Williamson) -> Vec<Williamson> {
+    // computes all equivalent sequences by shift
+
+    let mut res = vec![seq.clone()];
+
+    let mut s = Williamson::new(seq.size());
+    for index in 0..seq.size() {
+        s.set_sequence_value(&seq.values(seq.size() - 1 - index), index)
+    }
+    res.push(s);
 
     res
 }

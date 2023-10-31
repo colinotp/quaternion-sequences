@@ -182,7 +182,7 @@ impl MUM {
                 let basis_elm = computational_basis(qhm.size(), j, k);
                 q_b = q_b + &quaternion_to_operator(&quat).tensor(&basis_elm);
             }
-            // ! REMOVES TEMPORARILY we normalize by 1/size 
+            // ! REMOVED TEMPORARILY we normalize by 1/size 
             sequence.push(q_b /* * Complex::new(1./matrix_size as f32, 0.)*/);
         }
 
@@ -198,5 +198,54 @@ impl MUM {
 
         result
     }
+
+}
+
+pub struct HMUO {
+    matrix_size : usize,
+    operator : Operator
+}
+
+impl HMUO {
+
+    pub fn new(matrix_size : usize, operator : Operator) -> HMUO {
+        HMUO {matrix_size, operator : operator.clone()}
+    }
+
+
+    pub fn empty(matrix_size : usize) -> HMUO {
+        let mat = Operator::empty(matrix_size);
+        HMUO {matrix_size, operator : mat}
+    }
+
+    pub fn matrix_size(&self) -> usize {
+        self.matrix_size
+    }
+
+    pub fn value(&self)-> Operator {
+        self.operator.clone()
+    }
+
+    pub fn from_qhm(qhm : &QHM) -> HMUO {
+        let mut mat = Operator::empty(2*qhm.size());
+
+        for (j,k) in iproduct!(0..qhm.size(), 0..qhm.size()) {
+            let quat = qhm.get(j,k).conjugate();
+            let basis_elm = computational_basis(qhm.size(), j, k);
+            mat = mat + &basis_elm.tensor(&quaternion_to_operator(&quat));
+        }
+
+        HMUO {matrix_size : 2*qhm.size(), operator : mat}
+    }
+
+
+    pub fn tensor(&self, other : &HMUO) -> HMUO {
+        HMUO {matrix_size : self.matrix_size + other.matrix_size, operator : self.operator.tensor(&other.operator)}
+    }
+
+    pub fn to_string(&self) -> String {
+        self.operator.to_string() + &"\n\n"
+    }
+
 
 }
