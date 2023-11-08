@@ -1,4 +1,4 @@
-use std::{path::Path, fs::File, io::Write, env};
+use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
 
 use itertools::Itertools;
 use petgraph::{Graph, graph::NodeIndex, Undirected};
@@ -7,6 +7,7 @@ use crate::{sequences::{equivalence::generate_equivalence_classes, williamson::W
 
 use super::{matrices::HM, sequence::QS};
 
+use rayon::{iter::*};
 
 use graph_canon::{self, CanonLabeling};
 
@@ -81,8 +82,11 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
 
     println!("generated all matrices");
 
-    let equ = reduce_to_hadamard_equivalence(&liste);
-    println!("number of matrices up to equivalence : {}", equ.len());
+    let equ = liste.into_par_iter().map(|mat| (canon_hm(&mat), mat)).collect::<HashMap<_,_>>().into_iter().map(|(_,v)| v).collect::<Vec<_>>();
+
+    let count = equ.len();
+
+    println!("number of matrices up to equivalence : {}", /*equ.len()*/ count);
 
     let result_name = pathname.split(".").next().expect("No first element").to_string() + &".mat";
 
