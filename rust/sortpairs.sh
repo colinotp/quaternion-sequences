@@ -18,7 +18,7 @@ do
 		for filename in $dirname/*.pair;
 		do
 			echo $filename
-			sort -S 2G -T tmp/ $filename > $filename.sorted
+			sort -S 2G -T $SLURM_TMPDIR $filename > $filename.sorted
 		done
 	fi
 done

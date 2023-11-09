@@ -13,6 +13,6 @@ fi
 
 # sorting the files
 start2=`date +%s`
-sort -S 2G -T tmp/ $filename > $filename.sorted
+sort -S 2G -T $SLURM_TMPDIR $filename > $filename.sorted
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.
