@@ -1,7 +1,8 @@
 #! /bin/bash
 #SBATCH --time=300:00:00
-#SBATCH --mem=16000M
+#SBATCH --mem=70000M
 #SBATCH --account=def-cbright
+#SBATCH --cpus-per-task=16
 
 n=$1
 
