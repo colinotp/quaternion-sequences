@@ -1,0 +1,24 @@
+results/pairs/wts/find_19/rowsum_-1_1_5_7/pair_WZ.pair
+sort: write failed: 'standard output': Cannot allocate memory
+sort: write error
+results/pairs/wts/find_19/rowsum_-1_1_5_7/pair_YX.pair
+sort: write failed: /localscratch/colinot.17154926.0/sort5xc8Ql: No space left on device
+results/pairs/wts/find_19/rowsum_-1_5_5_5/pair_WX.pair
+sort: write failed: 'standard output': Cannot allocate memory
+sort: write error
+results/pairs/wts/find_19/rowsum_-1_5_5_5/pair_YZ.pair
+results/pairs/wts/find_19/rowsum_-3_3_3_7/pair_WY.pair
+results/pairs/wts/find_19/rowsum_-3_3_3_7/pair_ZX.pair
+sort: write failed: /localscratch/colinot.17154926.0/sortayoFcN: Cannot allocate memory
+results/pairs/wts/find_19/rowsum_1_1_5_7/pair_WZ.pair
+sort: write failed: 'standard output': Cannot allocate memory
+sort: write error
+results/pairs/wts/find_19/rowsum_1_1_5_7/pair_YX.pair
+sort: write failed: /localscratch/colinot.17154926.0/sortdLd0ww: No space left on device
+results/pairs/wts/find_19/rowsum_1_5_5_5/pair_WX.pair
+results/pairs/wts/find_19/rowsum_1_5_5_5/pair_YZ.pair
+sort: write failed: 'standard output': Cannot allocate memory
+sort: write error
+results/pairs/wts/find_19/rowsum_3_3_3_7/pair_WY.pair
+results/pairs/wts/find_19/rowsum_3_3_3_7/pair_ZX.pair
+slurmstepd: error: *** JOB 17154926 ON cdr454 CANCELLED AT 2023-11-03T12:16:05 DUE TO TIME LIMIT ***

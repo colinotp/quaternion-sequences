@@ -1,0 +1,15 @@
+results/pairs/wts/find_18/rowsum_6_4_4_-2/pair_WY.pair
+results/pairs/wts/find_18/rowsum_6_4_4_-2/pair_ZX.pair
+sort: write failed: tmp//sort4P5ldf: Cannot allocate memory
+results/pairs/wts/find_18/rowsum_6_4_4_2/pair_WY.pair
+results/pairs/wts/find_18/rowsum_6_4_4_2/pair_ZX.pair
+results/pairs/wts/find_18/rowsum_6_6_0_0/pair_XY.pair
+./sortpairs.sh: line 18: 29927 Killed                  sort -S 2G -T tmp/ $filename > $filename.sorted
+results/pairs/wts/find_18/rowsum_6_6_0_0/pair_ZW.pair
+results/pairs/wts/find_18/rowsum_8_2_2_0/pair_WY.pair
+sort: write failed: 'standard output': Cannot allocate memory
+sort: write error
+results/pairs/wts/find_18/rowsum_8_2_2_0/pair_ZX.pair
+sort: write failed: tmp//sortXyoqdd: Cannot allocate memory
+Sorting the files took 21796 seconds.
+slurmstepd: error: Detected 1 oom_kill event in StepId=10795729.batch. Some of the step tasks have been OOM Killed.

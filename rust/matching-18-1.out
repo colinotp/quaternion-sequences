@@ -1,0 +1,6 @@
+hey
+results/pairs/wts/find_18/rowsum_8_2_2_0
+The function took: 0.5171765 seconds to generate sequences with rowsums: 8, 2, 2, 0
+The function took: 93214.54 seconds to go through the two sets of pairs
+
+Creating the sequences took 93219 seconds.

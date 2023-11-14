@@ -1,0 +1,6 @@
+hey
+results/pairs/wts/find_18/rowsum_6_4_4_-2
+The function took: 0.32622197 seconds to generate sequences with rowsums: 6, 4, 4, -2
+The function took: 73021.95 seconds to go through the two sets of pairs
+
+Creating the sequences took 73027 seconds.
