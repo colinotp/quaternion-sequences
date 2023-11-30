@@ -218,4 +218,6 @@ YYXYXYYyyYxYxYyy
 YXZXZXYxyXzXzXyx
 generated all sequences
 generated all matrices
-slurmstepd: error: *** JOB 14427438 ON cdr465 CANCELLED AT 2023-10-11T09:49:47 DUE TO TIME LIMIT ***
+number of matrices up to equivalence : 16
+results/pairs/wts/find_16/result.mat
+Converting to matrices up to Hadamard equivalence took 269262 seconds.
