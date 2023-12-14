@@ -46,6 +46,7 @@ fn generate_comment(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 
 
 
 pub fn find(p : usize, seqtype : SequenceType) {
+    // Find sequences using the approach of using a solver. It ended up being much slower than desired
 
     let rowsums = generate_rowsums(p);
     println!("generated {} different rowsums", rowsums.len());

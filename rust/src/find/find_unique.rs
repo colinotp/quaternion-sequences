@@ -32,6 +32,7 @@ fn contains(set : &Vec<Williamson>, seq : &Williamson) -> bool {
 
 
 fn find_minimum(class : &HashSet<Williamson>) -> Williamson {
+    // finds the minimum of a set comparing with the lexical order
     let mut mini = None;
 
     for elm in class {
@@ -51,6 +52,7 @@ fn find_minimum(class : &HashSet<Williamson>) -> Williamson {
 
 
 pub fn find(size : usize) -> String{
+    // Finds sequences and reduces the set found up to equivalence
     let sequences = find_aux(size);
     
     eprintln!("The function found {} sequences before equivalences", sequences.len());
@@ -98,6 +100,7 @@ pub fn find_aux(size : usize) -> Vec<Williamson>{
 }
 
 fn find_recursive(will : &mut Williamson, size : usize, index : usize, sequences : &mut Vec<Williamson>){
+    // This is the naive approach to finding QTS
 
     if index >= size{
         if will.to_qs().is_perfect() {
@@ -118,7 +121,7 @@ fn find_recursive(will : &mut Williamson, size : usize, index : usize, sequences
 
 
 pub fn reduce_to_equivalence(sequences : &Vec<Williamson>) -> Vec<Williamson> {
-
+    // This function reduces a set of QTS up to the Sequence equivalence defined in our paper
     
     let mut classes : Vec<HashSet<Williamson>> = vec![];
 

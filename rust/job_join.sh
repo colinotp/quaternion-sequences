@@ -1,10 +1,10 @@
 #! /bin/bash
-#SBATCH --time=15:00:00
+#SBATCH --time=30:00:00
 #SBATCH --mem=4000M
 #SBATCH --account=def-cbright
 
 
-n=17
+n=18
 
 foldername="./results/pairs/wts/find_$n"
 filename="$foldername/result.log"

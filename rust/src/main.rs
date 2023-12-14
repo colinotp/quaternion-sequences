@@ -206,8 +206,8 @@ fn main() {
         }
     }
     else if count == 7 {
-        println!("hey");
 
+        // Make sure the arguments are integer
         let p = match str::parse::<usize>(&args[2]){
                     Ok(a) => {a},
                     Err(_) => {panic!("argument isn't an integer !")}};

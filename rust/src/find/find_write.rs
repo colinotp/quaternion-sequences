@@ -7,12 +7,14 @@ use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, ro
 
 
 pub fn quad_to_string(q : (isize, isize, isize, isize)) -> String {
+    // Transforms a quadruplet of integers into a string
 
     let (a,b,c,d) = q;
     a.to_string() + &" " + &b.to_string() + &" " + &c.to_string() + &" " + &d.to_string() + &"\n"
 }
 
 pub fn write_rowsums(p : usize) {
+    // Stores the possible rowsums for qts sequences of length p
 
     let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
     let folder = match seqtype {
@@ -40,6 +42,7 @@ pub enum EquationSide {
 
 
 pub fn sort(quad : &Quad) -> (Vec<isize>, Vec<usize>){
+    // Sorts a quadruplet of integers
 
     let mut tab = vec![quad.0, quad.1, quad.2, quad.3];
     let mut indices = vec![0,1,2,3];
@@ -80,6 +83,7 @@ fn index_to_tag(index: usize) -> SequenceTag {
 }
 
 pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_path : &String) {
+    // stores the sequences
 
     let path = folder_path.clone() + &"/seq_" + &tag_to_string(tag) + ".seq";
     let mut f = File::create(path).expect("Invalid file ?");
@@ -93,6 +97,7 @@ pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_pat
 
 
 pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), p : usize, folder_path : &String, side : EquationSide) {
+    // This function generates the files that end in .pair used for the algorithm
 
     let path = folder_path.clone() + &"/pair_" + &tag_to_string(&tags.0) + &tag_to_string(&tags.1) + ".pair";
     let mut f = File::create(path).expect("Invalid file ?");
@@ -142,6 +147,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
 
 pub fn write_pairs(p : usize) {
+    // This is the starting point of the part of the algorithm that generates the possible sequences
 
     // all the possible rowsums of p
     let rowsums = generate_rowsums(p);
@@ -163,6 +169,7 @@ pub fn write_pairs(p : usize) {
 }
 
 pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize) {
+    // This function generates the sequences possible for specific rowsums and stores them
     
     let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
     let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
@@ -202,6 +209,7 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
 
 
 pub fn join_pairs(p : usize) -> Vec<Williamson>{
+    // This is the starting point of the part of the algorithm that goes through the sorted files and finds valid QTS
 
     let mut result = vec![];
 
@@ -232,6 +240,7 @@ pub fn join_pairs(p : usize) -> Vec<Williamson>{
 
 
 pub fn get_sequences_from_dir(directory : &DirEntry) -> (Vec<Vec<i8>>,Vec<Vec<i8>>,Vec<Vec<i8>>,Vec<Vec<i8>>) {
+    // This function reads the files from a directory and returns the sequences that are in the files ending in .seq
 
     let mut sequence_x = vec![];
     let mut sequence_y = vec![];
@@ -262,6 +271,7 @@ pub fn get_sequences_from_dir(directory : &DirEntry) -> (Vec<Vec<i8>>,Vec<Vec<i8
 
 
 pub fn file_to_sequences(filename : &String) -> Vec<Vec<i8>> {
+    // This function reads a file storing a set of sequences and returns them
 
     let mut seq = vec![];
 
@@ -275,6 +285,7 @@ pub fn file_to_sequences(filename : &String) -> Vec<Vec<i8>> {
 }
 
 pub fn string_to_sequence(s : &String) -> Vec<i8>{
+    // This file reads a sequence stored in string form and returns the sequence
     let mut res = vec![];
 
     for elm in s.chars() {
@@ -291,6 +302,7 @@ pub fn string_to_sequence(s : &String) -> Vec<i8>{
 
 
 pub fn get_order_from_dir(directory : &DirEntry) -> ((String, String), (SequenceTag, SequenceTag, SequenceTag, SequenceTag)){
+    // This function reads the generated files in a folder to determine what comparisons to make
 
     let mut filenames = vec![];
     let mut pathnames = vec![];
@@ -319,6 +331,7 @@ pub fn get_order_from_dir(directory : &DirEntry) -> ((String, String), (Sequence
 }
 
 pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
+    // This reads the name of a file and returns what are the corresponding tags
 
     let tag1 = match filename.chars().nth(5).expect("File name not long enough") {
         'X' => {SequenceTag::X}
@@ -344,6 +357,7 @@ pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
 
 
 pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) -> Vec<Williamson> {
+    // This function reads two sorted files of sequences and uses the order to determine what comparisons should be made, and returns the valid QTS
 
     let mut result = vec![];
 
@@ -410,6 +424,7 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
 
 
 pub fn get_line_from(seq : &Option<Result<String, Error>>) -> (String, (usize, usize)) {
+    // This function parse a line from the sorted files
 
     assert!(seq.is_some());
 
@@ -425,6 +440,7 @@ pub fn get_line_from(seq : &Option<Result<String, Error>>) -> (String, (usize, u
 
 
 pub fn get_sequences<'a>(sequences : &'a (Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>), order : &'a (SequenceTag, SequenceTag, SequenceTag, SequenceTag), indices : &'a (usize, usize, usize, usize)) -> (&'a Vec<i8>, &'a Vec<i8>, &'a Vec<i8>, &'a Vec<i8>) {
+    // This function returns the sequences corresponding to the indices in a specific order
 
     let seqx = get_sequence_aux(sequences, order, indices, SequenceTag::X);
     let seqy = get_sequence_aux(sequences, order, indices, SequenceTag::Y);
