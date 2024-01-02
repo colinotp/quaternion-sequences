@@ -1,4 +1,4 @@
-Creating the sequences took 5751 seconds.
-Sorting the files took 666 seconds.
-Matching the sequences took 737 seconds.
-Total execution time was 7154 seconds.
+Ok("/scratch/colinot/quaternion-sequences/rust")
+results/pairs/wts/find_14/result.seq
+results/pairs/wts/find_14/result.mat
+Converting to matrices up to Hadamard equivalence took 631567 seconds.

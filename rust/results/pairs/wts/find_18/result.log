@@ -18,3 +18,7 @@ Folder rowsum_6_6_0_0 : sequences have order (Z, W, X, Y)
 Folder rowsum_6_4_4_-2 : sequences have order (Z, X, W, Y)
 Folder rowsum_6_4_4_2 : sequences have order (Z, X, W, Y)
 Folder rowsum_8_2_2_0 : sequences have order (Z, X, W, Y)
+
+count before equivalences 35916
+The function found a total of 6925824 sequences without any equivalences
+count after equivalences 600
