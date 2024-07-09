@@ -58,7 +58,7 @@ fn find_williamson_of_size(i : usize){
 
 fn find_williamson_type(){
     for i in 1..15{
-        find_williamson_of_size(i);
+        find_williamson_type_of_size(i);
     }
 }
 

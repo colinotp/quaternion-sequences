@@ -33,14 +33,13 @@ pub fn iter_over_filtered_dft<'a>(sequences : &'a Vec<Vec<i8>>, bound : f64) -> 
 
 
 pub fn iter_over_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, sequences2 : &'a Vec<Vec<i8>>, bound : f64) -> impl std::iter::Iterator<Item = (&'a Vec<i8>, &'a Vec<i8>)> {
-    let bound_sqr = bound * bound;
     let couples = iproduct!(sequences1, sequences2);
     couples
         .filter(move |(seq1, seq2)| {
             let dft1 = dft_sequence(seq1);
             let dft2 = dft_sequence(seq2);
             for (elm1, elm2) in dft1.iter().zip(dft2.iter()) {
-                if elm1.norm_sqr() + elm2.norm_sqr() > bound_sqr {return false;}
+                if elm1.norm_sqr() + elm2.norm_sqr() > bound {return false;}
             }
             true
         })
@@ -49,14 +48,14 @@ pub fn iter_over_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, sequences2 
 
 
 pub fn iter_over_enumerate_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, sequences2 : &'a Vec<Vec<i8>>, bound : f64) -> impl std::iter::Iterator<Item = ((usize, &'a Vec<i8>), (usize, &'a Vec<i8>))> {
-    let bound_sqr = bound * bound;
-    let couples = iproduct!(sequences1.iter().enumerate(), sequences2.iter().enumerate());
+    let couples = iproduct!(sequences1.iter().enumerate(), sequences2.iter().enumerate());      // Iterator for every unique combination of sequences
     couples
         .filter(move |((_, seq1), (_, seq2))| {
             let dft1 = dft_sequence(seq1);
             let dft2 = dft_sequence(seq2);
             for (elm1, elm2) in dft1.iter().zip(dft2.iter()) {
-                if elm1.norm_sqr() + elm2.norm_sqr() > bound_sqr {return false;}
+                // This seems to be checking if PSD_A(t) + PSD_B(t) > (4n)^2, how does this accomplish the goal? It seems to be less restrictive than it could be
+                if elm1.norm_sqr() + elm2.norm_sqr() > bound {return false;}
             }
             true
         })
