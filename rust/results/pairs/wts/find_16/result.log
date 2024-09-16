@@ -3,12 +3,38 @@
 (-4, 4, 4, 4)
 generated 3 different rowsums
 results/pairs/wts/find_16/rowsum_0_0_0_8
-The function took: 0.14154409 seconds to generate sequences with rowsums: 8, 0, 0, 0
-The function took: 3316.0098 seconds to go through the two sets of pairs
+The function took: 0.25618663 seconds to generate sequences with rowsums: 8, 0, 0, 0
+The function took: 1462.027 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_16/rowsum_4_4_4_4
-The function took: 0.95628005 seconds to generate sequences with rowsums: 4, 4, 4, 4
-The function took: 2173.979 seconds to go through the two sets of pairs
+The function took: 0.102719516 seconds to generate sequences with rowsums: 4, 4, 4, 4
+The function took: 1071.0447 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_16/rowsum_-4_4_4_4
-The function took: 0.08177524 seconds to generate sequences with rowsums: 4, 4, 4, -4
+The function took: 0.114557825 seconds to generate sequences with rowsums: 4, 4, 4, -4
+The function took: 1074.1385 seconds to go through the two sets of pairs
+
+Creating the sequences took 3607 seconds. 
+ 
+
+results/pairs/wts/find_16/rowsum_-4_4_4_4/pair_WX.pair
+results/pairs/wts/find_16/rowsum_-4_4_4_4/pair_YZ.pair
+results/pairs/wts/find_16/rowsum_0_0_0_8/pair_WY.pair
+results/pairs/wts/find_16/rowsum_0_0_0_8/pair_ZX.pair
+results/pairs/wts/find_16/rowsum_4_4_4_4/pair_XY.pair
+results/pairs/wts/find_16/rowsum_4_4_4_4/pair_ZW.pair
+Sorting the files took 253 seconds. 
+ 
+
+./results/pairs/wts/find_16
+Folder rowsum_0_0_0_8 : sequences have order (Z, X, W, Y)
+Folder rowsum_4_4_4_4 : sequences have order (X, Y, Z, W)
+Folder rowsum_-4_4_4_4 : sequences have order (Y, Z, W, X)
+
+count before equivalences 228256
+The function found a total of 1867776 sequences without any equivalences
+count after equivalences 216
+Matching the sequences took 418 seconds. 
+ 
+
+Total execution time was 4278 seconds.

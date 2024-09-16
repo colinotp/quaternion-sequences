@@ -2,26 +2,26 @@
 (-1, 1, 1, 1)
 generated 2 different rowsums
 results/pairs/wts/find_1/rowsum_1_1_1_1
-The function took: 0.13115829 seconds to generate sequences with rowsums: 1, 1, 1, 1
-The function took: 0.046605986 seconds to go through the two sets of pairs
+The function took: 0.10874054 seconds to generate sequences with rowsums: 1, 1, 1, 1
+The function took: 0.037901554 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_1/rowsum_1_1_1_-1
-The function took: 0.005195616 seconds to generate sequences with rowsums: 1, 1, 1, -1
-The function took: 0.005622848 seconds to go through the two sets of pairs
+results/pairs/wts/find_1/rowsum_-1_1_1_1
+The function took: 0.09323866 seconds to generate sequences with rowsums: 1, 1, 1, -1
+The function took: 0.043331034 seconds to go through the two sets of pairs
 
 Creating the sequences took 1 seconds. 
  
 
-results/pairs/wts/find_1/rowsum_1_1_1_-1/pair_WX.pair
-results/pairs/wts/find_1/rowsum_1_1_1_-1/pair_YZ.pair
+results/pairs/wts/find_1/rowsum_-1_1_1_1/pair_WX.pair
+results/pairs/wts/find_1/rowsum_-1_1_1_1/pair_YZ.pair
 results/pairs/wts/find_1/rowsum_1_1_1_1/pair_XY.pair
 results/pairs/wts/find_1/rowsum_1_1_1_1/pair_ZW.pair
 Sorting the files took 0 seconds. 
  
 
 ./results/pairs/wts/find_1
-Folder rowsum_1_1_1_-1 : sequences have order (Y, Z, W, X)
 Folder rowsum_1_1_1_1 : sequences have order (Z, W, X, Y)
+Folder rowsum_-1_1_1_1 : sequences have order (W, X, Y, Z)
 
 count before equivalences 2
 The function found a total of 16 sequences without any equivalences

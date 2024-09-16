@@ -1,24 +1,24 @@
 (0, 0, 2, 2)
 generated 1 different rowsums
-results/pairs/wts/find_2/rowsum_2_2_0_0
-The function took: 0.019312324 seconds to generate sequences with rowsums: 2, 2, 0, 0
-The function took: 0.024138028 seconds to go through the two sets of pairs
+results/pairs/wts/find_2/rowsum_0_0_2_2
+The function took: 0.056249447 seconds to generate sequences with rowsums: 2, 2, 0, 0
+The function took: 0.017089952 seconds to go through the two sets of pairs
 
-Creating the sequences took 0 seconds. 
+Creating the sequences took 2 seconds. 
  
 
-results/pairs/wts/find_2/rowsum_2_2_0_0/pair_XY.pair
-results/pairs/wts/find_2/rowsum_2_2_0_0/pair_ZW.pair
-Sorting the files took 0 seconds. 
+results/pairs/wts/find_2/rowsum_0_0_2_2/pair_XY.pair
+results/pairs/wts/find_2/rowsum_0_0_2_2/pair_ZW.pair
+Sorting the files took 1 seconds. 
  
 
 ./results/pairs/wts/find_2
-Folder rowsum_2_2_0_0 : sequences have order (Z, W, X, Y)
+Folder rowsum_0_0_2_2 : sequences have order (Z, W, X, Y)
 
 count before equivalences 4
 The function found a total of 96 sequences without any equivalences
 count after equivalences 2
-Matching the sequences took 1 seconds. 
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 1 seconds.
+Total execution time was 3 seconds.

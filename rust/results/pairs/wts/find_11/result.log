@@ -1,27 +1,27 @@
 (1, 3, 3, 5)
 (-1, 3, 3, 5)
 generated 2 different rowsums
-results/pairs/wts/find_11/rowsum_5_3_3_1
-The function took: 0.14801042 seconds to generate sequences with rowsums: 5, 3, 3, 1
-The function took: 2.3132458 seconds to go through the two sets of pairs
+results/pairs/wts/find_11/rowsum_1_3_3_5
+The function took: 0.107423 seconds to generate sequences with rowsums: 5, 3, 3, 1
+The function took: 1.6702039 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_11/rowsum_5_3_3_-1
-The function took: 0.007695719 seconds to generate sequences with rowsums: 5, 3, 3, -1
-The function took: 2.230978 seconds to go through the two sets of pairs
+results/pairs/wts/find_11/rowsum_-1_3_3_5
+The function took: 0.07083115 seconds to generate sequences with rowsums: 5, 3, 3, -1
+The function took: 1.9882636 seconds to go through the two sets of pairs
 
-Creating the sequences took 5 seconds. 
+Creating the sequences took 4 seconds. 
  
 
-results/pairs/wts/find_11/rowsum_5_3_3_-1/pair_WY.pair
-results/pairs/wts/find_11/rowsum_5_3_3_-1/pair_ZX.pair
-results/pairs/wts/find_11/rowsum_5_3_3_1/pair_WY.pair
-results/pairs/wts/find_11/rowsum_5_3_3_1/pair_ZX.pair
-Sorting the files took 0 seconds. 
+results/pairs/wts/find_11/rowsum_-1_3_3_5/pair_WY.pair
+results/pairs/wts/find_11/rowsum_-1_3_3_5/pair_ZX.pair
+results/pairs/wts/find_11/rowsum_1_3_3_5/pair_WY.pair
+results/pairs/wts/find_11/rowsum_1_3_3_5/pair_ZX.pair
+Sorting the files took 1 seconds. 
  
 
 ./results/pairs/wts/find_11
-Folder rowsum_5_3_3_-1 : sequences have order (Z, X, W, Y)
-Folder rowsum_5_3_3_1 : sequences have order (Z, X, W, Y)
+Folder rowsum_-1_3_3_5 : sequences have order (W, Y, Z, X)
+Folder rowsum_1_3_3_5 : sequences have order (Z, X, W, Y)
 
 count before equivalences 256
 The function found a total of 21120 sequences without any equivalences

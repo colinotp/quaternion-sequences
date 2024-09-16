@@ -1,19 +1,19 @@
 (0, 2, 2, 4)
 generated 1 different rowsums
-results/pairs/wts/find_6/rowsum_4_2_2_0
-The function took: 0.07874165 seconds to generate sequences with rowsums: 4, 2, 2, 0
-The function took: 0.04476955 seconds to go through the two sets of pairs
+results/pairs/wts/find_6/rowsum_0_2_2_4
+The function took: 0.09334289 seconds to generate sequences with rowsums: 4, 2, 2, 0
+The function took: 0.062252197 seconds to go through the two sets of pairs
 
-Creating the sequences took 0 seconds. 
+Creating the sequences took 1 seconds. 
  
 
-results/pairs/wts/find_6/rowsum_4_2_2_0/pair_WY.pair
-results/pairs/wts/find_6/rowsum_4_2_2_0/pair_ZX.pair
+results/pairs/wts/find_6/rowsum_0_2_2_4/pair_WY.pair
+results/pairs/wts/find_6/rowsum_0_2_2_4/pair_ZX.pair
 Sorting the files took 0 seconds. 
  
 
 ./results/pairs/wts/find_6
-Folder rowsum_4_2_2_0 : sequences have order (Z, X, W, Y)
+Folder rowsum_0_2_2_4 : sequences have order (W, Y, Z, X)
 
 count before equivalences 55
 The function found a total of 4608 sequences without any equivalences
@@ -21,4 +21,4 @@ count after equivalences 8
 Matching the sequences took 1 seconds. 
  
 
-Total execution time was 1 seconds.
+Total execution time was 2 seconds.

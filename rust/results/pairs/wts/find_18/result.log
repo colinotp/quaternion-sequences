@@ -1,24 +1,62 @@
-(0, 0, 6, 6)
-(0, 2, 2, 8)
-(2, 4, 4, 6)
-(-2, 4, 4, 6)
-generated 4 different rowsums
-results/pairs/wts/find_18/rowsum_6_6_0_0
-The function took: 0.32683772 seconds to generate sequences with rowsums: 6, 6, 0, 0
-The function took: 107951.26 seconds to go through the two sets of pairs
+results/pairs/wts/find_18/rowsum_0_0_6_6
+The function took: 0.367892 seconds to generate sequences with rowsums: 6, 6, 0, 0
+The function took: 68800.01 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_18/rowsum_8_2_2_0
-The function took: 0.42756963 seconds to generate sequences with rowsums: 8, 2, 2, 0
-The function took: 93711.54 seconds to go through the two sets of pairs
+Creating the sequences took 68801 seconds.
 
-results/pairs/wts/find_18/rowsum_6_4_4_2
-The function took: 2.1788542 seconds to generate sequences with rowsums: 6, 4, 4, 2
+
+results/pairs/wts/find_18/rowsum_0_2_2_8
+The function took: 0.36588404 seconds to generate sequences with rowsums: 8, 2, 2, 0
+The function took: 58374.367 seconds to go through the two sets of pairs
+
+Creating the sequences took 58375 seconds.
+
+
+results/pairs/wts/find_18/rowsum_2_4_4_6
+The function took: 0.30288434 seconds to generate sequences with rowsums: 6, 4, 4, 2
+The function took: 51135.29 seconds to go through the two sets of pairs
+
+Creating the sequences took 51136 seconds.
+
+
+results/pairs/wts/find_18/rowsum_-2_4_4_6
+The function took: 1.6341004 seconds to generate sequences with rowsums: 6, 4, 4, -2
+The function took: 46562.227 seconds to go through the two sets of pairs
+
+Creating the sequences took 46565 seconds.
+
+
+Sorting the file "pair_ZW.pair" took 261 seconds. 
+
+
+Sorting the file "pair_WY.pair" took 302 seconds. 
+
+
+Sorting the file "pair_WY.pair" took 367 seconds. 
+
+
+Sorting the file "pair_WY.pair" took 416 seconds. 
+
+
+Sorting the file "pair_ZX.pair" took 702 seconds. 
+
+
+Sorting the file "pair_ZX.pair" took 763 seconds. 
+
+
+Sorting the file "pair_ZX.pair" took 992 seconds. 
+
+
+Sorting the file "pair_XY.pair" took 1004 seconds. 
 ./results/pairs/wts/find_18
-Folder rowsum_6_6_0_0 : sequences have order (Z, W, X, Y)
-Folder rowsum_6_4_4_-2 : sequences have order (Z, X, W, Y)
-Folder rowsum_6_4_4_2 : sequences have order (Z, X, W, Y)
-Folder rowsum_8_2_2_0 : sequences have order (Z, X, W, Y)
+Folder rowsum_0_0_6_6 : sequences have order (X, Y, Z, W)
+Folder rowsum_0_2_2_8 : sequences have order (W, Y, Z, X)
+Folder rowsum_-2_4_4_6 : sequences have order (W, Y, Z, X)
+Folder rowsum_2_4_4_6 : sequences have order (Z, X, W, Y)
 
-count before equivalences 35916
-The function found a total of 6925824 sequences without any equivalences
-count after equivalences 600
+count before equivalences 168380
+The function found a total of 7921152 sequences without any equivalences
+count after equivalences 704
+Joining the files together took 0 seconds. 
+
+

@@ -5,60 +5,60 @@
 (3, 3, 3, 5)
 (-3, 3, 3, 5)
 generated 6 different rowsums
-results/pairs/wts/find_13/rowsum_7_1_1_1
-The function took: 0.016327549 seconds to generate sequences with rowsums: 7, 1, 1, 1
-The function took: 39.82638 seconds to go through the two sets of pairs
+results/pairs/wts/find_13/rowsum_1_1_1_7
+The function took: 0.21460451 seconds to generate sequences with rowsums: 7, 1, 1, 1
+The function took: 27.508297 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_13/rowsum_7_1_1_-1
-The function took: 0.12788919 seconds to generate sequences with rowsums: 7, 1, 1, -1
-The function took: 39.167805 seconds to go through the two sets of pairs
+results/pairs/wts/find_13/rowsum_-1_1_1_7
+The function took: 0.28106165 seconds to generate sequences with rowsums: 7, 1, 1, -1
+The function took: 27.536066 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_13/rowsum_5_5_1_1
-The function took: 0.036942553 seconds to generate sequences with rowsums: 5, 5, 1, 1
-The function took: 39.07472 seconds to go through the two sets of pairs
+results/pairs/wts/find_13/rowsum_1_1_5_5
+The function took: 0.5246937 seconds to generate sequences with rowsums: 5, 5, 1, 1
+The function took: 28.103035 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_13/rowsum_5_5_1_-1
-The function took: 0.049196873 seconds to generate sequences with rowsums: 5, 5, 1, -1
-The function took: 39.804836 seconds to go through the two sets of pairs
+results/pairs/wts/find_13/rowsum_-1_1_5_5
+The function took: 0.10031504 seconds to generate sequences with rowsums: 5, 5, 1, -1
+The function took: 27.694796 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_13/rowsum_5_3_3_3
-The function took: 0.028733756 seconds to generate sequences with rowsums: 5, 3, 3, 3
-The function took: 29.42077 seconds to go through the two sets of pairs
+results/pairs/wts/find_13/rowsum_3_3_3_5
+The function took: 0.45408365 seconds to generate sequences with rowsums: 5, 3, 3, 3
+The function took: 22.261301 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_13/rowsum_5_3_3_-3
-The function took: 0.0322187 seconds to generate sequences with rowsums: 5, 3, 3, -3
-The function took: 29.129225 seconds to go through the two sets of pairs
+results/pairs/wts/find_13/rowsum_-3_3_3_5
+The function took: 0.107942544 seconds to generate sequences with rowsums: 5, 3, 3, -3
+The function took: 21.912006 seconds to go through the two sets of pairs
 
-Creating the sequences took 217 seconds. 
+Creating the sequences took 156 seconds. 
  
 
-results/pairs/wts/find_13/rowsum_5_3_3_-3/pair_WY.pair
-results/pairs/wts/find_13/rowsum_5_3_3_-3/pair_ZX.pair
-results/pairs/wts/find_13/rowsum_5_3_3_3/pair_WY.pair
-results/pairs/wts/find_13/rowsum_5_3_3_3/pair_ZX.pair
-results/pairs/wts/find_13/rowsum_5_5_1_-1/pair_YX.pair
-results/pairs/wts/find_13/rowsum_5_5_1_-1/pair_ZW.pair
-results/pairs/wts/find_13/rowsum_5_5_1_1/pair_XY.pair
-results/pairs/wts/find_13/rowsum_5_5_1_1/pair_ZW.pair
-results/pairs/wts/find_13/rowsum_7_1_1_-1/pair_WY.pair
-results/pairs/wts/find_13/rowsum_7_1_1_-1/pair_ZX.pair
-results/pairs/wts/find_13/rowsum_7_1_1_1/pair_WY.pair
-results/pairs/wts/find_13/rowsum_7_1_1_1/pair_ZX.pair
-Sorting the files took 13 seconds. 
+results/pairs/wts/find_13/rowsum_-1_1_1_7/pair_WY.pair
+results/pairs/wts/find_13/rowsum_-1_1_1_7/pair_ZX.pair
+results/pairs/wts/find_13/rowsum_-1_1_5_5/pair_YX.pair
+results/pairs/wts/find_13/rowsum_-1_1_5_5/pair_ZW.pair
+results/pairs/wts/find_13/rowsum_-3_3_3_5/pair_WY.pair
+results/pairs/wts/find_13/rowsum_-3_3_3_5/pair_ZX.pair
+results/pairs/wts/find_13/rowsum_1_1_1_7/pair_WY.pair
+results/pairs/wts/find_13/rowsum_1_1_1_7/pair_ZX.pair
+results/pairs/wts/find_13/rowsum_1_1_5_5/pair_XY.pair
+results/pairs/wts/find_13/rowsum_1_1_5_5/pair_ZW.pair
+results/pairs/wts/find_13/rowsum_3_3_3_5/pair_WY.pair
+results/pairs/wts/find_13/rowsum_3_3_3_5/pair_ZX.pair
+Sorting the files took 9 seconds. 
  
 
 ./results/pairs/wts/find_13
-Folder rowsum_5_3_3_-3 : sequences have order (Z, X, W, Y)
-Folder rowsum_5_3_3_3 : sequences have order (Z, X, W, Y)
-Folder rowsum_5_5_1_-1 : sequences have order (Y, X, Z, W)
-Folder rowsum_5_5_1_1 : sequences have order (Z, W, X, Y)
-Folder rowsum_7_1_1_1 : sequences have order (Z, X, W, Y)
-Folder rowsum_7_1_1_-1 : sequences have order (Z, X, W, Y)
+Folder rowsum_1_1_5_5 : sequences have order (Z, W, X, Y)
+Folder rowsum_1_1_1_7 : sequences have order (W, Y, Z, X)
+Folder rowsum_-1_1_1_7 : sequences have order (Z, X, W, Y)
+Folder rowsum_-1_1_5_5 : sequences have order (Z, W, Y, X)
+Folder rowsum_-3_3_3_5 : sequences have order (W, Y, Z, X)
+Folder rowsum_3_3_3_5 : sequences have order (W, Y, Z, X)
 
 count before equivalences 2172
 The function found a total of 67392 sequences without any equivalences
 count after equivalences 12
-Matching the sequences took 24 seconds. 
+Matching the sequences took 14 seconds. 
  
 
-Total execution time was 254 seconds.
+Total execution time was 180 seconds.
