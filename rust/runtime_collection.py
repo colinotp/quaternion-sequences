@@ -3,7 +3,7 @@ import re
 n = input("Length: ")
 
 filePath = "./results/pairs/wts/find_"
-directory = filePath + n
+directory = filePath + n + "/result.log"
 
 
 runtimes = []

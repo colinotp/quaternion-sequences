@@ -13,7 +13,7 @@ do
 		for filename in $dirname/*.pair;
 		do
 			echo $filename
-			sbatch ./job_sort_specific.sh $filename --output="$filename.sorted"
+			sbatch ./job_sort_specific.sh $filename $n --output="$filename.sorted"
 		done
 	fi
 done
