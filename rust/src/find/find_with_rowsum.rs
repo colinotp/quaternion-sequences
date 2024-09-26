@@ -1,3 +1,7 @@
+// It seems like this is mostly legacy code from when some sort of solver was being used, not really used anymore.
+// The only functions that are referenced from outside this file are the sort function (used in testing)
+// and a couple others that are accessible by command line arguments to main.rs
+
 use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env, time::Instant};
 
 use memory_stats::memory_stats;
