@@ -1,10 +1,10 @@
 (0, 2, 2, 4)
 generated 1 different rowsums
 results/pairs/wts/find_6/rowsum_0_2_2_4
-The function took: 0.09334289 seconds to generate sequences with rowsums: 4, 2, 2, 0
-The function took: 0.062252197 seconds to go through the two sets of pairs
+The function took: 0.009316359 seconds to generate sequences with rowsums: 4, 2, 2, 0
+The function took: 0.020872092 seconds to go through the two sets of pairs
 
-Creating the sequences took 1 seconds. 
+Creating the sequences took 0 seconds. 
  
 
 results/pairs/wts/find_6/rowsum_0_2_2_4/pair_WY.pair
@@ -13,12 +13,11 @@ Sorting the files took 0 seconds.
  
 
 ./results/pairs/wts/find_6
-Folder rowsum_0_2_2_4 : sequences have order (W, Y, Z, X)
-
-count before equivalences 55
-The function found a total of 4608 sequences without any equivalences
-count after equivalences 8
-Matching the sequences took 1 seconds. 
+Folder rowsum_0_2_2_4 : sequences have order (Z, X, W, Y)
+thread 'main' panicked at src/find/find_write.rs:468:40:
+index out of bounds: the len is 15 but the index is 18
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 2 seconds.
+Total execution time was 0 seconds.

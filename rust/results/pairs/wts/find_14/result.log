@@ -2,31 +2,29 @@
 (0, 2, 6, 4)
 generated 2 different rowsums
 results/pairs/wts/find_14/rowsum_0_2_4_6
-The function took: 0.0973584 seconds to generate sequences with rowsums: 6, 4, 2, 0
-The function took: 95.06335 seconds to go through the two sets of pairs
+The function took: 0.034111988 seconds to generate sequences with rowsums: 6, 4, 2, 0
+The function took: 64.43473 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_14/rowsum_0_2_6_4
-The function took: 0.10956665 seconds to generate sequences with rowsums: 6, 4, 2, 0
-The function took: 94.702705 seconds to go through the two sets of pairs
+The function took: 0.016772397 seconds to generate sequences with rowsums: 6, 4, 2, 0
+The function took: 64.86041 seconds to go through the two sets of pairs
 
-Creating the sequences took 190 seconds. 
+Creating the sequences took 130 seconds. 
  
 
 results/pairs/wts/find_14/rowsum_0_2_4_6/pair_WZ.pair
 results/pairs/wts/find_14/rowsum_0_2_4_6/pair_YX.pair
 results/pairs/wts/find_14/rowsum_0_2_6_4/pair_YX.pair
 results/pairs/wts/find_14/rowsum_0_2_6_4/pair_ZW.pair
-Sorting the files took 9 seconds. 
+Sorting the files took 5 seconds. 
  
 
 ./results/pairs/wts/find_14
 Folder rowsum_0_2_4_6 : sequences have order (W, Z, Y, X)
-Folder rowsum_0_2_6_4 : sequences have order (Z, W, Y, X)
-
-count before equivalences 6716
-The function found a total of 612864 sequences without any equivalences
-count after equivalences 96
-Matching the sequences took 68 seconds. 
+thread 'main' panicked at src/find/find_write.rs:469:40:
+index out of bounds: the len is 2002 but the index is 2816
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 267 seconds.
+Total execution time was 135 seconds.

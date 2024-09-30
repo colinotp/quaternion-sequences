@@ -3,18 +3,18 @@
 (-2, 2, 4, 4)
 generated 3 different rowsums
 results/pairs/wts/find_10/rowsum_0_0_2_6
-The function took: 2.0742881 seconds to generate sequences with rowsums: 6, 2, 0, 0
-The function took: 0.78381896 seconds to go through the two sets of pairs
+The function took: 0.04230523 seconds to generate sequences with rowsums: 6, 2, 0, 0
+The function took: 0.39000294 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_10/rowsum_2_2_4_4
-The function took: 0.4152866 seconds to generate sequences with rowsums: 4, 4, 2, 2
-The function took: 0.51454586 seconds to go through the two sets of pairs
+The function took: 0.030629093 seconds to generate sequences with rowsums: 4, 4, 2, 2
+The function took: 0.33369482 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_10/rowsum_-2_2_4_4
-The function took: 0.5282794 seconds to generate sequences with rowsums: 4, 4, 2, -2
-The function took: 0.9734843 seconds to go through the two sets of pairs
+The function took: 0.043089688 seconds to generate sequences with rowsums: 4, 4, 2, -2
+The function took: 0.3152745 seconds to go through the two sets of pairs
 
-Creating the sequences took 7 seconds. 
+Creating the sequences took 1 seconds. 
  
 
 results/pairs/wts/find_10/rowsum_-2_2_4_4/pair_YX.pair
@@ -23,18 +23,15 @@ results/pairs/wts/find_10/rowsum_0_0_2_6/pair_WZ.pair
 results/pairs/wts/find_10/rowsum_0_0_2_6/pair_YX.pair
 results/pairs/wts/find_10/rowsum_2_2_4_4/pair_XY.pair
 results/pairs/wts/find_10/rowsum_2_2_4_4/pair_ZW.pair
-Sorting the files took 1 seconds. 
+Sorting the files took 0 seconds. 
  
 
 ./results/pairs/wts/find_10
-Folder rowsum_0_0_2_6 : sequences have order (Y, X, W, Z)
-Folder rowsum_2_2_4_4 : sequences have order (Z, W, X, Y)
 Folder rowsum_-2_2_4_4 : sequences have order (Z, W, Y, X)
-
-count before equivalences 819
-The function found a total of 38400 sequences without any equivalences
-count after equivalences 28
-Matching the sequences took 4 seconds. 
+thread 'main' panicked at src/find/find_write.rs:470:40:
+index out of bounds: the len is 120 but the index is 128
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 12 seconds.
+Total execution time was 1 seconds.

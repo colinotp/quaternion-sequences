@@ -2,25 +2,25 @@
 (-1, 1, 1, 1)
 generated 2 different rowsums
 results/pairs/wts/find_1/rowsum_1_1_1_1
-The function took: 0.10874054 seconds to generate sequences with rowsums: 1, 1, 1, 1
-The function took: 0.037901554 seconds to go through the two sets of pairs
+The function took: 0.041595917 seconds to generate sequences with rowsums: 1, 1, 1, 1
+The function took: 0.03754868 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_1/rowsum_-1_1_1_1
-The function took: 0.09323866 seconds to generate sequences with rowsums: 1, 1, 1, -1
-The function took: 0.043331034 seconds to go through the two sets of pairs
+The function took: 0.022853928 seconds to generate sequences with rowsums: 1, 1, 1, -1
+The function took: 0.028785832 seconds to go through the two sets of pairs
 
-Creating the sequences took 1 seconds. 
+Creating the sequences took 0 seconds. 
  
 
 results/pairs/wts/find_1/rowsum_-1_1_1_1/pair_WX.pair
 results/pairs/wts/find_1/rowsum_-1_1_1_1/pair_YZ.pair
 results/pairs/wts/find_1/rowsum_1_1_1_1/pair_XY.pair
 results/pairs/wts/find_1/rowsum_1_1_1_1/pair_ZW.pair
-Sorting the files took 0 seconds. 
+Sorting the files took 1 seconds. 
  
 
 ./results/pairs/wts/find_1
-Folder rowsum_1_1_1_1 : sequences have order (Z, W, X, Y)
+Folder rowsum_1_1_1_1 : sequences have order (X, Y, Z, W)
 Folder rowsum_-1_1_1_1 : sequences have order (W, X, Y, Z)
 
 count before equivalences 2
