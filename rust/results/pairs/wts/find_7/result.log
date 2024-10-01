@@ -4,22 +4,22 @@
 (-1, 3, 3, 3)
 generated 4 different rowsums
 results/pairs/wts/find_7/rowsum_1_1_1_5
-The function took: 0.19335914 seconds to generate sequences with rowsums: 5, 1, 1, 1
-The function took: 0.04389077 seconds to go through the two sets of pairs
+The function took: 0.022705575 seconds to generate sequences with rowsums: 5, 1, 1, 1
+The function took: 0.023657236 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_7/rowsum_-1_1_1_5
-The function took: 0.120045066 seconds to generate sequences with rowsums: 5, 1, 1, -1
-The function took: 0.057077408 seconds to go through the two sets of pairs
+The function took: 0.039214283 seconds to generate sequences with rowsums: 5, 1, 1, -1
+The function took: 0.028215408 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_7/rowsum_1_3_3_3
-The function took: 0.05948916 seconds to generate sequences with rowsums: 3, 3, 3, 1
-The function took: 0.053972907 seconds to go through the two sets of pairs
+The function took: 0.083300255 seconds to generate sequences with rowsums: 3, 3, 3, 1
+The function took: 0.016872471 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_7/rowsum_-1_3_3_3
-The function took: 0.045370527 seconds to generate sequences with rowsums: 3, 3, 3, -1
-The function took: 0.041817468 seconds to go through the two sets of pairs
+The function took: 0.045526154 seconds to generate sequences with rowsums: 3, 3, 3, -1
+The function took: 0.024808614 seconds to go through the two sets of pairs
 
-Creating the sequences took 1 seconds. 
+Creating the sequences took 0 seconds. 
  
 
 results/pairs/wts/find_7/rowsum_-1_1_1_5/pair_WY.pair
@@ -30,19 +30,15 @@ results/pairs/wts/find_7/rowsum_1_1_1_5/pair_WY.pair
 results/pairs/wts/find_7/rowsum_1_1_1_5/pair_ZX.pair
 results/pairs/wts/find_7/rowsum_1_3_3_3/pair_WX.pair
 results/pairs/wts/find_7/rowsum_1_3_3_3/pair_YZ.pair
-Sorting the files took 1 seconds. 
+Sorting the files took 0 seconds. 
  
 
 ./results/pairs/wts/find_7
-Folder rowsum_1_3_3_3 : sequences have order (Y, Z, W, X)
 Folder rowsum_-1_3_3_3 : sequences have order (W, X, Y, Z)
-Folder rowsum_1_1_1_5 : sequences have order (W, Y, Z, X)
-Folder rowsum_-1_1_1_5 : sequences have order (W, Y, Z, X)
-
-count before equivalences 254
-The function found a total of 6720 sequences without any equivalences
-count after equivalences 6
-Matching the sequences took 1 seconds. 
+thread 'main' panicked at src/find/find_write.rs:469:40:
+index out of bounds: the len is 21 but the index is 30
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 3 seconds.
+Total execution time was 0 seconds.
