@@ -14,6 +14,9 @@ then
 	exit 0
 fi
 
+# Empty out existing .pair files to avoid conflicts
+./pair_file_cleanup.sh
+
 n=$1
 
 foldername="./results/pairs/wts/find_$n"
