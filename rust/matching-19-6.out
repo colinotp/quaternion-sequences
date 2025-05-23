@@ -1,6 +1,0 @@
-hey
-results/pairs/wts/find_19/rowsum_-3_3_3_7
-The function took: 0.6581325 seconds to generate sequences with rowsums: 7, 3, 3, -3
-The function took: 315812.03 seconds to go through the two sets of pairs
-
-Creating the sequences took 315813 seconds.

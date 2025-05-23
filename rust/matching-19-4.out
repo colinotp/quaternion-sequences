@@ -1,6 +1,0 @@
-hey
-results/pairs/wts/find_19/rowsum_-1_5_5_5
-The function took: 1.0537837 seconds to generate sequences with rowsums: 5, 5, 5, -1
-The function took: 512877 seconds to go through the two sets of pairs
-
-Creating the sequences took 512878 seconds.
