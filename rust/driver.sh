@@ -19,6 +19,7 @@ fi
 
 n=$1
 
+
 foldername="./results/pairs/wts/find_$n"
 filename="$foldername/result.log"
 
@@ -31,7 +32,16 @@ start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pairs $n &> $filename
+
+if [ $# -eq 2 ]
+then
+	# User wants to specify rowsum pairing
+	rowsum_pairing=$2
+	./target/release/rust pairs $n $rowsum_pairing &> $filename
+else
+	# Use default rowsum pairing (W-Z, X-Y)
+	./target/release/rust pairs $n &> $filename
+fi
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. 
 echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename

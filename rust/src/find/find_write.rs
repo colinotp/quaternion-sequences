@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::SequenceType}, read_lines, find::find_unique::reduce_to_equivalence};
+use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::*}, read_lines, find::find_unique::reduce_to_equivalence};
 
 
 
@@ -146,7 +146,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 }
 
 
-pub fn write_pairs(p : usize) {
+pub fn write_pairs(p : usize, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
     // all the possible rowsums of p
@@ -164,11 +164,11 @@ pub fn write_pairs(p : usize) {
 
 
     for rs in rowsums {
-        write_pairs_rowsum(folder.to_string(), rs, p);
+        write_pairs_rowsum(folder.to_string(), rs, p, pairing.clone());
     }
 }
 
-pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize) {
+pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize, pairing: Option<RowsumPairing>) {
     // This function generates the sequences possible for specific rowsums and stores them
     
     let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
@@ -196,8 +196,21 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
 
     let now = Instant::now();
 
-    write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), p, &folder_path, EquationSide::LEFT);
-    write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), p, &folder_path, EquationSide::RIGHT);
+    // Uses sequences to generate .pair files based on chosen pairing (default pairing is WZ)
+    match pairing {
+        Some(RowsumPairing::WX) => {
+            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_2), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+        },
+        Some(RowsumPairing::WY) => {
+            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+        },
+        Some(RowsumPairing::WZ) | None => {
+            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), p, &folder_path, EquationSide::RIGHT);
+        }
+    };
     
     let elapsed_time = now.elapsed().as_secs_f32();
     eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");

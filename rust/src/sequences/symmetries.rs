@@ -4,6 +4,10 @@ pub enum Symmetry{ // enum for the different types of Quaternion Sequences
     I, II, III, IV
 }
 
+#[derive(Clone)]
+pub enum RowsumPairing{
+    WX, WY, WZ
+}
 
 #[derive(Clone)]
 pub enum SequenceType{ // enum for the different types of Quadruplets of sequences

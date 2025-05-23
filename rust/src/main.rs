@@ -164,6 +164,14 @@ fn find_matching_algorithm(p : usize) {
     
 }
 
+fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
+    match n.as_str() {
+        "WX" => Some(RowsumPairing::WX),
+        "WY" => Some(RowsumPairing::WY),
+        "WZ" => Some(RowsumPairing::WZ),
+        _ => None
+    }
+}
 
 fn main() {
     let args : Vec<String> = std::env::args().collect();
@@ -198,15 +206,30 @@ fn main() {
             s if s == "unique" => {find_unique_williamson_type_of_size(i)}
             s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
             s if s == "matching" => {find_matching_algorithm(i)}
-            s if s == "pairs" => {find_write::write_pairs(i)}
+            s if s == "pairs" => {find_write::write_pairs(i, None)}
             s if s == "join" => {find_write_wts(i)}
             s if s == "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq".to_string())}
             s if s == "rowsums" => {find_write::write_rowsums(i)}
             _ => {}
         }
     }
-    else if count == 7 {
+    else if count == 4 {
+        let i = match str::parse::<usize>(&args[2]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
 
+        let pairing = str_to_rowsum_pairing(&args[3]);
+        
+        match &args[1] {
+            s if s == "pairs" => {find_write::write_pairs(i, pairing)}
+            _ => {}
+        }
+    }
+    
+    else if count == 7 {
+        println!("FIXME: Need to update to allow rowsum pairing to be passed for this case");
+
+        /*
         // Make sure the arguments are integer
         let p = match str::parse::<usize>(&args[2]){
                     Ok(a) => {a},
@@ -228,6 +251,7 @@ fn main() {
             s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p)}
             _ => {}
         }
+        */
     }
 
 

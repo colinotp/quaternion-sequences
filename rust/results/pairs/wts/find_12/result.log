@@ -3,35 +3,38 @@
 (-2, 2, 2, 6)
 generated 3 different rowsums
 results/pairs/wts/find_12/rowsum_0_4_4_4
-The function took: 0.27150843 seconds to generate sequences with rowsums: 4, 4, 4, 0
-The function took: 4.8484783 seconds to go through the two sets of pairs
+The function took: 0.00686 seconds to generate sequences with rowsums: 4, 4, 4, 0
+The function took: 5.6439567 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_12/rowsum_2_2_2_6
-The function took: 0.07245231 seconds to generate sequences with rowsums: 6, 2, 2, 2
-The function took: 5.3685775 seconds to go through the two sets of pairs
+The function took: 0.008965701 seconds to generate sequences with rowsums: 6, 2, 2, 2
+The function took: 6.0630765 seconds to go through the two sets of pairs
 
 results/pairs/wts/find_12/rowsum_-2_2_2_6
-The function took: 0.102978185 seconds to generate sequences with rowsums: 6, 2, 2, -2
-The function took: 5.592089 seconds to go through the two sets of pairs
+The function took: 0.007926 seconds to generate sequences with rowsums: 6, 2, 2, -2
+The function took: 6.102284 seconds to go through the two sets of pairs
 
-Creating the sequences took 17 seconds. 
+Creating the sequences took 18 seconds. 
  
 
-results/pairs/wts/find_12/rowsum_-2_2_2_6/pair_WY.pair
-results/pairs/wts/find_12/rowsum_-2_2_2_6/pair_ZX.pair
-results/pairs/wts/find_12/rowsum_0_4_4_4/pair_WX.pair
-results/pairs/wts/find_12/rowsum_0_4_4_4/pair_YZ.pair
-results/pairs/wts/find_12/rowsum_2_2_2_6/pair_WY.pair
-results/pairs/wts/find_12/rowsum_2_2_2_6/pair_ZX.pair
+results/pairs/wts/find_12/rowsum_-2_2_2_6/pair_WX.pair
+results/pairs/wts/find_12/rowsum_-2_2_2_6/pair_YZ.pair
+results/pairs/wts/find_12/rowsum_0_4_4_4/pair_YX.pair
+results/pairs/wts/find_12/rowsum_0_4_4_4/pair_ZW.pair
+results/pairs/wts/find_12/rowsum_2_2_2_6/pair_WX.pair
+results/pairs/wts/find_12/rowsum_2_2_2_6/pair_YZ.pair
 Sorting the files took 1 seconds. 
  
 
 ./results/pairs/wts/find_12
-Folder rowsum_0_4_4_4 : sequences have order (Y, Z, W, X)
-thread 'main' panicked at src/find/find_write.rs:469:40:
-index out of bounds: the len is 495 but the index is 540
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Matching the sequences took 1 seconds. 
+Folder rowsum_2_2_2_6 : sequences have order (W, X, Y, Z)
+Folder rowsum_0_4_4_4 : sequences have order (Z, W, Y, X)
+Folder rowsum_-2_2_2_6 : sequences have order (W, X, Y, Z)
+
+count before equivalences 4728
+The function found a total of 147456 sequences without any equivalences
+count after equivalences 64
+Matching the sequences took 14 seconds. 
  
 
-Total execution time was 19 seconds.
+Total execution time was 33 seconds.
