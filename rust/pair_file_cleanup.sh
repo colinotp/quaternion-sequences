@@ -1,11 +1,10 @@
 #!/bin/bash
 
-# Cleans up temporary files (.pair, .pair.sorted, etc.)
+# Cleans up temporary files from given find_n directory (.pair, .pair.sorted, etc.)
 
+n=$1
 base_dir="results/pairs/wts"
-for i in {1..17}; do
-    dir="$base_dir/find_$i"
-    if [ -d "$dir" ]; then
-        rm -rf "$dir"/rowsum_*
-    fi
-done
+dir="$base_dir/find_$n"
+if [ -d "$dir" ]; then
+    rm -rf "$dir"/rowsum_*
+fi

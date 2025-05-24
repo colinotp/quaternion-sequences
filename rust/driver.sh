@@ -14,13 +14,38 @@ then
 	exit 0
 fi
 
-# Empty out existing .pair files to avoid conflicts
-./pair_file_cleanup.sh
 
 n=$1
-
-
+shift
 foldername="./results/pairs/wts/find_$n"
+rowsum_pairing="WZ"
+
+# Empty out existing .pair files to avoid conflicts
+while getopts "dp:" flag; do
+	case $flag in
+		d)
+		./pair_file_cleanup.sh $n
+		;;
+		p)
+		rowsum_pairing=$OPTARG
+		;;
+		/?)
+		echo "Invalid argument(s) passed. Exiting."
+		exit 1
+		;;
+	esac
+done
+
+# Check if rowsum directories still exist
+for d in "$foldername"/rowsum_*; do
+  if [ -d "$d" ]; then
+    echo "WARNING: results have already been generated for length $n. To run anyway, use the -d flag to overwrite. Exiting."
+	exit 1
+  fi
+done
+
+
+
 filename="$foldername/result.log"
 
 if [ ! -e $foldername ]
@@ -32,16 +57,7 @@ start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-
-if [ $# -eq 2 ]
-then
-	# User wants to specify rowsum pairing
-	rowsum_pairing=$2
-	./target/release/rust pairs $n $rowsum_pairing &> $filename
-else
-	# Use default rowsum pairing (W-Z, X-Y)
-	./target/release/rust pairs $n &> $filename
-fi
+./target/release/rust pairs $n $rowsum_pairing &> $filename
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. 
 echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
