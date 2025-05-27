@@ -2,7 +2,9 @@
 #SBATCH --time=24:00:00
 #SBATCH --mem=2000M
 #SBATCH --account=def-cbright
-#SBATCH --mail-user=bennet43@uwindsor.ca
-#SBATCH --mail-type=BEGIN,FAIL,TIME_LIMIT,TIME_LIMIT_50,TIME_LIMIT_80,END
+
+# Script to run a SLURM job on a DRAC cluster
+#
+# Simply calls the main driver script to compute QTS/PQS of a given length
 
 ./driver.sh 17

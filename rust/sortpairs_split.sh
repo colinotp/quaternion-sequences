@@ -1,5 +1,8 @@
 #! /bin/sh
 
+# WIP
+# Intended to split up the files being sorted into smaller files, and sort them individually to ease filesystem load
+
 if [ ! -e tmp/ ]
 then
 	mkdir tmp/

@@ -1,6 +1,6 @@
 import re
 
-n = input("Length: ")
+n = input("This script collects the total runtime taken to generate a given length of QTS/PQS.\nLength: ")
 
 filePath = "./results/pairs/wts/find_"
 directory = filePath + n + "/result.log"

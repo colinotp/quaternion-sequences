@@ -3,6 +3,11 @@
 #SBATCH --mem=8000M
 #SBATCH --account=def-cbright
 
+# Script to run a SLURM job on a DRAC cluster
+#
+# This script runs the first part of the algorithm for a single set of rowsums
+# Stops after generating the lists of auto and cross correlation values for the pairs
+
 if [ $# -ne 5 ]
 then
     echo "not enough arguments"

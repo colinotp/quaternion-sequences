@@ -4,6 +4,13 @@
 #SBATCH --account=def-cbright
 
 
+# Script to run a SLURM job on a DRAC cluster
+#
+# This script runs the part of the algorithm that goes
+# through the sorted auto and cross correlation values
+# to find valid QTS, and then computes the corresponding PQS
+
+
 filename=$1
 n=$2
 
