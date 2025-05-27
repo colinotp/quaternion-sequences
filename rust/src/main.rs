@@ -224,10 +224,7 @@ fn main() {
         }
     }
     
-    else if count == 7 {
-        println!("FIXME: Need to update to allow rowsum pairing to be passed for this case");
-
-        /*
+    else if count == 8 {
         // Make sure the arguments are integer
         let p = match str::parse::<usize>(&args[2]){
                     Ok(a) => {a},
@@ -245,11 +242,12 @@ fn main() {
                     Ok(a) => {a},
                     Err(_) => {panic!("argument isn't an integer !")}};
 
+        let pairing = str_to_rowsum_pairing(&args[7]);
         match &args[1] {
-            s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p)}
+            s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p, pairing)}
             _ => {}
         }
-        */
+        
     }
 
 
