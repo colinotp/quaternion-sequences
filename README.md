@@ -11,12 +11,12 @@ The algorithm to find Perfect Quaternion Sequences is written in rust.
 ### How to run
 
 In order to run it, one must first compile the code once using the command:
-cargo build --release
+`cargo build --release`
 
 This will create an exectuable in the target folder, which the driver script uses.
 
 To compute for Quaternion-type sequences of length n, the you can run the script:
-./driver.sh n
+`./driver.sh n`
 
 This will generate multiple files in the folder:
 results/pairs/wts/find_n
@@ -29,6 +29,14 @@ result.log collects data from the driver and tracks multiple parameters for debu
 
 result.seq collects the sequences that have been found up to Sequence equivalence.
 
+
+### `driver.sh`
+The driver script creates the relevant files (`result.xyz`, etc.), and then calls the main rust program using `./target/release/rust pairs $n $rowsum_pairing`. The parameters are as follows:
+* The `pairs` argument runs the first part of the algorithm, from generating possible rowsums to generating the `.pair` files containing the auto and cross correlation values for the pairs
+* `n` is the length of sequence to be searched for
+* `rowsum_pairing` can take a value of either `WX`, `WY`, or `WZ`. It decided which groups of sequences to pair together based on their rowsums.
+
+The `.pair` files are then sorted into `.sorted` files, and the code is run again with `./target/release/rust join $n`, to finish the algorithm by going through the sorted auto and cross correlation values to find valid QTS, and then compute the corresponding PQS.
 
 ### The other scripts
 
@@ -47,7 +55,7 @@ job_sort.sh, job_sort_simple.sh, job_sort_specific.sh, sortpairs.sh are all vari
 job_join.sh runs the last part of the driver, once the files are sorted
 
 
-And finally a few scripts to start batches on Comput Canada
+And finally a few scripts to start batches on the Digital Research Alliance of Canada's computers
 
 start_pairs_batches.sh This launches batches in parallel for each rowsum possible
 
