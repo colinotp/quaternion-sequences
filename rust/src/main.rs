@@ -166,9 +166,9 @@ fn find_matching_algorithm(p : usize) {
 
 fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     match n.as_str() {
-        "WX" => Some(RowsumPairing::WX),
-        "WY" => Some(RowsumPairing::WY),
-        "WZ" => Some(RowsumPairing::WZ),
+        "XY" => Some(RowsumPairing::XY),
+        "XZ" => Some(RowsumPairing::XZ),
+        "XW" => Some(RowsumPairing::XW),
         _ => None
     }
 }

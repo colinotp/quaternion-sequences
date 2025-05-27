@@ -18,7 +18,7 @@ fi
 n=$1
 shift
 foldername="./results/pairs/wts/find_$n"
-rowsum_pairing="WX"
+rowsum_pairing="XW"
 
 # Empty out existing .pair files to avoid conflicts
 while getopts "dp:" flag; do
