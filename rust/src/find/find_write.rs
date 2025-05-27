@@ -200,11 +200,11 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
     match pairing {
         Some(RowsumPairing::WX) => {
             write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_2), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
         },
         Some(RowsumPairing::WY) => {
             write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), p, &folder_path, EquationSide::RIGHT);
         },
         Some(RowsumPairing::WZ) | None => {
             write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), p, &folder_path, EquationSide::LEFT);
