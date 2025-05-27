@@ -4,6 +4,10 @@
 #SBATCH --account=def-cbright
 #SBATCH --cpus-per-task=16
 
+# Script to run a SLURM job on a DRAC cluster
+#
+# This script converts found sequences into Hadamard matrices (up to Hadamard equivalence)
+
 n=$1
 
 

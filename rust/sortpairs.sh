@@ -1,5 +1,12 @@
 #! /bin/sh
 
+if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+then
+	echo "This script sorts all of the generated .pair files for a given length n:"
+	echo "./driver.sh wts n"
+	exit 0
+fi
+
 if [ ! -e tmp/ ]
 then
 	mkdir tmp/

@@ -1,5 +1,11 @@
 #! /bin/bash
 
+if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+then
+	echo "This script submits a job to SLURM for each .pair file corresponding to a given length n, and sorts them."
+	echo "Example usage: ./start_sort_batches n"
+	exit 0
+fi
 
 n=$1
 
