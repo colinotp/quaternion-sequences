@@ -145,6 +145,88 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
 }
 
+pub fn get_indices(pairing: Option<RowsumPairing>, pair: u8) -> Option<(usize, usize)> {
+    match (pairing, pair) {
+        (Some(RowsumPairing::XY), 1) => Some((0, 1)),     // XY
+        (Some(RowsumPairing::XY), 2) => Some((2, 3)),     // ZW
+        (Some(RowsumPairing::XZ), 1) => Some((0, 2)),     // XZ
+        (Some(RowsumPairing::XZ), 2) => Some((1, 3)),     // YW
+        (Some(RowsumPairing::XW), 1) => Some((0, 3)),     // XW
+        (Some(RowsumPairing::XW), 2) => Some((1, 2)),     // YZ
+        _ => None
+    }
+}
+
+pub fn write_pair_single(p: usize, pairing: Option<RowsumPairing>, pair: u8) {
+    // This function is identical to write_pairs(), except for the purpose of running pairs individually on separate processors
+    // `pair` should be either a 1 or a 2, which decides whether to look at the first or second pair given by the chosen pairing
+
+    // all the possible rowsums of p
+    let rowsums = generate_rowsums(p);
+    for rs in &rowsums {
+        eprintln!("{:?}", rs);
+    }
+    eprintln!("generated {} different rowsums", rowsums.len());
+
+    let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
+    let folder = match seqtype {
+        SequenceType::WilliamsonType => {"wts"}
+        _ => {panic!("not implemented yet")} // TODO
+    };
+
+
+    for rs in rowsums {
+        write_pair_single_rowsum(folder.to_string(), rs, p, pairing.clone(), pair);
+    }
+
+}
+
+pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize, pairing: Option<RowsumPairing>, pair: u8) {
+    let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
+    let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
+
+    let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
+    println!("{}",folder_path);
+    fs::create_dir_all(&folder_path).expect("Error when creating the dir");     // This is safe to do concurrently across multiple processes according to the documentation
+
+    let sequences_0: Vec<Vec<i8>>;
+    let sequences_1: Vec<Vec<i8>>;
+
+    let pair_indices;
+    match get_indices(pairing, pair) {
+        Some(s) => {pair_indices = s},
+        None => {
+            println!("ERROR: get_indices() returned None");
+            return;
+        }
+    }
+
+    let now = Instant::now();
+    sequences_0 = generate_sequences_with_rowsum(rowsums[pair_indices.0], p);
+    sequences_1 = generate_sequences_with_rowsum(rowsums[pair_indices.1], p);
+
+    write_sequences(&sequences_0, &tags[pair_indices.0], &folder_path);
+    write_sequences(&sequences_1, &tags[pair_indices.1], &folder_path);
+
+    let elapsed_time = now.elapsed().as_secs_f32();
+    eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+
+    let side;
+    match pair {
+        1 => {side = EquationSide::LEFT},
+        2 => {side = EquationSide::RIGHT},
+        _ => {
+            println!("ERROR: Invalid `pair` passed");
+            return;
+        }
+    };
+
+    let now = Instant::now();
+    write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), p, &folder_path, side);
+    let elapsed_time = now.elapsed().as_secs_f32();
+    eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
+    
+}
 
 pub fn write_pairs(p : usize, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences

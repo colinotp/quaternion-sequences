@@ -235,6 +235,21 @@ fn main() {
             _ => {}
         }
     }
+    else if count == 5 {
+        let i = match str::parse::<usize>(&args[2]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let pair = match str::parse::<u8>(&args[3]) {
+            Ok(a) => {a},
+            Err(_) => {panic!("argument isn't an integer !")}
+        };
+
+        let pairing = str_to_rowsum_pairing(&args[3]);
+        match &args[1] {
+            s if s == "pair_single" => {find_write::write_pair_single(i, pairing, pair);}
+            _ => {}
+        }
+    }
     
     else if count == 8 {
         // Make sure the arguments are integer
