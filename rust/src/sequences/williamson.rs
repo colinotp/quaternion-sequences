@@ -166,7 +166,7 @@ impl Williamson{
 
     pub fn is_periodic_complementary(&self) -> bool{
         // tests if the sequences are periodic complementary
-        for offset in 1..=((self.size+1)/2) { // we only have to check first half, because the second is symmetric to the first 
+        for offset in 1..=((self.size+1)) {
             if periodic_autocorrelation(&self.a, offset) + periodic_autocorrelation(&self.b, offset) + periodic_autocorrelation(&self.c, offset) + periodic_autocorrelation(&self.d, offset) != 0 {
                 return false;
             }
