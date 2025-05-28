@@ -91,6 +91,18 @@ fn find_write_wts(i : usize){
 
     let result = find_write::join_pairs(i);
 
+    // Test to ensure actual QTS
+    for qts in &result {
+        if !qts.is_periodic_complementary() {
+            println!("ERROR: sequence {} fails autocorrelation condition", qts.to_string());
+            return;
+        }
+        if !qts.verify_cross_correlation() {
+            println!("ERROR: sequence {} fails crosscorrelation conditions", qts.to_string());
+            return;
+        }
+    }
+
     let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq");
     let path = Path::new(s);
     let mut f = File::create(path).expect("Invalid file ?");
