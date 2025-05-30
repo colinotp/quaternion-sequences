@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::*}, read_lines, find::find_unique::reduce_to_equivalence};
+use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, rowsum::{rowsum, generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::*}, read_lines, find::find_unique::reduce_to_equivalence};
 
 
 
@@ -93,11 +93,42 @@ pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_pat
     }
 }
 
+pub fn verify_rowsums(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), rs : (isize, isize, isize, isize)) -> bool {
+    let rowsum_0 : isize = match tags.0 {
+            SequenceTag::X => rs.0,
+            SequenceTag::Y => rs.1,
+            SequenceTag::Z => rs.2,
+            SequenceTag::W => rs.3
+        };
+    
 
+    for seq in sequences.0 {
+        if rowsum(seq.clone()) != rowsum_0 {
+            return false;
+        }
+    }
 
+    let rowsum_1 : isize = match tags.1 {
+            SequenceTag::X => rs.0,
+            SequenceTag::Y => rs.1,
+            SequenceTag::Z => rs.2,
+            SequenceTag::W => rs.3
+        };
+    
 
-pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), p : usize, folder_path : &String, side : EquationSide) {
+    for seq in sequences.1 {
+        if rowsum(seq.clone()) != rowsum_1 {
+            return false;
+        }
+    }
+    
+    true
+}
+
+pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), rs : (isize, isize, isize, isize), p : usize, folder_path : &String, side : EquationSide) {
     // This function generates the files that end in .pair used for the algorithm
+
+    assert!(verify_rowsums(sequences, tags, rs));
 
     let path = folder_path.clone() + &"/pair_" + &tag_to_string(&tags.0) + &tag_to_string(&tags.1) + ".pair";
     let mut f = File::create(path).expect("Invalid file ?");
@@ -222,7 +253,7 @@ pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isiz
     };
 
     let now = Instant::now();
-    write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), p, &folder_path, side);
+    write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), rs, p, &folder_path, side);
     let elapsed_time = now.elapsed().as_secs_f32();
     eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
     
@@ -278,19 +309,19 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
 
     let now = Instant::now();
 
-    // Uses sequences to generate .pair files based on chosen pairing (default pairing is WZ)
+    // Uses sequences to generate .pair files based on chosen pairing (default pairing is XW)
     match pairing {
         Some(RowsumPairing::XY) => {
-            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), rs, p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), rs, p, &folder_path, EquationSide::RIGHT);
         },
         Some(RowsumPairing::XZ) => {
-            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), rs, p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), rs, p, &folder_path, EquationSide::RIGHT);
         },
         Some(RowsumPairing::XW) | None => {
-            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), rs, p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), rs, p, &folder_path, EquationSide::RIGHT);
         }
     };
     
