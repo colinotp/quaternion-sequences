@@ -8,7 +8,7 @@
 # This script runs the first part of the algorithm for a single set of rowsums
 # Stops after generating the lists of auto and cross correlation values for the pairs
 
-if [ $# -ne 6 ]
+if [ $# -ne 7 ]
 then
     echo "not enough arguments"
     exit 1
