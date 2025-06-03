@@ -37,6 +37,6 @@ fi
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pair_single $n $a $b $c $d $rowsum_pairing $pair >> $filename
+./target/release/rust pair_single $n $a $b $c $d $rowsum_pairing $pair &>> $filename
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. >> $filename

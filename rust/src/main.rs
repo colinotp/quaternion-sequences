@@ -240,22 +240,6 @@ fn main() {
             _ => {}
         }
     }
-    else if count == 5 {
-        let i = match str::parse::<usize>(&args[2]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let pair = match str::parse::<u8>(&args[3]) {
-            Ok(a) => {a},
-            Err(_) => {panic!("argument isn't an integer !")}
-        };
-
-        let pairing = str_to_rowsum_pairing(&args[3]);
-        match &args[1] {
-            s if s == "pair_single" => {find_write::write_pair_single(i, pairing, pair);}
-            _ => {}
-        }
-    }
-    
     else if count == 8 {
         // Make sure the arguments are integer
         let p = match str::parse::<usize>(&args[2]){
@@ -279,7 +263,35 @@ fn main() {
             s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p, pairing)}
             _ => {}
         }
-        
+    }
+    else if count == 9 {
+        // Make sure the arguments are integer
+        let p = match str::parse::<usize>(&args[2]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let a = match str::parse::<isize>(&args[3]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let b = match str::parse::<isize>(&args[4]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let c = match str::parse::<isize>(&args[5]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+        let d = match str::parse::<isize>(&args[6]){
+                    Ok(a) => {a},
+                    Err(_) => {panic!("argument isn't an integer !")}};
+
+        let pair = match str::parse::<u8>(&args[8]) {
+            Ok(a) => {a},
+            Err(_) => {panic!("argument isn't an integer !")}
+        };
+
+        let pairing = str_to_rowsum_pairing(&args[7]);
+        match &args[1] {
+            s if s == "pair_single" => {find_write::write_pair_single_rowsum("wts".to_string(), (a,b,c,d), p, pairing, pair);}
+            _ => {}
+        }
     }
 
 
