@@ -32,38 +32,31 @@ result.seq collects the sequences that have been found up to Sequence equivalenc
 
 ### `driver.sh`
 The driver script creates the relevant files (`result.xyz`, etc.), and then calls the main rust program using `./target/release/rust pairs $n $rowsum_pairing`. The parameters are as follows:
-* The `pairs` argument runs the first part of the algorithm, from generating possible rowsums to generating the `.pair` files containing the auto and cross correlation values for the pairs
+* The `pairs` argument runs the first and longest part of the algorithm, from generating possible rowsums to generating the `.pair` files containing the auto and cross correlation values for the pairs
 * `n` is the length of sequence to be searched for
-* `rowsum_pairing` can take a value of either `WX`, `WY`, or `WZ`. It decided which groups of sequences to pair together based on their rowsums.
+* `rowsum_pairing` can take a value of either `XY`, `XZ`, or `XW`. It decides which groups of sequences to pair together based on their rowsums.
 
-The `.pair` files are then sorted into `.sorted` files, and the code is run again with `./target/release/rust join $n`, to finish the algorithm by going through the sorted auto and cross correlation values to find valid QTS, and then compute the corresponding PQS.
+The `.pair` files are then sorted into `.sorted` files using `sortpairs.sh`, which is just a script to run a bash sort in a SLURM job. The rust code is then run again with `./target/release/rust join $n`, to finish the algorithm by going through the sorted auto and cross correlation values to find valid QTS, and then compute the corresponding PQS.
 
 ### The other scripts
 
 Once the driver has been launched and the the sequences are generated, there are also other scripts that can generate useful information about the sequences:
 
-job_convert.sh will convert the sequences to Hadamard Matrices and give you the number of Hadamard Matrices made from QTS up to Hadamard equivalence.
-
-countpairs.sh will give you the number of pairs that the algorithm generated given a length n
+* `job_convert.sh` will convert the sequences to Hadamard Matrices and give you the number of Hadamard Matrices made from QTS up to Hadamard equivalence.
+* `countpairs.sh` will give you the number of pairs that the algorithm generated given a length n
 
 
 There are also additional scripts that run only part of the driver, in case this one fails during one of the parts:
 
 
-job_sort.sh, job_sort_simple.sh, job_sort_specific.sh, sortpairs.sh are all variants of the sorting part of the algorithm
-
-job_join.sh runs the last part of the driver, once the files are sorted
+* `job_sort.sh`, `job_sort_simple.sh`, `job_sort_specific.sh`, `sortpairs.sh` are all variants of the sorting part of the algorithm
+* `job_join.sh` runs the last part of the driver, once the files are sorted
 
 
 And finally a few scripts to start batches on the Digital Research Alliance of Canada's computers
 
-start_pairs_batches.sh This launches batches in parallel for each rowsum possible
-
-start_sort_batches.sh This launches batches in parallel for the sorting part of the algorithm
-
-
-
-
+* `start_pairs_batches.sh` launches batches in parallel for each rowsum possible
+* `start_sort_batches.sh` launches batches in parallel for the sorting part of the algorithm
 
 
 
