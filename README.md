@@ -42,8 +42,9 @@ The `.pair` files are then sorted into `.sorted` files using `sortpairs.sh`, whi
 
 Once the driver has been launched and the the sequences are generated, there are also other scripts that can generate useful information about the sequences:
 
-* `job_convert.sh` will convert the sequences to Hadamard Matrices and give you the number of Hadamard Matrices made from QTS up to Hadamard equivalence.
+* `job_convert.sh` will convert the sequences to Hadamard Matrices and give you the number of Hadamard Matrices made from QTS up to Hadamard equivalence
 * `countpairs.sh` will give you the number of pairs that the algorithm generated given a length n
+* `start_parallel_batches.sh` will launch DRAC jobs in parallel, computing each pair of each rowsum individually
 
 
 There are also additional scripts that run only part of the driver, in case this one fails during one of the parts:
