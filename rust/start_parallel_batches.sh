@@ -1,5 +1,11 @@
 #! /bin/bash
 
+if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
+then
+	echo "This driver exhaustively computes all quaternion-type sequences of length n with parallelization. It is intended for use in an environment with the SLURM job manager."
+	echo "Example usage: ./driver.sh n"
+	exit 0
+fi
 
 n=$1
 shift
