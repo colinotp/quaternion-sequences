@@ -48,7 +48,7 @@ do
 	jobids+=($jobid)
 	echo "Submitted job $jobid for rowsum $rowsum"
 
-	# Submit job for first pair, capturing job ID
+	# Submit job for second pair, capturing job ID
 	jobid=$(sbatch ./job_pair_single_rowsum.sh $n $rowsum $rowsum_pairing 2 | awk '{print $4}')
 	# Check for successful job submission
 	if [[ -z "$jobid" ]]; then
@@ -60,14 +60,31 @@ do
 
 done < "$input"
 
-dep_string=$(IFS=:; echo "${jobids[*]}")
-jobid=$(sbatch --dependency=afterok:$dep_string ./job_sort.sh wts $n | awk '{print $4}')
-# Check for successful job submission
-if [[ -z "$jobid" ]]; then
-	echo "Failed to submit sort job"
-	exit 1
-fi
-echo "Submitted job $jobid for sorting"
+# Start sorting
 
-sbatch --dependency=afterok:$jobid ./job_join.sh $n
+# Dependencies for sort jobs
+dep_string=$(IFS=:; echo "${jobids[*]}")
+jobids2=()
+
+for dirname in results/pairs/wts/find_$n/*;
+do
+	if [ -d $dirname ]
+	then
+		for filename in $dirname/*.pair;
+		do
+			echo $filename
+			jobid=$(sbatch --dependency=afterok:$dep_string ./job_sort_specific.sh $filename $n --output="$filename.sorted" | awk '{print $4}')
+			# Check for successful job submission
+			if [[ -z "$jobid" ]]; then
+				echo "Failed to submit sorting job for file $filename"
+				exit 1
+			fi
+			jobids2+=($jobid)
+			echo "Submitted job $jobid to sort file $filename"
+		done
+	fi
+done
+
+dep_string2=$(IFS=:; echo "${jobids2[*]}")
+sbatch --dependency=afterok:$dep_string2 ./job_join.sh $n
 
