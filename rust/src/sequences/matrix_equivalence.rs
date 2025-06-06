@@ -1,7 +1,7 @@
 use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
 
 use itertools::Itertools;
-use petgraph::{Graph, graph::NodeIndex, Undirected};
+use petgraph::{graph::NodeIndex, visit::{EdgeIndexable, NodeIndexable}, Graph, Undirected};
 
 use crate::{sequences::{equivalence::generate_equivalence_classes, williamson::Williamson, symmetries::SequenceType}, read_lines};
 
@@ -17,8 +17,11 @@ pub fn graph_from_hm(mat : &HM) -> Graph<i32,i32,Undirected> {
     
     let size = mat.size();
 
-    for _ in 0..4*size{
-        g.add_node(0);
+    for i in 0..4*size{
+        let node = g.add_node(0);
+        if i < 2*size {
+            g.add_edge(node, node, 0);
+        }
     }
 
     for row in 0..size {
