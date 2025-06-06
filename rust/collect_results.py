@@ -1,17 +1,20 @@
 import re
+import os
 from pathlib import Path
 
-def read_runtimes(directory):
+# Calculate runtime
+def read_runtimes(result_dir):
     runtimes = []
 
     pattern = r'took (\d+) seconds'
-    with open(directory, "r") as file:
+    with open(result_dir, "r") as file:
         for line in file:
             match = re.search(pattern, line)
             if match:
                 runtimes.append(int(match.group(1)))
-    return runtimes
+    return sum(runtimes)
 
+# Disk usage used
 def get_disk_usage(path):
     total = 0
     for rowsum_dir in Path(path).iterdir():
@@ -19,20 +22,95 @@ def get_disk_usage(path):
             size = sum(f.stat().st_size for f in rowsum_dir.rglob("*") if f.is_file())
             size_MB = size / (1024**2)
             total += size_MB
-            print(f"Size of {rowsum_dir}: {size_MB}MB\n")
-    print(f"Total disk usage for size {n}: {total}MB\n")
     return total
 
-def create_table():
-    print("TODO: Finish this")
+# Total QTS count without equivalences
+def total_QTS_count(result_dir):
+    pattern = r'The function found a total of (\d+) sequences'
+    with open(result_dir, 'r') as file:
+        for line in file:
+            match = re.search(pattern, line)
+            if match:
+                return int(match.group(1))
+    print('ERROR: Total QTS before equivalence not found')
+    exit()
+    
+# Total QTS count after equivalences
+def reduced_QTS_count(result_dir):
+    pattern = r'count after equivalences (\d+)'
+    with open(result_dir, 'r') as file:
+        for line in file:
+            match = re.search(pattern, line)
+            if match:
+                return int(match.group(1))
+    print('ERROR: QTS after equivalence not found')
+    exit()
+    
+# Count generated pairs
+def count_pairs(n):
+    return int(os.popen('./countpairs.sh ' + str(n)).read())
 
+# Create table from data. Each arg other than n should be a list of length n
+def create_table(n, total, S_equ, time, pairs, disk, latex):
+    if latex is False:
+        width = 13
+        with open('results.tab', 'w') as file:
+            file.write('n'.ljust(width, ' '))
+            file.write('Total (s)'.ljust(width, ' '))
+            file.write('S_{equ}'.ljust(width, ' '))
+            file.write('Time'.ljust(width, ' '))
+            file.write('Pairs'.ljust(width, ' '))
+            file.write('Disk usage (MB)'.ljust(width, ' '))
+            file.write('\n')
+            
+            for i in range(n):
+                file.write(str(i+1).ljust(width, ' '))
+                file.write(str(total[i]).ljust(width, ' '))
+                file.write(str(S_equ[i]).ljust(width, ' '))
+                file.write(str(time[i]).ljust(width, ' '))
+                file.write(str(pairs[i]).ljust(width, ' '))
+                if disk[i] < 10:
+                    file.write(str(round(disk[i], 1)).ljust(width, ' ') + '\n')
+                else:
+                    file.write(str(round(disk[i])).ljust(width, ' ') + '\n')
+    else:
+        with open('results.tab', 'w') as file:
+            file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & Time (s) & Pairs & Disk space (MB)\\\\\n')
+            for i in range(n):
+                if disk[i] < 10:
+                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
+                else: 
+                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
+
+
+
+# Start execution
 
 start = input("This script collects data from a computation generate given lengths of QTS/PQS.\nStart: ")
 end = input("End: ")
+
+runtime=[]
+disk_usage=[]
+QTS_total=[]
+QTS_reduced=[]
+pairs=[]
 
 for n in range(int(start), int(end)+1):
     filePath = "./results/pairs/wts/find_" + str(n)
     result_dir = filePath + "/result.log"
 
-    runtimes = read_runtimes(result_dir)
-    disk_usage = get_disk_usage(filePath)
+    runtime.append(read_runtimes(result_dir))
+    disk_usage.append(get_disk_usage(filePath))
+    QTS_total.append(total_QTS_count(result_dir))
+    QTS_reduced.append(reduced_QTS_count(result_dir))
+    pairs.append(count_pairs(n))
+    
+    print(f'=========================== Length {n} ===========================')
+    print(f'Runtime: {runtime}')
+    print(f'Disk usage: {disk_usage}')
+    print(f'QTS without equivalence: {QTS_total}')
+    print(f'QTS after equivalence: {QTS_reduced}')
+    print(f'Total pairs generated: {pairs}\n')
+
+create_table(int(end), QTS_total, QTS_reduced, runtime, pairs, disk_usage, True)
+    
