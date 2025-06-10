@@ -46,18 +46,26 @@ def reduced_QTS_count(result_dir):
     print('ERROR: QTS after equivalence not found')
     exit()
     
+# Total Hadamard matrix count up to hadamard equivalence
+def hadamard_reduced_QTS_count(path):
+    result_mat = path + '/result.mat'
+    with open(result_mat, 'r') as file:
+        count = len(file.readlines())
+    return count
+    
 # Count generated pairs
 def count_pairs(n):
     return int(os.popen('./countpairs.sh ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
-def create_table(n, total, S_equ, time, pairs, disk, latex):
+def create_table(n, total, S_equ, M_equ, time, pairs, disk, latex):
     if latex is False:
         width = 13
         with open('results.tab', 'w') as file:
             file.write('n'.ljust(width, ' '))
             file.write('Total (s)'.ljust(width, ' '))
             file.write('S_{equ}'.ljust(width, ' '))
+            file.write('M_{equ}'.ljust(width, ' '))
             file.write('Time'.ljust(width, ' '))
             file.write('Pairs'.ljust(width, ' '))
             file.write('Disk usage (MB)'.ljust(width, ' '))
@@ -67,6 +75,7 @@ def create_table(n, total, S_equ, time, pairs, disk, latex):
                 file.write(str(i+1).ljust(width, ' '))
                 file.write(str(total[i]).ljust(width, ' '))
                 file.write(str(S_equ[i]).ljust(width, ' '))
+                file.write(str(M_equ[i]).ljust(width, ' '))
                 file.write(str(time[i]).ljust(width, ' '))
                 file.write(str(pairs[i]).ljust(width, ' '))
                 if disk[i] < 10:
@@ -75,12 +84,12 @@ def create_table(n, total, S_equ, time, pairs, disk, latex):
                     file.write(str(round(disk[i])).ljust(width, ' ') + '\n')
     else:
         with open('results.tab', 'w') as file:
-            file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & Time (s) & Pairs & Disk space (MB)\\\\\n')
+            file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Pairs & Disk space (MB)\\\\\n')
             for i in range(n):
                 if disk[i] < 10:
-                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
+                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
                 else: 
-                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
+                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
 
 
 
@@ -88,11 +97,13 @@ def create_table(n, total, S_equ, time, pairs, disk, latex):
 
 start = input("This script collects data from a computation generate given lengths of QTS/PQS.\nStart: ")
 end = input("End: ")
+latex = True if input("Tab-separated values (t) or LaTeX formatting (l)? ") == 'l' else False
 
 runtime=[]
 disk_usage=[]
 QTS_total=[]
 QTS_reduced=[]
+QTS_hadamard_reduced=[]
 pairs=[]
 
 for n in range(int(start), int(end)+1):
@@ -103,14 +114,16 @@ for n in range(int(start), int(end)+1):
     disk_usage.append(get_disk_usage(filePath))
     QTS_total.append(total_QTS_count(result_dir))
     QTS_reduced.append(reduced_QTS_count(result_dir))
+    QTS_hadamard_reduced.append(hadamard_reduced_QTS_count(filePath))
     pairs.append(count_pairs(n))
     
     print(f'=========================== Length {n} ===========================')
-    print(f'Runtime: {runtime}')
-    print(f'Disk usage: {disk_usage}')
-    print(f'QTS without equivalence: {QTS_total}')
-    print(f'QTS after equivalence: {QTS_reduced}')
-    print(f'Total pairs generated: {pairs}\n')
+    print(f'Runtime: {runtime[n-1]} seconds')
+    print(f'Disk usage: {disk_usage[n-1]} MB')
+    print(f'QTS without equivalence: {QTS_total[n-1]}')
+    print(f'QTS after sequence equivalence: {QTS_reduced[n-1]}')
+    print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[n-1]}')
+    print(f'Total pairs generated: {pairs[n-1]}\n')
 
-create_table(int(end), QTS_total, QTS_reduced, runtime, pairs, disk_usage, True)
+create_table(int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, pairs, disk_usage, latex)
     
