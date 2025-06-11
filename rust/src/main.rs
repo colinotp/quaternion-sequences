@@ -261,6 +261,7 @@ fn main() {
         let pairing = str_to_rowsum_pairing(&args[7]);
         match &args[1] {
             s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p, pairing)}
+            s if s == "create" => {find_write::create_rowsum_dirs("wts".to_string(), p, (a,b,c,d), pairing);}
             _ => {}
         }
     }

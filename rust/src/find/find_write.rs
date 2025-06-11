@@ -259,6 +259,41 @@ pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isiz
     
 }
 
+pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize, isize), pairing: Option<RowsumPairing>) {
+    // This creates the rowsums.quad file as well as the rowsum_x_y_z_w directories, as well as the .pair files
+    // For use when directories need to be known/iterated over, but have not been created yet
+    // e.g., submitting SLURM jobs with dependencies
+
+    let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
+    println!("{}",folder_path);
+    fs::create_dir_all(&folder_path).expect("Error when creating the dir");
+
+    let (_, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
+    let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
+
+    let path1 : String;
+    let path2 : String;
+
+    match pairing {
+        Some(RowsumPairing::XY) => {
+            path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[1]) + ".pair";
+            path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[2]) + &tag_to_string(&tags[3]) + ".pair";
+        },
+        Some(RowsumPairing::XZ) => {
+            path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[2]) + ".pair";
+            path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[1]) + &tag_to_string(&tags[3]) + ".pair";
+        },
+        Some(RowsumPairing::XW) => {
+            path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[3]) + ".pair";
+            path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[1]) + &tag_to_string(&tags[2]) + ".pair";
+        },
+        None => {panic!("Missing pairing arg")}
+    };
+
+    File::create(path1).expect("Invalid file ?");
+    File::create(path2).expect("Invalid file ?");    
+}
+
 pub fn write_pairs(p : usize, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences
 

@@ -44,6 +44,7 @@ jobids=()
 input="results/pairs/wts/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
+	./target/release/rust create $n $rowsum $rowsum_pairing
     # Submit job for first pair, capturing job ID
 	jobid=$(sbatch ./job_pair_single_rowsum.sh $n $rowsum $rowsum_pairing 1 | awk '{print $4}')
 	# Check for successful job submission
