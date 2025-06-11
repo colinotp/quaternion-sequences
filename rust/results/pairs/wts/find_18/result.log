@@ -1,46 +1,54 @@
-results/pairs/wts/find_18/rowsum_0_0_6_6
 results/pairs/wts/find_18/rowsum_0_2_2_8
-results/pairs/wts/find_18/rowsum_-2_4_4_6
 results/pairs/wts/find_18/rowsum_2_4_4_6
-Creating the sequences took 37442 seconds.
-Creating the sequences took 37678 seconds.
-Creating the sequences took 46312 seconds.
-Creating the sequences took 52252 seconds.
+results/pairs/wts/find_18/rowsum_-2_4_4_6
+results/pairs/wts/find_18/rowsum_0_0_6_6
+Creating the sequences took 33840 seconds.
+Creating the sequences took 33872 seconds.
+Creating the sequences took 36016 seconds.
+Creating the sequences took 42433 seconds.
 
 
-Sorting the file "pair_ZW.pair" took 208 seconds. 
+Sorting the file "pair_WX.pair" took 262 seconds. 
 
 
-Sorting the file "pair_WY.pair" took 230 seconds. 
+Sorting the file "pair_WX.pair" took 514 seconds. 
 
 
-Sorting the file "pair_WY.pair" took 281 seconds. 
+Sorting the file "pair_WX.pair" took 547 seconds. 
 
 
-Sorting the file "pair_WY.pair" took 328 seconds. 
+Sorting the file "pair_WX.pair" took 616 seconds. 
 
 
-Sorting the file "pair_ZX.pair" took 554 seconds. 
+Sorting the file "pair_ZY.pair" took 616 seconds. 
 
 
-Sorting the file "pair_ZX.pair" took 619 seconds. 
+Sorting the file "pair_YZ.pair" took 657 seconds. 
 
 
-Sorting the file "pair_ZX.pair" took 881 seconds. 
+Sorting the file "pair_YZ.pair" took 659 seconds. 
 
 
-Sorting the file "pair_XY.pair" took 904 seconds. 
+Sorting the file "pair_YZ.pair" took 720 seconds. 
 
 
 ./results/pairs/wts/find_18
-Folder rowsum_2_4_4_6 : sequences have order (Z, X, W, Y)
-Folder rowsum_0_0_6_6 : sequences have order (X, Y, Z, W)
-Folder rowsum_0_2_2_8 : sequences have order (Z, X, W, Y)
-Folder rowsum_-2_4_4_6 : sequences have order (Z, X, W, Y)
+Folder rowsum_2_4_4_6 : sequences have order (W, X, Y, Z)
+Folder rowsum_0_0_6_6 : sequences have order (W, X, Z, Y)
+Folder rowsum_0_2_2_8 : sequences have order (Y, Z, W, X)
+Folder rowsum_-2_4_4_6 : sequences have order (W, X, Y, Z)
 
-count before equivalences 168380
+count before equivalences 169061
 The function found a total of 7921152 sequences without any equivalences
 count after equivalences 704
-Joining the files together took 2217 seconds. 
+Joining the files together took 2075 seconds. 
 
 
+results/pairs/wts/find_18/rowsum_0_2_2_8
+results/pairs/wts/find_18/rowsum_-2_4_4_6
+results/pairs/wts/find_18/rowsum_0_0_6_6
+results/pairs/wts/find_18/rowsum_2_4_4_6
+Creating the sequences took 33490 seconds.
+Creating the sequences took 33644 seconds.
+Creating the sequences took 36871 seconds.
+Creating the sequences took 41562 seconds.
