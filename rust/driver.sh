@@ -1,10 +1,11 @@
 #! /bin/bash
 
-# This driver computes the perfect Williamson Type sequences for the given n:
+# This driver computes the perfect quaternion sequences for the given n:
 # ./driver.sh n
 #
-# At the moment, it doesn't return the list of sequences, but just the number of sequences.
-# I'll add it quickly.
+# Optional flags:
+# -d: delete existing .seq, .pair and .sorted files
+# -p <pairing>: run code with chosen pairing of sequences. Options include XY, XW, XZ
 
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
