@@ -1,7 +1,7 @@
 use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
 
 use itertools::Itertools;
-use petgraph::{graph::NodeIndex, visit::{EdgeIndexable, NodeIndexable}, Graph, Undirected};
+use petgraph::{graph::NodeIndex, Graph, Undirected};
 
 use crate::{sequences::{equivalence::generate_equivalence_classes, williamson::Williamson, symmetries::SequenceType}, read_lines};
 

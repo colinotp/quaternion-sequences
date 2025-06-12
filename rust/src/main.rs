@@ -7,7 +7,6 @@ use std::io::{self, BufRead, Write};
 use std::path::Path;
 
 use sequences::matrices::QHM;
-use sequences::williamson::Williamson;
 use time::*;
 
 mod sequences;
