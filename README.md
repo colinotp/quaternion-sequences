@@ -31,7 +31,7 @@ result.seq collects the sequences that have been found up to Sequence equivalenc
 
 
 ### `driver.sh`
-The driver script creates the relevant files (`result.xyz`, etc.), and then calls the main rust program using `./target/release/rust pairs $n $rowsum_pairing`. The parameters are as follows:
+This is the main driver. This script creates the relevant files (`result.xyz`, etc.), and then calls the main rust program using `./target/release/rust pairs $n $rowsum_pairing`. The parameters are as follows:
 * The `pairs` argument runs the first and longest part of the algorithm, from generating possible rowsums to generating the `.pair` files containing the auto and cross correlation values for the pairs
 * `n` is the length of sequence to be searched for
 * `rowsum_pairing` can take a value of either `XY`, `XZ`, or `XW`. It decides which groups of sequences to pair together based on their rowsums.
@@ -44,7 +44,7 @@ Once the driver has been launched and the the sequences are generated, there are
 
 * `job_convert.sh` will convert the sequences to Hadamard Matrices and give you the number of Hadamard Matrices made from QTS up to Hadamard equivalence
 * `countpairs.sh` will give you the number of pairs that the algorithm generated given a length n
-* `start_parallel_batches.sh` will launch DRAC jobs in parallel, computing each pair of each rowsum individually
+* `driver_parallel.sh` will launch DRAC jobs in parallel, computing each pair of each rowsum individually
 
 
 There are also additional scripts that run only part of the driver, in case this one fails during one of the parts:
