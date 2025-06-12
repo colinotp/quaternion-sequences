@@ -163,16 +163,16 @@ pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
 
 pub fn generate_equivalence_classes(wills : &Vec<Williamson>) -> Vec<Williamson> {
 
-    let mut result = vec![];
+    let mut result = HashSet::new();
 
     for w in wills {
         let class = generate_equivalence_class(w);
         for elm in class {
-            result.push(elm);
+            result.insert(elm);
         }
     }
 
-    result
+    result.into_iter().collect()
 }
 
 
