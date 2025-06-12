@@ -162,7 +162,12 @@ impl Williamson{
     }
 
 
-
+    pub fn verify_wts(&self) -> bool {
+        if !(self.is_periodic_complementary() && self.verify_cross_correlation()) {
+            return false;
+        }
+        true
+    }
 
     pub fn is_periodic_complementary(&self) -> bool{
         // tests if the sequences are periodic complementary

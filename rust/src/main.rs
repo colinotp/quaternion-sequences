@@ -93,7 +93,9 @@ fn find_write_wts(i : usize){
     let result = find_write::join_pairs(i);
 
     // Test to ensure actual QTS
-    assert!(verify_qts(&result));
+    for wts in &result {
+        assert!(wts.verify_wts(), "Sequence failed auto/cross correlation conditions: {}", wts.to_string());
+    }
 
     let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq");
     let path = Path::new(s);
@@ -103,22 +105,6 @@ fn find_write_wts(i : usize){
 
     f.write(res_string.as_bytes()).expect("Error when writing in the file");
 }
-
-fn verify_qts(qts_list: &Vec<Williamson>) -> bool {
-    for qts in qts_list {
-        if !qts.is_periodic_complementary() {
-            println!("ERROR: sequence {} fails autocorrelation condition", qts.to_string());
-            return false;
-        }
-        if !qts.verify_cross_correlation() {
-            println!("ERROR: sequence {} fails crosscorrelation conditions", qts.to_string());
-            return false;
-        }
-    }
-
-    true
-}
-
 
 
 fn read_lines<P>(filename: P) -> io::Result<io::Lines<io::BufReader<File>>>

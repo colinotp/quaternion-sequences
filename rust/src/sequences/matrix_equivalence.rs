@@ -75,8 +75,7 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
     let wills : Vec<Williamson> = seqs.iter().map(|s| Williamson::from_pqs(s)).collect();
 
     for wts in &wills {
-        assert!(wts.is_periodic_complementary(), "wts fails autocorrelation condition: {}", wts.to_string());
-        assert!(wts.verify_cross_correlation(), "wts fails crosscorrelation condition: {}", wts.to_string());
+        assert!(wts.verify_wts(), "wts fails auto/cross correlation condition: {}", wts.to_string());
     }
 
     let all = generate_equivalence_classes(&wills);
