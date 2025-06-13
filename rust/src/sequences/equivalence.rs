@@ -166,6 +166,10 @@ pub fn generate_equivalence_classes(wills : &Vec<Williamson>) -> Vec<Williamson>
     let mut result = HashSet::new();
 
     for w in wills {
+        if result.contains(w) {
+            continue;
+        }
+
         let class = generate_equivalence_class(w);
         for elm in class {
             result.insert(elm);
