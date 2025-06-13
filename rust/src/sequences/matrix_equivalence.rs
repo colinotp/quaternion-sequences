@@ -9,7 +9,7 @@ use super::{matrices::HM, sequence::QS};
 
 use rayon::{iter::*};
 
-use graph_canon::{self, canon, CanonLabeling};
+use graph_canon::{self, CanonLabeling};
 
 
 pub fn graph_from_hm(mat : &HM) -> Graph<i32,i32,Undirected> {
