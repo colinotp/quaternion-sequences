@@ -9,7 +9,7 @@ use super::{matrices::HM, sequence::QS};
 
 use rayon::{iter::*};
 
-use graph_canon::{self, CanonLabeling};
+use graph_canon::{self, canon, CanonLabeling};
 
 
 pub fn graph_from_hm(mat : &HM) -> Graph<i32,i32,Undirected> {
@@ -86,11 +86,12 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
         assert!(elm.to_qs().is_perfect());
     }
 
-    let liste: Vec<HM> = all.iter().map(|w| HM::from_williamson(w,SequenceType::WilliamsonType)).collect();
-
-    println!("generated all matrices");
-
-    let equ = liste.into_par_iter().map(|mat| (canon_hm(&mat), mat)).collect::<HashMap<_,_>>().into_iter().map(|(_,v)| v).collect::<Vec<_>>();
+    let canon_reps : HashMap<CanonLabeling, HM> = all.par_iter().map(|seq| {
+        let hmat = HM::from_williamson(seq, SequenceType::WilliamsonType);
+        (canon_hm(&hmat), hmat)
+    }).collect();
+    
+    let equ = canon_reps.into_iter().map(|(_,v)| v).collect::<Vec<_>>();
 
     let count = equ.len();
 
