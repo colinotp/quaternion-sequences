@@ -161,7 +161,7 @@ pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
 }
 
 
-pub fn generate_equivalence_classes(wills : &Vec<Williamson>) -> Vec<Williamson> {
+pub fn generate_equivalent_qts(wills : &Vec<Williamson>) -> Vec<Williamson> {
 
     let mut result = HashSet::new();
 

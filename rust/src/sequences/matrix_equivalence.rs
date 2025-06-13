@@ -3,7 +3,7 @@ use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
-use crate::{sequences::{equivalence::generate_equivalence_classes, williamson::Williamson, symmetries::SequenceType}, read_lines};
+use crate::{sequences::{equivalence::generate_equivalent_qts, williamson::Williamson, symmetries::SequenceType}, read_lines};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -78,7 +78,7 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
         assert!(wts.verify_wts(), "wts fails auto/cross correlation condition: {}", wts.to_string());
     }
 
-    let all = generate_equivalence_classes(&wills);
+    let all = generate_equivalent_qts(&wills);
 
     println!("generated all sequences");
 
