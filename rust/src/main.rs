@@ -175,111 +175,103 @@ fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     }
 }
 
+fn str_to_usize(source : &str) -> usize {
+    match str::parse::<usize>(source) {
+        Ok(a) => {a},
+        Err(_) => {panic!("argument isn't an integer !")}
+    }
+}
+
+fn str_to_isize(source : &str) -> isize {
+    match str::parse::<isize>(source) {
+        Ok(a) => {a},
+        Err(_) => {panic!("argument isn't an integer !")}
+    }
+}
+
 fn main() {
     let args : Vec<String> = std::env::args().collect();
-    let count = args.len();
 
-    if count == 1 {
-        //find_pqs(None);
-        //find_williamson();
-        //find_pqs(Some(Symmetry::I));
-        convert_qs_to_matrices();
-        //find_unique_williamson_type_of_size(9);
-        //find_q24(8, None);
-        //find_write::write_pairs(7);
-    }
-    else if count == 2 {
-        match &args[1] {
-            s if s == "pqs" => {find_pqs(None)}
-            s if s == "ws" => {find_williamson()}
-            s if s == "wts" => {find_williamson_type()}
-            _ => {}
-        }
-    }
-    else if count == 3 {
-        let i = match str::parse::<usize>(&args[2]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
+    match args.len() {
+        // For running individual functions
+        1 => {
+            //find_pqs(None);
+            //find_williamson();
+            //find_pqs(Some(Symmetry::I));
+            convert_qs_to_matrices();
+            //find_unique_williamson_type_of_size(9);
+            //find_q24(8, None);
+            //find_write::write_pairs(7);
+        },
+        // General operations on sequences (mostly deprecated)
+        2 => match args[1].as_str() {
+            "pqs" => {find_pqs(None);},
+            "ws" => {find_williamson();},
+            "wts" => {find_williamson_type();},
+            _ => {panic!("Invalid argument");}
+        },
+        // Operations on sequences of a given length p
+        3 => {
+            let p = str_to_usize(&args[2]);
+            match args[1].as_str() {
+                "pqs" => {find_pqs_of_type(p, &None);}
+                "ws" => {find_williamson_of_size(p);}
+                "wts" => {find_williamson_type_of_size(p);}
+                "unique" => {find_unique_williamson_type_of_size(p);}
+                "equation" => {find_with_rowsum::find(p, SequenceType::WilliamsonType);}
+                "matching" => {find_matching_algorithm(p);}
+                "join" => {find_write_wts(p);}
+                "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
+                "rowsums" => {find_write::write_rowsums(p);}
+                _ => {}
+            };
+        },
+        // Pair generation
+        4 => {
+            let p = str_to_usize(&args[2]);
+            let pairing = str_to_rowsum_pairing(&args[3]);
+            match args[1].as_str() {
+                "pairs" => {find_write::write_pairs(p, pairing);}
+                _ => {}
+            }
+        },
+        // Pair generation for a single set of rowsums (or file generation)
+        8 => {
+            let p = str_to_usize(&args[2]);     // length
+            let a = str_to_isize(&args[3]);     // rowsum 1
+            let b = str_to_isize(&args[4]);     // rowsum 2
+            let c = str_to_isize(&args[5]);     // rowsum 3
+            let d = str_to_isize(&args[6]);     // rowsum 4
 
-        match &args[1] {
-            s if s == "pqs" => {find_pqs_of_type(i, &None)}
-            s if s == "ws" => {find_williamson_of_size(i)}
-            s if s == "wts" => {find_williamson_type_of_size(i)}
-            s if s == "unique" => {find_unique_williamson_type_of_size(i)}
-            s if s == "equation" => {find_with_rowsum::find(i, SequenceType::WilliamsonType)}
-            s if s == "matching" => {find_matching_algorithm(i)}
-            s if s == "join" => {find_write_wts(i)}
-            s if s == "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq".to_string())}
-            s if s == "rowsums" => {find_write::write_rowsums(i)}
-            _ => {}
-        }
-    }
-    else if count == 4 {
-        let i = match str::parse::<usize>(&args[2]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
+            let pairing = str_to_rowsum_pairing(&args[7]);      // Rowsum pairing
 
-        let pairing = str_to_rowsum_pairing(&args[3]);
-        match &args[1] {
-            s if s == "pairs" => {find_write::write_pairs(i, pairing)}
-            _ => {}
-        }
-    }
-    else if count == 8 {
-        // Make sure the arguments are integer
-        let p = match str::parse::<usize>(&args[2]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let a = match str::parse::<isize>(&args[3]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let b = match str::parse::<isize>(&args[4]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let c = match str::parse::<isize>(&args[5]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let d = match str::parse::<isize>(&args[6]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
+            match args[1].as_str() {
+                "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p, pairing)}
+                "create" => {find_write::create_rowsum_dirs("wts".to_string(), p, (a,b,c,d), pairing);}
+                _ => {}
+            }
+        },
+        // Pair generation for a single pair from a single set of rowsums
+        9 => {
+            let p = str_to_usize(&args[2]);     // length
+            let a = str_to_isize(&args[3]);     // rowsum 1
+            let b = str_to_isize(&args[4]);     // rowsum 2
+            let c = str_to_isize(&args[5]);     // rowsum 3
+            let d = str_to_isize(&args[6]);     // rowsum 4
 
-        let pairing = str_to_rowsum_pairing(&args[7]);
-        match &args[1] {
-            s if s == "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p, pairing)}
-            s if s == "create" => {find_write::create_rowsum_dirs("wts".to_string(), p, (a,b,c,d), pairing);}
-            _ => {}
-        }
-    }
-    else if count == 9 {
-        // Make sure the arguments are integer
-        let p = match str::parse::<usize>(&args[2]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let a = match str::parse::<isize>(&args[3]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let b = match str::parse::<isize>(&args[4]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let c = match str::parse::<isize>(&args[5]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
-        let d = match str::parse::<isize>(&args[6]){
-                    Ok(a) => {a},
-                    Err(_) => {panic!("argument isn't an integer !")}};
+            let pairing = str_to_rowsum_pairing(&args[7]);      // Rowsum pairing
+            
+            // First or second pair (1 or 2)?
+            let pair = match str::parse::<u8>(&args[8]) {
+                Ok(a) => {a},
+                Err(_) => {panic!("argument isn't an integer !")}
+            };
 
-        let pair = match str::parse::<u8>(&args[8]) {
-            Ok(a) => {a},
-            Err(_) => {panic!("argument isn't an integer !")}
-        };
-
-        let pairing = str_to_rowsum_pairing(&args[7]);
-        match &args[1] {
-            s if s == "pair_single" => {find_write::write_pair_single_rowsum("wts".to_string(), (a,b,c,d), p, pairing, pair);}
-            _ => {}
-        }
-    }
-
-
-
+            match args[1].as_str() {
+                "pair_single" => {find_write::write_pair_single_rowsum("wts".to_string(), (a,b,c,d), p, pairing, pair);},
+                _ => {}
+            }
+        },
+        _ => {}
+    };
 }
