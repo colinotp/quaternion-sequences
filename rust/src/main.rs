@@ -94,6 +94,9 @@ fn find_write_wts(i : usize){
     // Test to ensure actual QTS
     for wts in &result {
         assert!(wts.verify_wts(), "Sequence failed auto/cross correlation conditions: {}", wts.to_string());
+        if !wts.is_amicable() {
+            print!("Seq is valid QTS, but not amicable (not WTS): {}", wts.to_string())
+        }
     }
 
     let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq");
