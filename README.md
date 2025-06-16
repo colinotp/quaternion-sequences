@@ -86,21 +86,6 @@ This would use the function "..." in ...
 If WTS are the same as QTS, then we can eliminate all the sequences whose cross-correlation isn't symmetric.
 This would cut out a lot of sequences and improve the algorithm a lot.
 
-### Mistakes in the naming system
-
-During this project, we've wrongly called Quaternion-type sequences as Williamson-type sequences.
-As far as we know, these two types are distinct.
-
-The class "Williamson" can actually represent any quadruplet of +-1 sequence.
-
-The files are stored in a folder called result/pairs/wts, when it should be qts
-
-
-
-
-
-
-
 
 # Description of the folders
 
