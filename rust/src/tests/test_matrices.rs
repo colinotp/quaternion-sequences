@@ -3,7 +3,7 @@ mod tests {
 
     use cgmath::Quaternion;
 
-    use crate::sequences::{sequence::QS, matrices::{QHM, HM, OpMat}, williamson::Williamson, symmetries::SequenceType, matrix_equivalence::reduce_to_hadamard_equivalence, equivalence::generate_equivalent_qts};
+    use crate::sequences::{sequence::QS, matrices::{QHM, HM, OpMat}, williamson::QuadSeq, symmetries::SequenceType, matrix_equivalence::reduce_to_hadamard_equivalence, equivalence::generate_equivalent_qts};
 
 
 
@@ -61,10 +61,10 @@ mod tests {
         let seq_z = vec![-1,-1,-1];
         let seq_w = vec![-1,-1,-1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let hm = HM::from_williamson(&will, SequenceType::WilliamsonType);
+        let hm = HM::from_williamson(&will, SequenceType::QuaternionType);
 
         println!("{}", hm.to_string());
 
@@ -81,7 +81,7 @@ mod tests {
         let seq_z = vec![-1,-1,-1];
         let seq_w = vec![-1,-1,-1];
 
-        let mut will1 = Williamson::new(size);
+        let mut will1 = QuadSeq::new(size);
         will1.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
 
@@ -91,7 +91,7 @@ mod tests {
         let seq_z = vec![1,1,1];
         let seq_w = vec![-1,-1,-1];
 
-        let mut will2 = Williamson::new(size);
+        let mut will2 = QuadSeq::new(size);
         will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let wills = vec![will1, will2];
@@ -99,7 +99,7 @@ mod tests {
 
         println!("{}", all.len());
 
-        let liste: Vec<HM> = all.iter().map(|w| HM::from_williamson(w,SequenceType::WilliamsonType)).collect();
+        let liste: Vec<HM> = all.iter().map(|w| HM::from_williamson(w,SequenceType::QuaternionType)).collect();
 
         let equ = reduce_to_hadamard_equivalence(&liste);
 

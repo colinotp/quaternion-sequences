@@ -3,7 +3,7 @@
 use std::collections::HashSet;
 
 
-use crate::sequences::{williamson::{Williamson, QUADRUPLETS}, equivalence::{generate_equivalence_class, will_less_than}};
+use crate::sequences::{williamson::{QuadSeq, QUADRUPLETS}, equivalence::{generate_equivalence_class, will_less_than}};
 
 
 
@@ -18,7 +18,7 @@ fn equals(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> bool {
 
 
 
-fn contains(set : &Vec<Williamson>, seq : &Williamson) -> bool {
+fn contains(set : &Vec<QuadSeq>, seq : &QuadSeq) -> bool {
     let (a1,b1,c1,d1) = seq.sequences();
     for elm in set {
         let (a2,b2,c2,d2) = elm.sequences();
@@ -31,7 +31,7 @@ fn contains(set : &Vec<Williamson>, seq : &Williamson) -> bool {
 
 
 
-fn find_minimum(class : &HashSet<Williamson>) -> Williamson {
+fn find_minimum(class : &HashSet<QuadSeq>) -> QuadSeq {
     // finds the minimum of a set comparing with the lexical order
     let mut mini = None;
 
@@ -57,7 +57,7 @@ pub fn find(size : usize) -> String{
     
     eprintln!("The function found {} sequences before equivalences", sequences.len());
 
-    let mut classes : Vec<HashSet<Williamson>> = vec![];
+    let mut classes : Vec<HashSet<QuadSeq>> = vec![];
 
     for seq in sequences {
         let mut new_seq = true;
@@ -89,8 +89,8 @@ pub fn find(size : usize) -> String{
 }
 
 
-pub fn find_aux(size : usize) -> Vec<Williamson>{
-    let mut will = Williamson::new(size);
+pub fn find_aux(size : usize) -> Vec<QuadSeq>{
+    let mut will = QuadSeq::new(size);
 
     let mut result = vec![];
 
@@ -99,7 +99,7 @@ pub fn find_aux(size : usize) -> Vec<Williamson>{
     result
 }
 
-fn find_recursive(will : &mut Williamson, size : usize, index : usize, sequences : &mut Vec<Williamson>){
+fn find_recursive(will : &mut QuadSeq, size : usize, index : usize, sequences : &mut Vec<QuadSeq>){
     // This is the naive approach to finding QTS
 
     if index >= size{
@@ -120,10 +120,10 @@ fn find_recursive(will : &mut Williamson, size : usize, index : usize, sequences
 
 
 
-pub fn reduce_to_equivalence(sequences : &Vec<Williamson>) -> Vec<Williamson> {
+pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>) -> Vec<QuadSeq> {
     // This function reduces a set of QTS up to the Sequence equivalence defined in our paper
     
-    let mut classes : Vec<HashSet<Williamson>> = vec![];
+    let mut classes : Vec<HashSet<QuadSeq>> = vec![];
 
     for seq in sequences {
         let mut new_seq = true;

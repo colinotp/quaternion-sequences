@@ -11,5 +11,5 @@ pub enum RowsumPairing{
 
 #[derive(Clone)]
 pub enum SequenceType{ // enum for the different types of Quadruplets of sequences
-    Williamson, WilliamsonType, ItoType, ExtraTypeI, ExtraTypeII, ExtraTypeIII
+    Williamson, WilliamsonType, QuaternionType, ItoType, ExtraTypeI, ExtraTypeII, ExtraTypeIII
 }

@@ -15,7 +15,7 @@ else
     exit 0
 fi
 
-base_dir="results/pairs/wts"
+base_dir="results/pairs/qts"
 for (( i=START; i<=END; i++ ))
 do
     dir="$base_dir/find_$i"

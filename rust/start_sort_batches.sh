@@ -12,7 +12,7 @@ n=$1
 
 export LC_ALL=C
 
-for dirname in results/pairs/wts/find_$n/*;
+for dirname in results/pairs/qts/find_$n/*;
 do
 	if [ -d $dirname ]
 	then

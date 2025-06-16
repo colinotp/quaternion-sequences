@@ -107,7 +107,7 @@ QTS_hadamard_reduced=[]
 pairs=[]
 
 for n in range(int(start), int(end)+1):
-    filePath = "./results/pairs/wts/find_" + str(n)
+    filePath = "./results/pairs/qts/find_" + str(n)
     result_dir = filePath + "/result.log"
 
     runtime.append(read_runtimes(result_dir))

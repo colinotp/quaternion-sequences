@@ -2,7 +2,7 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::sequences::{mum::*, sequence::*, matrices::QHM, williamson::Williamson};
+    use crate::sequences::{mum::*, sequence::*, matrices::QHM, williamson::QuadSeq};
 
 
     #[test]
@@ -36,7 +36,7 @@ mod tests {
         let seq_z = vec![-1,-1];
         let seq_w = vec![-1, 1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let pqs = will.to_qs();

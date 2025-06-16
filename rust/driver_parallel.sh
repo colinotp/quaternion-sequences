@@ -41,7 +41,7 @@ done
 jobids=()
 
 # read the rowsums file and submit jobs
-input="results/pairs/wts/find_$n/rowsums.quad"
+input="results/pairs/qts/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
 	./target/release/rust create $n $rowsum $rowsum_pairing
@@ -73,7 +73,7 @@ done < "$input"
 dep_string=$(IFS=:; echo "${jobids[*]}")
 jobids2=()
 
-for dirname in results/pairs/wts/find_$n/*;
+for dirname in results/pairs/qts/find_$n/*;
 do
 	if [ -d $dirname ]
 	then

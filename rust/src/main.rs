@@ -87,19 +87,19 @@ fn find_unique_williamson_type_of_size(i : usize){
     f.write(result.as_bytes()).expect("Error when writing in the file");
 }
 
-fn find_write_wts(i : usize){
+fn find_write_qts(i : usize){
 
     let result = find_write::join_pairs(i);
 
     // Test to ensure actual QTS
-    for wts in &result {
-        assert!(wts.verify_wts(), "Sequence failed auto/cross correlation conditions: {}", wts.to_string());
-        if !wts.is_amicable() {
-            print!("Seq is valid QTS, but not amicable (not WTS): {}", wts.to_string())
+    for qts in &result {
+        assert!(qts.verify_qts(), "Sequence failed auto/cross correlation conditions: {}", qts.to_string());
+        if !qts.is_amicable() {
+            print!("Seq is valid QTS, but not amicable (not WTS): {}", qts.to_string())
         }
     }
 
-    let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq");
+    let s = &("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.seq");
     let path = Path::new(s);
     let mut f = File::create(path).expect("Invalid file ?");
     
@@ -117,10 +117,10 @@ where P: AsRef<Path>, { // compact code to read a file
 
 fn convert_qs_to_matrices() {
     for i in 1.. {
-        println!("{}", &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq"));
-        if let Ok(lines) = read_lines(&("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.seq")) {
+        println!("{}", &("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.seq"));
+        if let Ok(lines) = read_lines(&("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.seq")) {
             // Consumes the iterator, returns an (Optional) String
-            let s = &("./results/pairs/wts/find_".to_string() + &i.to_string() + &"/result.qhm");
+            let s = &("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.qhm");
             let path = Path::new(s);
             let mut f = File::create(path).expect("Invalid file ?");
 
@@ -221,10 +221,10 @@ fn main() {
                 "ws" => {find_williamson_of_size(p);}
                 "wts" => {find_williamson_type_of_size(p);}
                 "unique" => {find_unique_williamson_type_of_size(p);}
-                "equation" => {find_with_rowsum::find(p, SequenceType::WilliamsonType);}
+                "equation" => {find_with_rowsum::find(p, SequenceType::QuaternionType);}
                 "matching" => {find_matching_algorithm(p);}
-                "join" => {find_write_wts(p);}
-                "convert" => {hadamard_equivalence_from_file("results/pairs/wts/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
+                "join" => {find_write_qts(p);}
+                "convert" => {hadamard_equivalence_from_file("results/pairs/qts/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
                 "rowsums" => {find_write::write_rowsums(p);}
                 _ => {}
             };
@@ -249,8 +249,8 @@ fn main() {
             let pairing = str_to_rowsum_pairing(&args[7]);      // Rowsum pairing
 
             match args[1].as_str() {
-                "pairs_rowsum" => {find_write::write_pairs_rowsum("wts".to_string(), (a,b,c,d), p, pairing)}
-                "create" => {find_write::create_rowsum_dirs("wts".to_string(), p, (a,b,c,d), pairing);}
+                "pairs_rowsum" => {find_write::write_pairs_rowsum("qts".to_string(), (a,b,c,d), p, pairing)}
+                "create" => {find_write::create_rowsum_dirs("qts".to_string(), p, (a,b,c,d), pairing);}
                 _ => {}
             }
         },
@@ -271,7 +271,7 @@ fn main() {
             };
 
             match args[1].as_str() {
-                "pair_single" => {find_write::write_pair_single_rowsum("wts".to_string(), (a,b,c,d), p, pairing, pair);},
+                "pair_single" => {find_write::write_pair_single_rowsum("qts".to_string(), (a,b,c,d), p, pairing, pair);},
                 _ => {}
             }
         },

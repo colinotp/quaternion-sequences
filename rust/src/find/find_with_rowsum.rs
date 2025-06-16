@@ -2,7 +2,7 @@ use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env, time::Instant};
 
 use memory_stats::memory_stats;
 
-use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft, iter_over_filtered_couples}, equations::generate_equations, williamson::{SequenceTag, tag_to_string, Williamson}, symmetries::SequenceType, matching::{generate_matching_table, MatchData, compute_complementary_auto_correlations, compute_complementary_cross_correlations, verify_cross_correlation}};
+use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft, iter_over_filtered_couples}, equations::generate_equations, williamson::{SequenceTag, tag_to_string, QuadSeq}, symmetries::SequenceType, matching::{generate_matching_table, MatchData, compute_complementary_auto_correlations, compute_complementary_cross_correlations, verify_cross_correlation}};
 
 
 fn get_two_best(quad: &Quad) -> ((isize, usize),(isize, usize)){
@@ -53,7 +53,7 @@ pub fn find(p : usize, seqtype : SequenceType) {
     println!("Current directory: {:?}", env::current_dir().ok().unwrap());
 
     let folder = match seqtype {
-        SequenceType::WilliamsonType => {"wts"}
+        SequenceType::QuaternionType => {"qts"}
         _ => {panic!("not implemented yet")} // TODO
     };
 
@@ -129,7 +129,7 @@ pub fn print_memory_usage(message : &str) {
 }
 
 
-pub fn find_matching(p : usize) -> Vec<Williamson>{
+pub fn find_matching(p : usize) -> Vec<QuadSeq>{
 
     // The resulting list of sequences
     let mut matches = vec![];
@@ -191,7 +191,7 @@ pub fn find_matching(p : usize) -> Vec<Williamson>{
 
                 if verify_cross_correlation(&[seq0, seq1, seq2, seq3], &tags) {
 
-                    let mut will = Williamson::new(p);
+                    let mut will = QuadSeq::new(p);
                     will.set_sequence(&seq0, &tags[0]);
                     will.set_sequence(&seq1, &tags[1]);
                     will.set_sequence(&seq2, &tags[2]);

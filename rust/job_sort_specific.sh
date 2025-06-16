@@ -19,5 +19,5 @@ start=`date +%s`
 sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
 end=`date +%s`
 if [[ $? -eq 0 ]]; then
-    echo -e "Sorting the file \"$(basename "$filename")\" took $((end - start)) seconds. \n\n" >> "./results/pairs/wts/find_$n/result.log"
+    echo -e "Sorting the file \"$(basename "$filename")\" took $((end - start)) seconds. \n\n" >> "./results/pairs/qts/find_$n/result.log"
 fi

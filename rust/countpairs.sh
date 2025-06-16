@@ -17,7 +17,7 @@ n=$1
 
 count=$((0))
 
-for dirname in results/pairs/wts/find_$n/*;
+for dirname in results/pairs/qts/find_$n/*;
 do
 	if [ -d $dirname ]
 	then

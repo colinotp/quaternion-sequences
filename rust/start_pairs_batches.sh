@@ -41,7 +41,7 @@ done
 
 
 # read the rowsums file
-input="results/pairs/wts/find_$n/rowsums.quad"
+input="results/pairs/qts/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
     #launch the batches for each rowsum

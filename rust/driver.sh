@@ -18,7 +18,7 @@ fi
 
 n=$1
 shift
-foldername="./results/pairs/wts/find_$n"
+foldername="./results/pairs/qts/find_$n"
 rowsum_pairing="XW"
 
 # Empty out existing .pair files to avoid conflicts
@@ -65,7 +65,7 @@ echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $
 
 # sorting the files
 start2=`date +%s`
-./sortpairs.sh wts $n &>> $filename
+./sortpairs.sh qts $n &>> $filename
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.
 echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filename

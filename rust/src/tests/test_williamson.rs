@@ -2,11 +2,11 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::sequences::williamson::{Williamson, QUADRUPLETS, periodic_autocorrelation, cross_correlation};
+    use crate::sequences::williamson::{QuadSeq, QUADRUPLETS, periodic_autocorrelation, cross_correlation};
 
     #[test]
     fn test_conversion() {
-        let mut will = Williamson::new(16);
+        let mut will = QuadSeq::new(16);
         for (i, q) in QUADRUPLETS.iter().enumerate(){
             will.set_sequence_value(q, i);
         }
@@ -46,7 +46,7 @@ mod tests {
     
     #[test]
     fn test_periodic_complementary() {
-        let mut will = Williamson::new(2);
+        let mut will = QuadSeq::new(2);
         assert!(!will.is_periodic_complementary());
 
         let val = [QUADRUPLETS[0], QUADRUPLETS[5]];
@@ -58,7 +58,7 @@ mod tests {
 
 
         
-        let mut will = Williamson::new(4);
+        let mut will = QuadSeq::new(4);
         assert!(!will.is_periodic_complementary());
 
         let val = [QUADRUPLETS[0], QUADRUPLETS[0], QUADRUPLETS[1], QUADRUPLETS[0]];
@@ -72,7 +72,7 @@ mod tests {
 
     #[test]
     fn test_symmetric() {
-        let mut will = Williamson::new(4);
+        let mut will = QuadSeq::new(4);
         assert!(will.is_symmetric());
 
         let val = [QUADRUPLETS[0], QUADRUPLETS[0], QUADRUPLETS[15], QUADRUPLETS[0]];
@@ -89,7 +89,7 @@ mod tests {
 
     #[test]
     fn test_amicable() {
-        let mut will = Williamson::new(4);
+        let mut will = QuadSeq::new(4);
         assert!(will.is_amicable());
 
         let val = [QUADRUPLETS[0], QUADRUPLETS[0], QUADRUPLETS[15], QUADRUPLETS[0]];
@@ -108,12 +108,12 @@ mod tests {
     #[test]
     fn test_symmetric_implies_amicable() {
         let size = 5;
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
     
         aux_recursive(&mut will, size, 1);
     }
     
-    fn aux_recursive(will : &mut Williamson, size : usize, index : usize) {
+    fn aux_recursive(will : &mut QuadSeq, size : usize, index : usize) {
     
         if index >= will.search_size(){
             assert!(!will.is_symmetric() || will.is_amicable());
@@ -131,12 +131,12 @@ mod tests {
     #[test]
     fn test_equivalence_cross_correlation_property() {
         let size = 5;
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
     
         aux_recursive2(&mut will, size, 1);
     }
     
-    fn aux_recursive2(will : &mut Williamson, size : usize, index : usize) {
+    fn aux_recursive2(will : &mut QuadSeq, size : usize, index : usize) {
     
         if index >= will.search_size(){
             assert!(!(will.verify_cross_correlation() ^ will.is_amicable())); // XNOR operation
@@ -160,7 +160,7 @@ mod tests {
         let seq_z = vec![-1,-1,-1,-1,1,-1,1,-1];
         let seq_w = vec![-1,-1,-1, 1,1,-1,1, 1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         
         assert!(will.to_qs().is_perfect());

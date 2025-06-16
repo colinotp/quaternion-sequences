@@ -1,6 +1,6 @@
 use cgmath::Quaternion;
 
-use super::{sequence::{QS, quaternion_to_string}, williamson::Williamson, symmetries::SequenceType};
+use super::{sequence::{QS, quaternion_to_string}, williamson::QuadSeq, symmetries::SequenceType};
 
 
 
@@ -159,7 +159,7 @@ impl HM {
         hm
     }
 
-    pub fn from_williamson(will : &Williamson, seqtype : SequenceType) -> HM {
+    pub fn from_williamson(will : &QuadSeq, seqtype : SequenceType) -> HM {
 
         let size = will.size();
         let mut hm = HM::new(4*size);
@@ -170,7 +170,7 @@ impl HM {
         let matw = HM::from_sequence(&will.sequence(super::williamson::SequenceTag::W));
 
         match seqtype {
-            SequenceType::WilliamsonType => {
+            SequenceType::QuaternionType => {
                 hm.copy_block_to(&matw, 0, 0, &OpMat::NONE);
                 hm.copy_block_to(&matx, size, 0, &OpMat::NONE);
                 hm.copy_block_to(&maty, 2*size, 0, &OpMat::NONE);

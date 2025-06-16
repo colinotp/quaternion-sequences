@@ -18,7 +18,7 @@ n=$1
 export LC_ALL=C
 
 # dirname is rowsum_x_y_z_w
-for dirname in results/pairs/wts/find_$n/*;
+for dirname in results/pairs/qts/find_$n/*;
 do
 	if [ -d $dirname ]
 	then

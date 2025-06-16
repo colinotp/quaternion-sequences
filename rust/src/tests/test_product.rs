@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::sequences::{product::{sequence_product, mum_product}, williamson::Williamson, matrices::QHM, mum::{MUM, HMUO}};
+    use crate::sequences::{product::{sequence_product, mum_product}, williamson::QuadSeq, matrices::QHM, mum::{MUM, HMUO}};
 
 
     #[test]
@@ -14,7 +14,7 @@ mod tests {
         let seq_z = vec![-1,1,1,-1,-1,-1,-1];
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
-        let mut will1 = Williamson::new(size);
+        let mut will1 = QuadSeq::new(size);
         will1.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         let qs1 = will1.to_qs();
         
@@ -24,7 +24,7 @@ mod tests {
         let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
         let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
 
-        let mut will2 = Williamson::new(size);
+        let mut will2 = QuadSeq::new(size);
         will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         let qs2 = will2.to_qs();
 
@@ -45,7 +45,7 @@ mod tests {
         let seq_z = vec![-1,-1, 1];
         let seq_w = vec![-1,-1, 1];
 
-        let mut will1 = Williamson::new(size);
+        let mut will1 = QuadSeq::new(size);
         will1.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         let qs1 = will1.to_qs();
         let qhm1 = QHM::from_pqs(qs1).dephased();
@@ -58,7 +58,7 @@ mod tests {
         let seq_z = vec![-1,-1];
         let seq_w = vec![-1, 1];
 
-        let mut will2 = Williamson::new(size);
+        let mut will2 = QuadSeq::new(size);
         will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         let qs2 = will2.to_qs();
         let qhm2 = QHM::from_pqs(qs2).dephased();
@@ -82,7 +82,7 @@ mod tests {
         let seq_z = vec![-1,-1, 1];
         let seq_w = vec![-1,-1, 1];
         
-        let mut will1 = Williamson::new(size);
+        let mut will1 = QuadSeq::new(size);
         will1.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         let qs1 = will1.to_qs();
         
@@ -93,7 +93,7 @@ mod tests {
         let seq_z = vec![-1, 1,-1, 1];
         let seq_w = vec![-1, 1, 1, 1];
         
-        let mut will2 = Williamson::new(size);
+        let mut will2 = QuadSeq::new(size);
         will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
         let qs2 = will2.to_qs();
 

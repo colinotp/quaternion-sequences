@@ -18,5 +18,5 @@ start=`date +%s`
 sort -m $output_dir/*.sorted > $filename.sorted
 end=`date +%s`
 if [[ $? -eq 0 ]]; then
-    echo -e "Merging the file \"$(basename "$filename")\" took $((end - start)) seconds. \n\n" >> "./results/pairs/wts/find_$n/result.log"
+    echo -e "Merging the file \"$(basename "$filename")\" took $((end - start)) seconds. \n\n" >> "./results/pairs/qts/find_$n/result.log"
 fi

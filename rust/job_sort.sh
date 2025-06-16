@@ -13,6 +13,6 @@ n=$1
 
 # sorting the files
 start2=`date +%s`
-./sortpairs.sh wts $n
+./sortpairs.sh qts $n
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.

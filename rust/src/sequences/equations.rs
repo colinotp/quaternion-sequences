@@ -15,7 +15,7 @@ pub fn generate_equations(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>,
     // generates all the equations given by two sequences and their positions, so that they return a specific type of sequence.
 
     match seqtype {
-        SequenceType::WilliamsonType => {
+        SequenceType::QuaternionType => {
             equations_williamson_type(seq1, tag1, seq2, tag2, rowsum)
         }
         _ => {panic!()/* TODO */}

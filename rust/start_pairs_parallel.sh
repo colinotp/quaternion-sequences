@@ -39,7 +39,7 @@ done
 
 
 # read the rowsums file and submit jobs
-input="results/pairs/wts/find_$n/rowsums.quad"
+input="results/pairs/qts/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
     # Submit job for first pair, capturing job ID

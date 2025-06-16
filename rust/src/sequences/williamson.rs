@@ -52,7 +52,7 @@ pub fn quaternion_to_quad(quat : &Quaternion<f32>) -> (i8, i8, i8, i8) {
 
 
 #[derive(Clone, PartialEq, Eq, Hash)]
-pub struct Williamson {
+pub struct QuadSeq {
     size : usize,
     a: Vec<i8>,
     b: Vec<i8>,
@@ -63,10 +63,10 @@ pub struct Williamson {
 
 
 
-impl Williamson{
+impl QuadSeq{
 
-    pub fn new(size: usize) -> Williamson {
-        Williamson {
+    pub fn new(size: usize) -> QuadSeq {
+        QuadSeq {
             size,
             a : vec![-1; size],
             b : vec![-1; size],
@@ -142,9 +142,9 @@ impl Williamson{
     }
 
 
-    pub fn from_pqs(pqs : &QS) -> Williamson {
+    pub fn from_pqs(pqs : &QS) -> QuadSeq {
 
-        let mut will = Williamson::new(pqs.size());
+        let mut qts = QuadSeq::new(pqs.size());
 
         let (mut seqx, mut seqy, mut seqz, mut seqw) = (vec![], vec![], vec![], vec![]);
 
@@ -156,13 +156,13 @@ impl Williamson{
             seqw.push(w);
         }
 
-        will.set_all_values((&seqx, &seqy, &seqz, &seqw));
+        qts.set_all_values((&seqx, &seqy, &seqz, &seqw));
 
-        will
+        qts
     }
 
 
-    pub fn verify_wts(&self) -> bool {
+    pub fn verify_qts(&self) -> bool {
         if !(self.is_periodic_complementary() && self.verify_cross_correlation()) {
             return false;
         }
@@ -288,7 +288,7 @@ fn element_to_string(elem : i8) -> String {
     }
 }
 
-impl ToString for Williamson{
+impl ToString for QuadSeq{
     fn to_string(&self) -> String {
         let mut res_str: String = "[\n".to_owned();
 

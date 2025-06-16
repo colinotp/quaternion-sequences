@@ -3,7 +3,7 @@ use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
-use crate::{sequences::{equivalence::generate_equivalent_qts, williamson::Williamson, symmetries::SequenceType}, read_lines};
+use crate::{sequences::{equivalence::generate_equivalent_qts, williamson::QuadSeq, symmetries::SequenceType}, read_lines};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -72,13 +72,13 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
         seqs.push(QS::from_str(&line.to_string()));
     }
 
-    let wills : Vec<Williamson> = seqs.iter().map(|s| Williamson::from_pqs(s)).collect();
+    let qts_list : Vec<QuadSeq> = seqs.iter().map(|s| QuadSeq::from_pqs(s)).collect();
 
-    for wts in &wills {
-        assert!(wts.verify_wts(), "wts fails auto/cross correlation condition: {}", wts.to_string());
+    for qts in &qts_list {
+        assert!(qts.verify_qts(), "wts fails auto/cross correlation condition: {}", qts.to_string());
     }
 
-    let all = generate_equivalent_qts(&wills);
+    let all = generate_equivalent_qts(&qts_list);
 
     println!("generated all sequences");
 
@@ -87,7 +87,7 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
     }
 
     let canon_reps : HashMap<CanonLabeling, HM> = all.par_iter().map(|seq| {
-        let hmat = HM::from_williamson(seq, SequenceType::WilliamsonType);
+        let hmat = HM::from_williamson(seq, SequenceType::QuaternionType);
         (canon_hm(&hmat), hmat)
     }).collect();
     

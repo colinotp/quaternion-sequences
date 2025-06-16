@@ -3,7 +3,7 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::sequences::{williamson::{Williamson, QUADRUPLETS}, equivalence::*};
+    use crate::sequences::{williamson::{QuadSeq, QUADRUPLETS}, equivalence::*};
     use crate::sequences::sequence::*;
     use crate::find::find_unique::reduce_to_equivalence;
     use crate::read_lines;
@@ -32,7 +32,7 @@ mod tests {
         let seq_z = vec![-1,1,1,-1,-1,-1,-1];
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_reorder(&will);
@@ -55,7 +55,7 @@ mod tests {
         let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
         let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_uniform_shift(&will);
@@ -78,7 +78,7 @@ mod tests {
         let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
         let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_negate(&will);
@@ -99,7 +99,7 @@ mod tests {
         let seq_z = vec![-1,-1,-1,-1,-1,1,-1,1];
         let seq_w = vec![-1,-1, 1,-1,-1,1, 1,1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_alternated_negation(&will);
@@ -113,12 +113,12 @@ mod tests {
     #[test]
     fn test_equivalence_class() {
         let size = 5;
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
     
         alt_recursive(&mut will, size, 1);
     }
     
-    fn alt_recursive(will : &mut Williamson, size : usize, index : usize) {
+    fn alt_recursive(will : &mut QuadSeq, size : usize, index : usize) {
     
         if index >= will.search_size(){
             if will.to_qs().is_perfect() {
@@ -157,7 +157,7 @@ mod tests {
         let seq_z = vec![-1,1,1,-1,-1,-1,-1];
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let equivalent = equivalent_automorphism(&will);
@@ -179,7 +179,7 @@ mod tests {
         let seq_z = vec![-1,1,1,-1,-1,-1,-1];
         let seq_w = vec![-1,1,1,-1, 1,-1, 1];
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         for elm in generate_equivalence_class(&will) {
@@ -200,7 +200,7 @@ mod tests {
             let mut sequences = vec![];
             for line in lines {
                 if let Ok(pqs) = line {
-                    let seq = Williamson::from_pqs(&QS::from_str(&pqs));
+                    let seq = QuadSeq::from_pqs(&QS::from_str(&pqs));
                     sequences.push(seq);
                 }
             }
@@ -224,7 +224,7 @@ mod tests {
             let mut sequences = vec![];
 
             for line in read_lines(filepath).expect("Invalid file") {
-                sequences.push(Williamson::from_pqs(&QS::from_str(&line.expect("error reading line"))));
+                sequences.push(QuadSeq::from_pqs(&QS::from_str(&line.expect("error reading line"))));
             }
 
             let mut total = vec![];

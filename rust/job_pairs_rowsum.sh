@@ -26,7 +26,7 @@ start=`date +%s`
 # go through rowsums
 # start all the batches
 
-foldername="./results/pairs/wts/find_$n"
+foldername="./results/pairs/qts/find_$n"
 filename="$foldername/result.log"
 
 if [ ! -e $foldername ]

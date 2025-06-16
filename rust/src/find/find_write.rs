@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{sequences::{williamson::{SequenceTag, tag_to_string, Williamson}, rowsum::{rowsum, generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::*}, read_lines, find::find_unique::reduce_to_equivalence};
+use crate::{sequences::{williamson::{SequenceTag, tag_to_string, QuadSeq}, rowsum::{rowsum, generate_rowsums, generate_sequences_with_rowsum, Quad, sequence_to_string}, fourier::iter_over_enumerate_filtered_couples, matching::{compute_cross_correlations, compute_auto_correlations}, symmetries::*}, read_lines, find::find_unique::reduce_to_equivalence};
 
 
 
@@ -16,9 +16,9 @@ pub fn quad_to_string(q : (isize, isize, isize, isize)) -> String {
 pub fn write_rowsums(p : usize) {
     // Stores the possible rowsums for qts sequences of length p
 
-    let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
+    let seqtype = SequenceType::QuaternionType; // TODO implement the other types
     let folder = match seqtype {
-        SequenceType::WilliamsonType => {"wts"}
+        SequenceType::QuaternionType => {"qts"}
         _ => {panic!("not implemented yet")} // TODO
     };
 
@@ -199,9 +199,9 @@ pub fn write_pair_single(p: usize, pairing: Option<RowsumPairing>, pair: u8) {
     }
     eprintln!("generated {} different rowsums", rowsums.len());
 
-    let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
+    let seqtype = SequenceType::QuaternionType; // TODO implement the other types
     let folder = match seqtype {
-        SequenceType::WilliamsonType => {"wts"}
+        SequenceType::QuaternionType => {"qts"}
         _ => {panic!("not implemented yet")} // TODO
     };
 
@@ -304,9 +304,9 @@ pub fn write_pairs(p : usize, pairing: Option<RowsumPairing>) {
     }
     eprintln!("generated {} different rowsums", rowsums.len());
 
-    let seqtype = SequenceType::WilliamsonType; // TODO implement the other types
+    let seqtype = SequenceType::QuaternionType; // TODO implement the other types
     let folder = match seqtype {
-        SequenceType::WilliamsonType => {"wts"}
+        SequenceType::QuaternionType => {"qts"}
         _ => {panic!("not implemented yet")} // TODO
     };
 
@@ -369,13 +369,13 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
 
 
 
-pub fn join_pairs(p : usize) -> Vec<Williamson>{
+pub fn join_pairs(p : usize) -> Vec<QuadSeq>{
     // This is the starting point of the part of the algorithm that goes through the sorted files and finds valid QTS
 
     let mut result = vec![];
 
-    let find_i = fs::read_dir("./results/pairs/wts/find_".to_string() + &p.to_string()).unwrap();
-    eprintln!("{}", "./results/pairs/wts/find_".to_string() + &p.to_string());
+    let find_i = fs::read_dir("./results/pairs/qts/find_".to_string() + &p.to_string()).unwrap();
+    eprintln!("{}", "./results/pairs/qts/find_".to_string() + &p.to_string());
 
     for rowsum_x_y in find_i {
         let directory = rowsum_x_y.unwrap();
@@ -517,7 +517,7 @@ pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
 
 
 
-pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) -> Vec<Williamson> {
+pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) -> Vec<QuadSeq> {
     // This function reads two sorted files of sequences and uses the order to determine what comparisons should be made, and returns the valid QTS
 
     let mut result = vec![];
@@ -560,11 +560,11 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
                 let indices = (i1, i2, i3, i4);
                 // test if the sequence is of type seqtype, add them to the result files if it is
                 let sequences = get_sequences(sequences, order, &indices);
-                let mut will = Williamson::new(sequences.0.len());
-                will.set_all_values(sequences);
+                let mut qts = QuadSeq::new(sequences.0.len());
+                qts.set_all_values(sequences);
                 
-                if will.to_qs().is_perfect() {
-                    result.push(will);
+                if qts.to_qs().is_perfect() {
+                    result.push(qts);
                 }
 
             }

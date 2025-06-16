@@ -1,16 +1,16 @@
 
-use crate::sequences::williamson::{Williamson, QUADRUPLETS};
+use crate::sequences::williamson::{QuadSeq, QUADRUPLETS};
 
 
 
 
-pub fn find(size : usize, condition : fn(&Williamson) -> bool) -> usize{
-    let mut will = Williamson::new(size);
+pub fn find(size : usize, condition : fn(&QuadSeq) -> bool) -> usize{
+    let mut will = QuadSeq::new(size);
 
     return find_recursive(&mut will, size, 1, condition);
 }
 
-fn find_recursive(will : &mut Williamson, size : usize, index : usize, condition : fn(&Williamson) -> bool) -> usize{
+fn find_recursive(will : &mut QuadSeq, size : usize, index : usize, condition : fn(&QuadSeq) -> bool) -> usize{
 
     if index >= will.search_size(){
         if condition(will) {

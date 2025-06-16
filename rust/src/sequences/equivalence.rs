@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use super::williamson::{Williamson, SequenceTag};
+use super::williamson::{QuadSeq, SequenceTag};
 
 
 
@@ -89,7 +89,7 @@ fn will_less_than_aux(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Comp {
     Comp::EQUAL
 }
 
-pub fn will_less_than(will1 : &Williamson, will2 : &Williamson) -> bool {
+pub fn will_less_than(will1 : &QuadSeq, will2 : &QuadSeq) -> bool {
 
     let (a1,b1,c1,d1) = will1.sequences();
     let (a2,b2,c2,d2) = will2.sequences();
@@ -114,7 +114,7 @@ pub fn will_less_than(will1 : &Williamson, will2 : &Williamson) -> bool {
 
 // * Functions to treat the equivalences
 
-pub fn generate_canonical_representative(seq : &Williamson) -> Williamson{
+pub fn generate_canonical_representative(seq : &QuadSeq) -> QuadSeq{
     let set = generate_equivalence_class(seq);
     let mut mini = seq.clone();
     for elm in set {
@@ -128,7 +128,7 @@ pub fn generate_canonical_representative(seq : &Williamson) -> Williamson{
 
 
 
-pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
+pub fn generate_equivalence_class(seq : &QuadSeq) -> HashSet<QuadSeq> {
     // This function generates the representative of the equivalence class that seq belongs to
     
     let mut class = HashSet::new();
@@ -161,16 +161,16 @@ pub fn generate_equivalence_class(seq : &Williamson) -> HashSet<Williamson> {
 }
 
 
-pub fn generate_equivalent_qts(wills : &Vec<Williamson>) -> Vec<Williamson> {
+pub fn generate_equivalent_qts(qts_list : &Vec<QuadSeq>) -> Vec<QuadSeq> {
 
     let mut result = HashSet::new();
 
-    for w in wills {
-        if result.contains(w) {
+    for qts in qts_list {
+        if result.contains(qts) {
             continue;
         }
 
-        let class = generate_equivalence_class(w);
+        let class = generate_equivalence_class(qts);
         for elm in class {
             result.insert(elm);
         }
@@ -181,7 +181,7 @@ pub fn generate_equivalent_qts(wills : &Vec<Williamson>) -> Vec<Williamson> {
 
 
 
-fn swap(will : &mut Williamson, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
+fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     
     let (a,b,c,d) = will.sequences();
 
@@ -199,7 +199,7 @@ fn swap(will : &mut Williamson, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     will.set_sequence(&seq1, &seqtag2);
 }
 
-pub fn equivalent_reorder(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by reorder
 
     let mut res = vec![seq.clone()];
@@ -226,13 +226,13 @@ pub fn equivalent_reorder(seq : &Williamson) -> Vec<Williamson> {
 
 
 
-pub fn equivalent_uniform_shift(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_uniform_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by shift
 
     let mut res = vec![seq.clone()];
 
     for offset in 1..seq.size() {
-        let mut s = Williamson::new(seq.size());
+        let mut s = QuadSeq::new(seq.size());
         for index in 0..seq.size() {
             s.set_sequence_value(&seq.values((index + offset) % seq.size()), index)
         }
@@ -242,12 +242,12 @@ pub fn equivalent_uniform_shift(seq : &Williamson) -> Vec<Williamson> {
     res
 }
 
-pub fn equivalent_reverse(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_reverse(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by shift
 
     let mut res = vec![seq.clone()];
 
-    let mut s = Williamson::new(seq.size());
+    let mut s = QuadSeq::new(seq.size());
     for index in 0..seq.size() {
         s.set_sequence_value(&seq.values(seq.size() - 1 - index), index)
     }
@@ -283,7 +283,7 @@ pub fn alt_negated(seq : &Vec<i8>, frequency : usize) -> Vec<i8> {
 
 
 
-pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by negation
 
     let (a,b,c,d) = seq.sequences();
@@ -302,7 +302,7 @@ pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
             (SequenceTag::Z, SequenceTag::W) => {(&a, &b, &nega_c, &nega_d)},
             _ => {panic!("Incorrect tags entered !")}
         };
-        let mut s = Williamson::new(seq.size());
+        let mut s = QuadSeq::new(seq.size());
         s.set_all_values(quad);
 
         res.push(s);
@@ -312,7 +312,7 @@ pub fn equivalent_negate(seq : &Williamson) -> Vec<Williamson> {
 }
 
 
-pub fn equivalent_alternated_negation(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
 
     if seq.size() % 2 == 1 {
         return vec![seq.clone()];
@@ -326,7 +326,7 @@ pub fn equivalent_alternated_negation(seq : &Williamson) -> Vec<Williamson> {
 
     let quads = (&alt_negated(&a, frequency), &alt_negated(&b, frequency), &alt_negated(&c, frequency), &alt_negated(&d, frequency));
 
-    let mut s = Williamson::new(seq.size());
+    let mut s = QuadSeq::new(seq.size());
     s.set_all_values(quads);
 
     res.push(seq.clone());
@@ -357,7 +357,7 @@ fn permute(seq : &Vec<i8>, coprime : usize) -> Vec<i8> {
 
 
 
-pub fn equivalent_automorphism(seq : &Williamson) -> Vec<Williamson> {
+pub fn equivalent_automorphism(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by permutation
 
     let mut result = vec![];
@@ -370,7 +370,7 @@ pub fn equivalent_automorphism(seq : &Williamson) -> Vec<Williamson> {
 
     for k in COPRIMES[size].iter() {
 
-        let mut will = Williamson::new(size);
+        let mut will = QuadSeq::new(size);
 
         let (a,b,c,d) = seq.sequences();
 
