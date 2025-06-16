@@ -2,7 +2,7 @@
 #[macro_use]
 extern crate lazy_static;
 
-use std::fs::File;
+use std::{fs::File, env};
 use std::io::{self, BufRead, Write};
 use std::path::Path;
 
@@ -14,7 +14,7 @@ mod tests;
 mod find;
 use crate::find::*;
 use crate::find::find_unique::reduce_to_equivalence;
-use crate::sequences::{sequence::*, symmetries::*};
+use crate::sequences::{equivalence::generate_equivalent_qts, williamson::*, sequence::*, symmetries::*};
 use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 
 fn find_pqs(symmetry : Option<Symmetry>){
@@ -169,6 +169,37 @@ fn find_matching_algorithm(p : usize) {
     
 }
 
+// Verify that all qts of a given length are also WTS (amicable)
+fn verify_qts_eq_wts(p : usize) {
+    let mut seqs = vec![];
+
+    let pathname = "results/pairs/qts/find_".to_string() + &p.to_string() + &"/result.seq".to_string();
+
+    println!("{:?}",env::current_dir());
+    println!("{pathname}");
+    for line_res in read_lines(&pathname).expect("error reading the file") {
+        let line = line_res.expect("Error reading line");
+        println!("{}", &line);
+        seqs.push(QS::from_str(&line.to_string()));
+    }
+
+    let qts_list : Vec<QuadSeq> = seqs.iter().map(|s| QuadSeq::from_pqs(s)).collect();
+
+    for qts in &qts_list {
+        assert!(qts.verify_qts(), "wts fails auto/cross correlation condition: {}", qts.to_string());
+    }
+
+    let all = generate_equivalent_qts(&qts_list);
+
+    for qts in all {
+        if !qts.is_amicable() {
+            panic!("QTS not amicable: {}", qts.to_string());
+        }
+    }
+
+    println!("Length {} checked, all QTS = WTS", p);
+}
+
 fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     match n.as_str() {
         "XY" => Some(RowsumPairing::XY),
@@ -226,6 +257,7 @@ fn main() {
                 "join" => {find_write_qts(p);}
                 "convert" => {hadamard_equivalence_from_file("results/pairs/qts/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
                 "rowsums" => {find_write::write_rowsums(p);}
+                "amicable" => {verify_qts_eq_wts(p);}
                 _ => {}
             };
         },
