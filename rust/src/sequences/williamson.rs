@@ -179,7 +179,7 @@ impl Williamson{
         true
     }
 
-    pub fn is_amicable(&self) -> bool { // This function and the verify_cross_correlation function are equivalent
+    pub fn is_amicable(&self) -> bool { // This function is a stronger version of the condition in verify_cross_correlation
         for offset in 1..self.size {
             if !(cross_correlation(&self.a, &self.b, offset) == cross_correlation(&self.b, &self.a, offset) &&
                cross_correlation(&self.a, &self.c, offset) == cross_correlation(&self.c, &self.a, offset) &&
@@ -195,7 +195,7 @@ impl Williamson{
         true
     }
 
-    pub fn verify_cross_correlation(&self) -> bool { // This function and the is_amicable function are equivalent
+    pub fn verify_cross_correlation(&self) -> bool { // This function is a weaker version of the condition in is_amicable
         for offset in 0..self.size {
             if !(cross_correlation(&self.a, &self.b, offset) - cross_correlation(&self.b, &self.a, offset) == cross_correlation(&self.d, &self.c, offset) - cross_correlation(&self.c, &self.d, offset) &&
                cross_correlation(&self.a, &self.c, offset) - cross_correlation(&self.c, &self.a, offset) == cross_correlation(&self.b, &self.d, offset) - cross_correlation(&self.d, &self.b, offset) &&
