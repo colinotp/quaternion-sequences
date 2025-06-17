@@ -14,7 +14,7 @@ mod tests;
 mod find;
 use crate::find::*;
 use crate::find::find_unique::reduce_to_equivalence;
-use crate::sequences::{equivalence::generate_equivalent_qts, williamson::*, sequence::*, symmetries::*};
+use crate::sequences::{williamson::*, sequence::*, symmetries::*};
 use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 
 fn find_pqs(symmetry : Option<Symmetry>){
