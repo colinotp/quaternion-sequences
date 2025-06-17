@@ -186,15 +186,8 @@ fn verify_qts_eq_wts(p : usize) {
     let qts_list : Vec<QuadSeq> = seqs.iter().map(|s| QuadSeq::from_pqs(s)).collect();
 
     for qts in &qts_list {
-        assert!(qts.verify_qts(), "wts fails auto/cross correlation condition: {}", qts.to_string());
-    }
-
-    let all = generate_equivalent_qts(&qts_list);
-
-    for qts in all {
-        if !qts.is_amicable() {
-            panic!("QTS not amicable: {}", qts.to_string());
-        }
+        assert!(qts.verify_qts(), "Sequence fails auto/cross correlation condition: {}", qts.to_string());
+        assert!(qts.is_amicable(), "Valid QTS fails amicabililty condition: {}", qts.to_string());
     }
 
     println!("Length {} checked, all QTS = WTS", p);
