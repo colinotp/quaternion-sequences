@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::matching::{verify_cross_correlation, compute_auto_correlations, compute_complementary_auto_correlations, compute_cross_correlations, compute_complementary_cross_correlations}};
+    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{matching::{compute_auto_correlations, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, verify_cross_correlation}, symmetries::SequenceType}};
     use crate::sequences::williamson::SequenceTag;
 
 
@@ -78,7 +78,7 @@ mod tests {
 
     #[test]
     fn test_join() {
-        join_pairs(7);
+        join_pairs(7, SequenceType::QuaternionType);
     }
 
 }

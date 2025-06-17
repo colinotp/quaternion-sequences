@@ -294,7 +294,7 @@ pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize,
     File::create(path2).expect("Invalid file ?");    
 }
 
-pub fn write_pairs(p : usize, pairing: Option<RowsumPairing>) {
+pub fn write_pairs(p : usize, seqtype : SequenceType, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
     // all the possible rowsums of p
@@ -304,19 +304,13 @@ pub fn write_pairs(p : usize, pairing: Option<RowsumPairing>) {
     }
     eprintln!("generated {} different rowsums", rowsums.len());
 
-    let seqtype = SequenceType::QuaternionType; // TODO implement the other types
-    let folder = match seqtype {
-        SequenceType::QuaternionType => {"qts"}
-        _ => {panic!("not implemented yet")} // TODO
-    };
-
-
+    let folder = seqtype.to_string();
     for rs in rowsums {
-        write_pairs_rowsum(folder.to_string(), rs, p, pairing.clone());
+        write_pairs_rowsum(&folder, rs, p, pairing.clone());
     }
 }
 
-pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize, pairing: Option<RowsumPairing>) {
+pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, pairing: Option<RowsumPairing>) {
     // This function generates the sequences possible for specific rowsums and stores them
     
     let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
@@ -369,13 +363,15 @@ pub fn write_pairs_rowsum(folder : String, rs : (isize, isize, isize, isize), p 
 
 
 
-pub fn join_pairs(p : usize) -> Vec<QuadSeq>{
+pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     // This is the starting point of the part of the algorithm that goes through the sorted files and finds valid QTS
 
     let mut result = vec![];
 
-    let find_i = fs::read_dir("./results/pairs/qts/find_".to_string() + &p.to_string()).unwrap();
-    eprintln!("{}", "./results/pairs/qts/find_".to_string() + &p.to_string());
+    let folder = seqtype.to_string();
+
+    let find_i = fs::read_dir("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string()).unwrap();
+    eprintln!("{}", "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string());
 
     for rowsum_x_y in find_i {
         let directory = rowsum_x_y.unwrap();
@@ -387,7 +383,7 @@ pub fn join_pairs(p : usize) -> Vec<QuadSeq>{
             let (pathnames, order) = get_order_from_dir(&directory);
             eprintln!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
     
-            result.append(&mut join_pairs_files(&pathnames, &order, &sequences));
+            result.append(&mut join_pairs_files(&pathnames, seqtype.clone(), &order, &sequences));
         }
     }
 
@@ -517,7 +513,7 @@ pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
 
 
 
-pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) -> Vec<QuadSeq> {
+pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, order : &(SequenceTag, SequenceTag, SequenceTag, SequenceTag), sequences : &(Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>)) -> Vec<QuadSeq> {
     // This function reads two sorted files of sequences and uses the order to determine what comparisons should be made, and returns the valid QTS
 
     let mut result = vec![];
@@ -560,16 +556,18 @@ pub fn join_pairs_files(filenames : &(String, String), order : &(SequenceTag, Se
                 let indices = (i1, i2, i3, i4);
                 // test if the sequence is of type seqtype, add them to the result files if it is
                 let sequences = get_sequences(sequences, order, &indices);
-                let mut qts = QuadSeq::new(sequences.0.len());
-                qts.set_all_values(sequences);
+                let mut quad_seq = QuadSeq::new(sequences.0.len());
+                quad_seq.set_all_values(sequences);
                 
-                if qts.to_qs().is_perfect() {
-                    result.push(qts);
+                let condition: Box<dyn Fn(&QuadSeq) -> bool> = match seqtype {
+                    SequenceType::QuaternionType => Box::new(|quad| quad.to_qs().is_perfect()),
+                    SequenceType::WilliamsonType => Box::new(|quad| quad.verify_wts()),
+                    _ => Box::new(|_| false)
+                };
+                if condition(&quad_seq) {
+                    result.push(quad_seq);
                 }
-
             }
-
-
         }
         else if seq12 < seq34 {
             line12 = lines12.next();

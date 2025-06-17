@@ -87,23 +87,26 @@ fn find_unique_williamson_type_of_size(i : usize){
     f.write(result.as_bytes()).expect("Error when writing in the file");
 }
 
-fn find_write_qts(i : usize){
+fn find_write_quad_seq(i : usize, seqtype : SequenceType){
 
-    let result = find_write::join_pairs(i);
+    let result = find_write::join_pairs(i, seqtype.clone());
 
-    // Test to ensure actual QTS
-    for qts in &result {
-        assert!(qts.verify_qts(), "Sequence failed auto/cross correlation conditions: {}", qts.to_string());
-        if !qts.is_amicable() {
-            print!("Seq is valid QTS, but not amicable (not WTS): {}", qts.to_string())
+    if matches!(seqtype, SequenceType::QuaternionType) {
+        // Check to see if also valid WTS
+        for qts in &result {
+            assert!(qts.verify_qts(), "Sequence failed auto/cross correlation conditions: {}", qts.to_string());
+            if !qts.is_amicable() {
+                print!("Seq is valid QTS, but not amicable (not WTS): {}", qts.to_string())
+            }
         }
     }
-
-    let s = &("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.seq");
+    
+    let folder = seqtype.to_string();
+    let s = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result.seq");
     let path = Path::new(s);
     let mut f = File::create(path).expect("Invalid file ?");
     
-    let res_string = result.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+    let res_string = result.iter().map(|w| w.to_string_result(seqtype.clone()) + &"\n").fold("".to_string(), |s, t| s + &t);
 
     f.write(res_string.as_bytes()).expect("Error when writing in the file");
 }
@@ -202,6 +205,15 @@ fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     }
 }
 
+fn str_to_seqtype(n : &String) -> SequenceType {
+    match n.as_str() {
+        "qts" => SequenceType::QuaternionType,
+        "wts" => SequenceType::WilliamsonType,
+        "ws" => SequenceType::Williamson,
+        _ => SequenceType::QuaternionType
+    }
+}
+
 fn str_to_usize(source : &str) -> usize {
     match str::parse::<usize>(source) {
         Ok(a) => {a},
@@ -247,24 +259,33 @@ fn main() {
                 "unique" => {find_unique_williamson_type_of_size(p);}
                 "equation" => {find_with_rowsum::find(p, SequenceType::QuaternionType);}
                 "matching" => {find_matching_algorithm(p);}
-                "join" => {find_write_qts(p);}
                 "convert" => {hadamard_equivalence_from_file("results/pairs/qts/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
                 "rowsums" => {find_write::write_rowsums(p);}
                 "amicable" => {verify_qts_eq_wts(p);}
                 _ => {}
             };
         },
-        // Pair generation
+        // Matching step
         4 => {
-            let p = str_to_usize(&args[2]);
-            let pairing = str_to_rowsum_pairing(&args[3]);
+            let seqtype = str_to_seqtype(&args[2]);
+            let p = str_to_usize(&args[3]);
             match args[1].as_str() {
-                "pairs" => {find_write::write_pairs(p, pairing);}
+                "join" => {find_write_quad_seq(p, seqtype);}
+                _ => {}
+            }
+        }
+        // Pair generation
+        5 => {
+            let seqtype = str_to_seqtype(&args[2]);
+            let p = str_to_usize(&args[3]);
+            let pairing = str_to_rowsum_pairing(&args[4]);
+            match args[1].as_str() {
+                "pairs" => {find_write::write_pairs(p, seqtype, pairing);}
                 _ => {}
             }
         },
         // Pair generation for a single set of rowsums (or file generation)
-        8 => {
+        8 => {  // TODO: Set up to allow for other seqtype
             let p = str_to_usize(&args[2]);     // length
             let a = str_to_isize(&args[3]);     // rowsum 1
             let b = str_to_isize(&args[4]);     // rowsum 2
@@ -274,13 +295,13 @@ fn main() {
             let pairing = str_to_rowsum_pairing(&args[7]);      // Rowsum pairing
 
             match args[1].as_str() {
-                "pairs_rowsum" => {find_write::write_pairs_rowsum("qts".to_string(), (a,b,c,d), p, pairing)}
+                "pairs_rowsum" => {find_write::write_pairs_rowsum("qts", (a,b,c,d), p, pairing)}
                 "create" => {find_write::create_rowsum_dirs("qts".to_string(), p, (a,b,c,d), pairing);}
                 _ => {}
             }
         },
         // Pair generation for a single pair from a single set of rowsums
-        9 => {
+        9 => {  // TODO: Set up to allow for other seqtype
             let p = str_to_usize(&args[2]);     // length
             let a = str_to_isize(&args[3]);     // rowsum 1
             let b = str_to_isize(&args[4]);     // rowsum 2

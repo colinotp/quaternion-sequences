@@ -13,3 +13,17 @@ pub enum RowsumPairing{
 pub enum SequenceType{ // enum for the different types of Quadruplets of sequences
     Williamson, WilliamsonType, QuaternionType, ItoType, ExtraTypeI, ExtraTypeII, ExtraTypeIII
 }
+
+impl ToString for SequenceType {
+    fn to_string(&self) -> String {
+        match self {
+            SequenceType::Williamson => "ws".to_string(),
+            SequenceType::WilliamsonType => "wts".to_string(),
+            SequenceType::QuaternionType => "qts".to_string(),
+            SequenceType::ItoType => "its".to_string(),
+            SequenceType::ExtraTypeI => "et1".to_string(),
+            SequenceType::ExtraTypeII => "et2".to_string(),
+            SequenceType::ExtraTypeIII => "et3".to_string()
+        }
+    }
+}
