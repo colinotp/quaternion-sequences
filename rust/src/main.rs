@@ -205,12 +205,12 @@ fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     }
 }
 
-fn str_to_seqtype(n : &String) -> SequenceType {
-    match n.as_str() {
+fn str_to_seqtype(n : &str) -> SequenceType {
+    match n {
         "qts" => SequenceType::QuaternionType,
         "wts" => SequenceType::WilliamsonType,
         "ws" => SequenceType::Williamson,
-        _ => SequenceType::QuaternionType
+        _ => {panic!("Invalid sequence type passed")}
     }
 }
 
@@ -285,39 +285,41 @@ fn main() {
             }
         },
         // Pair generation for a single set of rowsums (or file generation)
-        8 => {  // TODO: Set up to allow for other seqtype
-            let p = str_to_usize(&args[2]);     // length
-            let a = str_to_isize(&args[3]);     // rowsum 1
-            let b = str_to_isize(&args[4]);     // rowsum 2
-            let c = str_to_isize(&args[5]);     // rowsum 3
-            let d = str_to_isize(&args[6]);     // rowsum 4
+        9 => {
+            let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
+            let p = str_to_usize(&args[3]);     // length
+            let a = str_to_isize(&args[4]);     // rowsum 1
+            let b = str_to_isize(&args[5]);     // rowsum 2
+            let c = str_to_isize(&args[6]);     // rowsum 3
+            let d = str_to_isize(&args[7]);     // rowsum 4
 
-            let pairing = str_to_rowsum_pairing(&args[7]);      // Rowsum pairing
+            let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
 
             match args[1].as_str() {
-                "pairs_rowsum" => {find_write::write_pairs_rowsum("qts", (a,b,c,d), p, pairing)}
-                "create" => {find_write::create_rowsum_dirs("qts".to_string(), p, (a,b,c,d), pairing);}
+                "pairs_rowsum" => {find_write::write_pairs_rowsum(&folder, (a,b,c,d), p, pairing)}
+                "create" => {find_write::create_rowsum_dirs(folder, p, (a,b,c,d), pairing);}
                 _ => {}
             }
         },
         // Pair generation for a single pair from a single set of rowsums
-        9 => {  // TODO: Set up to allow for other seqtype
-            let p = str_to_usize(&args[2]);     // length
-            let a = str_to_isize(&args[3]);     // rowsum 1
-            let b = str_to_isize(&args[4]);     // rowsum 2
-            let c = str_to_isize(&args[5]);     // rowsum 3
-            let d = str_to_isize(&args[6]);     // rowsum 4
+        10 => {
+            let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
+            let p = str_to_usize(&args[3]);     // length
+            let a = str_to_isize(&args[4]);     // rowsum 1
+            let b = str_to_isize(&args[5]);     // rowsum 2
+            let c = str_to_isize(&args[6]);     // rowsum 3
+            let d = str_to_isize(&args[7]);     // rowsum 4
 
-            let pairing = str_to_rowsum_pairing(&args[7]);      // Rowsum pairing
+            let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
             
             // First or second pair (1 or 2)?
-            let pair = match str::parse::<u8>(&args[8]) {
+            let pair = match str::parse::<u8>(&args[9]) {
                 Ok(a) => {a},
                 Err(_) => {panic!("argument isn't an integer !")}
             };
 
             match args[1].as_str() {
-                "pair_single" => {find_write::write_pair_single_rowsum("qts".to_string(), (a,b,c,d), p, pairing, pair);},
+                "pair_single" => {find_write::write_pair_single_rowsum(folder, (a,b,c,d), p, pairing, pair);},
                 _ => {}
             }
         },

@@ -188,7 +188,7 @@ pub fn get_indices(pairing: Option<RowsumPairing>, pair: u8) -> Option<(usize, u
     }
 }
 
-pub fn write_pair_single(p: usize, pairing: Option<RowsumPairing>, pair: u8) {
+pub fn write_pair_single(seqtype : SequenceType, p: usize, pairing: Option<RowsumPairing>, pair: u8) {
     // This function is identical to write_pairs(), except for the purpose of running pairs individually on separate processors
     // `pair` should be either a 1 or a 2, which decides whether to look at the first or second pair given by the chosen pairing
 
@@ -199,15 +199,10 @@ pub fn write_pair_single(p: usize, pairing: Option<RowsumPairing>, pair: u8) {
     }
     eprintln!("generated {} different rowsums", rowsums.len());
 
-    let seqtype = SequenceType::QuaternionType; // TODO implement the other types
-    let folder = match seqtype {
-        SequenceType::QuaternionType => {"qts"}
-        _ => {panic!("not implemented yet")} // TODO
-    };
-
+    let folder = seqtype.to_string();
 
     for rs in rowsums {
-        write_pair_single_rowsum(folder.to_string(), rs, p, pairing.clone(), pair);
+        write_pair_single_rowsum(folder.clone(), rs, p, pairing.clone(), pair);
     }
 
 }
