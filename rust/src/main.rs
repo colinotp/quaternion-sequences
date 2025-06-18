@@ -102,13 +102,21 @@ fn find_write_quad_seq(i : usize, seqtype : SequenceType){
     }
     
     let folder = seqtype.to_string();
-    let s = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result.seq");
-    let path = Path::new(s);
-    let mut f = File::create(path).expect("Invalid file ?");
     
-    let res_string = result.iter().map(|w| w.to_string_result(seqtype.clone()) + &"\n").fold("".to_string(), |s, t| s + &t);
+    let s = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result.seq");
+    let qs = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result.qseq");
+    
+    let path_seq = Path::new(s);
+    let path_qseq = Path::new(qs);
 
-    f.write(res_string.as_bytes()).expect("Error when writing in the file");
+    let mut f_seq = File::create(path_seq).expect("Invalid file ?");
+    let mut f_qseq = File::create(path_qseq).expect("Invalid file ?");
+    
+    let seq_res_string = result.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+    let qseq_res_string = result.iter().map(|w| w.to_string() + &"\n").fold("".to_string(), |s, t| s + &t);
+
+    f_seq.write(seq_res_string.as_bytes()).expect("Error when writing in the file");
+    f_qseq.write(qseq_res_string.as_bytes()).expect("Error when writing in the file");
 }
 
 

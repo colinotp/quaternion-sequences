@@ -1,7 +1,5 @@
 use cgmath::Quaternion;
 
-use crate::sequences::symmetries::SequenceType;
-
 use super::sequence::{QS, QPLUS, Q24};
 
 
@@ -226,13 +224,6 @@ impl QuadSeq{
             }
         }
         true
-    }
-
-    pub fn to_string_result(&self, seqtype : SequenceType) -> String {  // Turns QuadSeq into string for display in result.seq
-        match seqtype {
-            SequenceType::QuaternionType => self.to_qs().to_string_raw(),
-            _ => self.to_string()
-        }
     }
 
     pub fn to_qs(&self) -> QS {
