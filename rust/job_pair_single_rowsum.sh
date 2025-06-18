@@ -14,20 +14,21 @@ then
     exit 1
 fi
 
-n=$1
-a=$2
-b=$3
-c=$4
-d=$5
-rowsum_pairing=$6
-pair=$7
+type=$1
+n=$2
+a=$3
+b=$4
+c=$5
+d=$6
+rowsum_pairing=$7
+pair=$8
 start=`date +%s`
 
 
 # go through rowsums
 # start all the batches
 
-foldername="./results/pairs/qts/find_$n"
+foldername="./results/pairs/$type/find_$n"
 filename="$foldername/result.log"
 
 if [ ! -e $foldername ]
@@ -37,6 +38,6 @@ fi
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pair_single $n $a $b $c $d $rowsum_pairing $pair &>> $filename
+./target/release/rust pair_single $type $n $a $b $c $d $rowsum_pairing $pair &>> $filename
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. >> $filename

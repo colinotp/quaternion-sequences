@@ -3,12 +3,15 @@
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
 	echo "This driver exhaustively computes all quaternion-type sequences of length n with parallelization. It is intended for use in an environment with the SLURM job manager."
-	echo "Example usage: ./driver_parallel.sh n"
+	echo "Example usage: ./driver_parallel.sh qts n"
 	exit 0
 fi
 
-n=$1
+type=$1
+n=$2
 shift
+shift
+foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
 
 while getopts "dp:" flag; do
@@ -19,7 +22,7 @@ while getopts "dp:" flag; do
 		p)
 		rowsum_pairing=$OPTARG
 		;;
-		/?)
+		\?)
 		echo "Invalid argument(s) passed. Exiting."
 		exit 1
 		;;
@@ -35,7 +38,7 @@ for d in "$foldername"/rowsum_*; do
 done
 
 # Generate rowsums
-./target/release/rust rowsums $n 
+./target/release/rust rowsums $type $n 
 
 
 jobids=()
@@ -44,9 +47,9 @@ jobids=()
 input="results/pairs/qts/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
-	./target/release/rust create $n $rowsum $rowsum_pairing
+	./target/release/rust create $type $n $rowsum $rowsum_pairing
     # Submit job for first pair, capturing job ID
-	jobid=$(sbatch ./job_pair_single_rowsum.sh $n $rowsum $rowsum_pairing 1 | awk '{print $4}')
+	jobid=$(sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 1 | awk '{print $4}')
 	# Check for successful job submission
 	if [[ -z "$jobid" ]]; then
 		echo "Failed to submit job for rowsum $rowsum"
@@ -56,7 +59,7 @@ do
 	echo "Submitted job $jobid for rowsum $rowsum"
 
 	# Submit job for second pair, capturing job ID
-	jobid=$(sbatch ./job_pair_single_rowsum.sh $n $rowsum $rowsum_pairing 2 | awk '{print $4}')
+	jobid=$(sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 2 | awk '{print $4}')
 	# Check for successful job submission
 	if [[ -z "$jobid" ]]; then
 		echo "Failed to submit job for rowsum $rowsum"
@@ -93,5 +96,5 @@ do
 done
 
 dep_string2=$(IFS=:; echo "${jobids2[*]}")
-sbatch --dependency=afterok:$dep_string2 ./job_join.sh $n
+sbatch --dependency=afterok:$dep_string2 ./job_join.sh $type $n
 

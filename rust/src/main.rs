@@ -259,18 +259,18 @@ fn main() {
                 "unique" => {find_unique_williamson_type_of_size(p);}
                 "equation" => {find_with_rowsum::find(p, SequenceType::QuaternionType);}
                 "matching" => {find_matching_algorithm(p);}
-                "convert" => {hadamard_equivalence_from_file("results/pairs/qts/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
-                "rowsums" => {find_write::write_rowsums(p);}
                 "amicable" => {verify_qts_eq_wts(p);}
                 _ => {}
             };
         },
-        // Matching step
+        // Matching step/rowsum generation/Hadamard equivalence reduction
         4 => {
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
             match args[1].as_str() {
-                "join" => {find_write_quad_seq(p, seqtype);}
+                "join" => {find_write_quad_seq(p, seqtype);},
+                "rowsums" => {find_write::write_rowsums(p, seqtype);},
+                "convert" => {hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
                 _ => {}
             }
         }

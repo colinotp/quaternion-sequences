@@ -11,6 +11,6 @@
 # Example usage: sbatch job_sort_split.sh n
 # where n is the desired length
 
-
-n=$1
-./sortpairs_split.sh $n
+type=$1
+n=$2
+./sortpairs_split.sh $type $n

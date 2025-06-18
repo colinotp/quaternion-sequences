@@ -1,7 +1,7 @@
 #! /bin/bash
 
-# This driver computes the perfect quaternion sequences for the given n:
-# ./driver.sh n
+# This driver computes sequences for the given length n:
+# ./driver.sh qts n
 #
 # Optional flags:
 # -d: delete existing .seq, .pair and .sorted files
@@ -10,15 +10,16 @@
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
-	echo "This driver computes the perfect Williamson Type sequences for the given n:"
-	echo "./driver.sh n"
+	echo "This driver computes sequences for the given length n:"
+	echo "./driver.sh qts n"
 	exit 0
 fi
 
-
-n=$1
+type=$1
+n=$2
 shift
-foldername="./results/pairs/qts/find_$n"
+shift
+foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
 
 # Empty out existing .pair files to avoid conflicts
@@ -51,28 +52,28 @@ filename="$foldername/result.log"
 
 if [ ! -e $foldername ]
 then
-	mkdir $foldername
+	mkdir -p $foldername
 fi
 
 start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pairs $n $rowsum_pairing &> $filename
+./target/release/rust pairs $type $n $rowsum_pairing &> $filename
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. 
 echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # sorting the files
 start2=`date +%s`
-./sortpairs.sh qts $n &>> $filename
+./sortpairs.sh $type $n &>> $filename
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.
 echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
-./target/release/rust join $n &>> $filename
+./target/release/rust join $type $n &>> $filename
 end2=`date +%s`
 echo Matching the sequences took `expr $end2 - $start2` seconds.
 echo -e Matching the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename

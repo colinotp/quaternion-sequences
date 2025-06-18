@@ -10,9 +10,9 @@
 # through the sorted auto and cross correlation values
 # to find valid QTS, and then computes the corresponding PQS
 
-
-filename=$1
-n=$2
+type=$1
+filename=$2
+n=$3
 
 # sorting the files
 start=`date +%s`

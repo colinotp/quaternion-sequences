@@ -7,8 +7,11 @@ then
 	exit 0
 fi
 
-n=$1
+type=$1
+n=$2
 shift
+shift
+foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
 
 while getopts "dp:" flag; do
@@ -35,14 +38,14 @@ for d in "$foldername"/rowsum_*; do
 done
 
 # Generate rowsums
-./target/release/rust rowsums $n 
+./target/release/rust rowsums $type $n 
 
 
 # read the rowsums file and submit jobs
-input="results/pairs/qts/find_$n/rowsums.quad"
+input="results/pairs/$type/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
     # Submit job for first pair, capturing job ID
-	sbatch ./job_pair_single_rowsum.sh $n $rowsum $rowsum_pairing 1
-	sbatch ./job_pair_single_rowsum.sh $n $rowsum $rowsum_pairing 2
+	sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 1
+	sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 2
 done < "$input"

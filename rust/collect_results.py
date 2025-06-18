@@ -95,8 +95,9 @@ def create_table(n, total, S_equ, M_equ, time, pairs, disk, latex):
 
 # Start execution
 
-start = input("This script collects data from a computation generate given lengths of QTS/PQS.\nStart: ")
+start = input("This script collects data from a computation generate given lengths of QTS.\nStart: ")
 end = input("End: ")
+seqtype = input("Sequence type (qts/wts): ")
 latex = True if input("Tab-separated values (t) or LaTeX formatting (l)? ") == 'l' else False
 
 runtime=[]
@@ -107,7 +108,7 @@ QTS_hadamard_reduced=[]
 pairs=[]
 
 for n in range(int(start), int(end)+1):
-    filePath = "./results/pairs/qts/find_" + str(n)
+    filePath = "./results/pairs/" + seqtype + "/find_" + str(n)
     result_dir = filePath + "/result.log"
 
     runtime.append(read_runtimes(result_dir))

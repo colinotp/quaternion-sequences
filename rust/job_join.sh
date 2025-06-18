@@ -9,16 +9,17 @@
 # through the sorted auto and cross correlation values
 # to find valid QTS, and then computes the corresponding PQS
 
-n=$1
+type=$1
+n=$2
 
 foldername="./results/pairs/qts/find_$n"
 filename="$foldername/result.log"
 
 # sorting the files
 start2=`date +%s`
-./target/release/rust join $n &>> $filename
+./target/release/rust join $type $n &>> $filename
 end2=`date +%s`
 if [[ $? -eq 0 ]]; then
-    echo -e "Joining the files together took $((end2 - start2)) seconds. \n\n" >> "./results/pairs/qts/find_$n/result.log"
+    echo -e "Joining the files together took $((end2 - start2)) seconds. \n\n" >> "./results/pairs/$type/find_$n/result.log"
 fi
 

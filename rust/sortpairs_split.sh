@@ -12,13 +12,14 @@ then
 	mkdir tmp/
 fi
 
-n=$1
+type=$1
+n=$2
 
 
 export LC_ALL=C
 
 # dirname is rowsum_x_y_z_w
-for dirname in results/pairs/qts/find_$n/*;
+for dirname in results/pairs/$type/find_$n/*;
 do
 	if [ -d $dirname ]
 	then
@@ -41,7 +42,7 @@ do
 			for file in $output_dir/${base_name}_part_*;
 			do
 				# Use this for sorting on compute canada
-				jobid=$(sbatch job_sort_specific.sh $file $n | awk '{print $4}')
+				jobid=$(sbatch job_sort_specific.sh $type $file $n | awk '{print $4}')
 				if [[ -z "$jobid" ]]; then
 					echo "Failed to submit job for rowsum $rowsum"
 					exit 1
@@ -53,7 +54,7 @@ do
 			done
 			# Merge sorted files together
 			dep_string=$(IFS=:; echo "${jobids[*]}")
-			sbatch --dependency=afterok:$dep_string job_merge_specific.sh $filename $output_dir $n
+			sbatch --dependency=afterok:$dep_string job_merge_specific.sh $type $filename $output_dir $n
 		done
 
 	fi

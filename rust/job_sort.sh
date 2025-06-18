@@ -9,10 +9,11 @@
 # Example usage: sbatch job_sort.sh n
 # where n is the desired length
 
-n=$1
+type=$1
+n=$2
 
 # sorting the files
 start2=`date +%s`
-./sortpairs.sh qts $n
+./sortpairs.sh $type $n
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.

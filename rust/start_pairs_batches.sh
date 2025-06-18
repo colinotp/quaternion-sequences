@@ -9,8 +9,11 @@ then
 	exit 0
 fi
 
-n=$1
+type=$1
+n=$2
 shift
+shift
+foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
 
 while getopts "dp:" flag; do
@@ -28,6 +31,8 @@ while getopts "dp:" flag; do
 	esac
 done
 
+
+
 # Check if rowsum directories still exist
 for d in "$foldername"/rowsum_*; do
   if [ -d "$d" ]; then
@@ -36,14 +41,14 @@ for d in "$foldername"/rowsum_*; do
   fi
 done
 
-./target/release/rust rowsums $n 
+./target/release/rust rowsums $type $n 
 
 
 
 # read the rowsums file
-input="results/pairs/qts/find_$n/rowsums.quad"
+input="results/pairs/$type/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
     #launch the batches for each rowsum
-    sbatch ./job_pairs_rowsum.sh $n $rowsum $rowsum_pairing
+    sbatch ./job_pairs_rowsum.sh $type $n $rowsum $rowsum_pairing
 done < "$input"

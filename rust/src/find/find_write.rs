@@ -13,14 +13,9 @@ pub fn quad_to_string(q : (isize, isize, isize, isize)) -> String {
     a.to_string() + &" " + &b.to_string() + &" " + &c.to_string() + &" " + &d.to_string() + &"\n"
 }
 
-pub fn write_rowsums(p : usize) {
+pub fn write_rowsums(p : usize, seqtype : SequenceType) {
     // Stores the possible rowsums for qts sequences of length p
-
-    let seqtype = SequenceType::QuaternionType; // TODO implement the other types
-    let folder = match seqtype {
-        SequenceType::QuaternionType => {"qts"}
-        _ => {panic!("not implemented yet")} // TODO
-    };
+    let folder = seqtype.to_string();
 
     let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string();
     let path = folder_path.clone() + &"/rowsums.quad";
