@@ -160,7 +160,7 @@ fn find_matching_algorithm(p : usize) {
     let now = Instant::now();
     let sequences = find_with_rowsum::find_matching(p);
     eprintln!("The function found {} sequences before equivalences in {} seconds", sequences.len(), now.elapsed().as_seconds_f32());
-    let result = reduce_to_equivalence(&sequences);
+    let result = reduce_to_equivalence(&sequences, crate::sequences::symmetries::SequenceType::QuaternionType);
     let count = result.len();
     let elapsed_time = now.elapsed().as_seconds_f32();
     eprintln!("For n = {p}, the function took: {elapsed_time} seconds and found {count} sequences");
@@ -282,7 +282,7 @@ fn main() {
             match args[1].as_str() {
                 "join" => {find_write_quad_seq(p, seqtype);},
                 "rowsums" => {find_write::write_rowsums(p, seqtype);},
-                "convert" => {hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string());}
+                "convert" => {hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string(), seqtype);}
                 _ => {}
             }
         }

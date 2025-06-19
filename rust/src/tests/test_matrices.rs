@@ -3,7 +3,7 @@ mod tests {
 
     use cgmath::Quaternion;
 
-    use crate::sequences::{sequence::QS, matrices::{QHM, HM, OpMat}, williamson::QuadSeq, symmetries::SequenceType, matrix_equivalence::reduce_to_hadamard_equivalence, equivalence::generate_equivalent_qts};
+    use crate::sequences::{sequence::QS, matrices::{QHM, HM, OpMat}, williamson::QuadSeq, symmetries::SequenceType, matrix_equivalence::reduce_to_hadamard_equivalence, equivalence::generate_equivalent_quad_seqs};
 
 
 
@@ -95,7 +95,7 @@ mod tests {
         will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
         let wills = vec![will1, will2];
-        let all = generate_equivalent_qts(&wills);
+        let all = generate_equivalent_quad_seqs(&wills, SequenceType::QuaternionType);
 
         println!("{}", all.len());
 

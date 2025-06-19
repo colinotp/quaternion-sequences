@@ -3,7 +3,7 @@
 use std::collections::HashSet;
 
 
-use crate::sequences::{williamson::{QuadSeq, QUADRUPLETS}, equivalence::{generate_equivalence_class, will_less_than}};
+use crate::sequences::{equivalence::{generate_equivalence_class, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
 
 
 
@@ -68,7 +68,7 @@ pub fn find(size : usize) -> String{
             }
         }
         if new_seq {
-            let new_class = generate_equivalence_class(&seq);
+            let new_class = generate_equivalence_class(&seq, SequenceType::QuaternionType);
             classes.push(new_class);
         }
     }
@@ -120,7 +120,7 @@ fn find_recursive(will : &mut QuadSeq, size : usize, index : usize, sequences : 
 
 
 
-pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>) -> Vec<QuadSeq> {
+pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
     // This function reduces a set of QTS up to the Sequence equivalence defined in our paper
     
     let mut classes : Vec<HashSet<QuadSeq>> = vec![];
@@ -134,7 +134,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>) -> Vec<QuadSeq> {
             }
         }
         if new_seq {
-            let new_class = generate_equivalence_class(&seq);
+            let new_class = generate_equivalence_class(&seq, seqtype.clone());
             classes.push(new_class);
         }
     }

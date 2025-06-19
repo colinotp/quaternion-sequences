@@ -3,7 +3,7 @@ use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
-use crate::{sequences::{equivalence::generate_equivalent_qts, williamson::QuadSeq, symmetries::SequenceType}, read_lines};
+use crate::{sequences::{equivalence::generate_equivalent_quad_seqs, williamson::QuadSeq, symmetries::SequenceType}, read_lines};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -60,7 +60,7 @@ pub fn reduce_to_hadamard_equivalence( mats : &Vec<HM>) -> Vec<&HM> {
 
 
 
-pub fn hadamard_equivalence_from_file(pathname : String) {
+pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType) {
 
     let mut seqs = vec![];
 
@@ -72,13 +72,18 @@ pub fn hadamard_equivalence_from_file(pathname : String) {
         seqs.push(QS::from_str(&line.to_string()));
     }
 
-    let qts_list : Vec<QuadSeq> = seqs.iter().map(|s| QuadSeq::from_pqs(s)).collect();
+    let quad_seq_list : Vec<QuadSeq> = seqs.iter().map(|s| QuadSeq::from_pqs(s)).collect();
 
-    for qts in &qts_list {
-        assert!(qts.verify_qts(), "wts fails auto/cross correlation condition: {}", qts.to_string());
+    for quad_seq in &quad_seq_list {
+        match seqtype {
+            SequenceType::QuaternionType => {assert!(quad_seq.verify_qts(), "qts fails auto/cross correlation condition: {}", quad_seq.to_string());},
+            SequenceType::WilliamsonType => {assert!(quad_seq.verify_wts(), "wts fails auto/cross correlation condition: {}", quad_seq.to_string());},
+            _ => {}
+        }
+        
     }
 
-    let all = generate_equivalent_qts(&qts_list);
+    let all = generate_equivalent_quad_seqs(&quad_seq_list, seqtype);
 
     println!("generated all sequences");
 

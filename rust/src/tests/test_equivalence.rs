@@ -3,7 +3,7 @@
 #[cfg(test)]
 mod tests {
 
-    use crate::sequences::{williamson::{QuadSeq, QUADRUPLETS}, equivalence::*};
+    use crate::sequences::{equivalence::*, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
     use crate::sequences::sequence::*;
     use crate::find::find_unique::reduce_to_equivalence;
     use crate::read_lines;
@@ -122,7 +122,7 @@ mod tests {
     
         if index >= will.search_size(){
             if will.to_qs().is_perfect() {
-                let equivalent = generate_equivalence_class(&will);
+                let equivalent = generate_equivalence_class(&will, SequenceType::QuaternionType);
                 for seq in equivalent {
                     assert!(seq.to_qs().is_perfect());
                 }
@@ -182,7 +182,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        for elm in generate_equivalence_class(&will) {
+        for elm in generate_equivalence_class(&will, SequenceType::QuaternionType) {
             println!("{}", elm.to_qs().to_string_raw());
             assert!(elm.to_qs().is_perfect());
         }
@@ -205,7 +205,7 @@ mod tests {
                 }
             }
 
-            let reducted_sequences = reduce_to_equivalence(&sequences);
+            let reducted_sequences = reduce_to_equivalence(&sequences, crate::sequences::symmetries::SequenceType::QuaternionType);
 
             println!("{}", sequences.len());
             println!("{}", reducted_sequences.len());
@@ -230,7 +230,7 @@ mod tests {
             let mut total = vec![];
 
             for seq in sequences {
-                let mut v = generate_equivalence_class(&seq).into_iter().collect();
+                let mut v = generate_equivalence_class(&seq, SequenceType::QuaternionType).into_iter().collect();
                 total.append(&mut v);
             }
 

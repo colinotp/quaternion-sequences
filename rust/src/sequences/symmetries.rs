@@ -1,3 +1,5 @@
+use crate::sequences::{williamson::*, equivalence::*};
+
 
 #[derive(Clone)]
 pub enum Symmetry{ // enum for the different types of Quaternion Sequences
@@ -12,6 +14,16 @@ pub enum RowsumPairing{
 #[derive(Clone)]
 pub enum SequenceType{ // enum for the different types of Quadruplets of sequences
     Williamson, WilliamsonType, QuaternionType, ItoType, ExtraTypeI, ExtraTypeII, ExtraTypeIII
+}
+
+impl SequenceType {
+    // Returns a list of equivalence operations for the given sequence type
+    pub fn equivalences(&self) -> Vec<fn(&QuadSeq) -> Vec<QuadSeq>> {
+        match self {    // TODO: Implement WTS equivalence operations
+            Self::QuaternionType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism, equivalent_reverse],
+            _ => vec![]
+        }
+    }
 }
 
 impl ToString for SequenceType {

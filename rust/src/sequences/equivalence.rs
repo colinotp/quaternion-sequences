@@ -3,6 +3,8 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
+use crate::sequences::symmetries::SequenceType;
+
 use super::williamson::{QuadSeq, SequenceTag};
 
 
@@ -114,8 +116,8 @@ pub fn will_less_than(will1 : &QuadSeq, will2 : &QuadSeq) -> bool {
 
 // * Functions to treat the equivalences
 
-pub fn generate_canonical_representative(seq : &QuadSeq) -> QuadSeq{
-    let set = generate_equivalence_class(seq);
+pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType) -> QuadSeq{
+    let set = generate_equivalence_class(seq, seqtype);
     let mut mini = seq.clone();
     for elm in set {
         if will_less_than(&elm, &mini) {
@@ -128,7 +130,7 @@ pub fn generate_canonical_representative(seq : &QuadSeq) -> QuadSeq{
 
 
 
-pub fn generate_equivalence_class(seq : &QuadSeq) -> HashSet<QuadSeq> {
+pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
     // This function generates the representative of the equivalence class that seq belongs to
     
     let mut class = HashSet::new();
@@ -138,7 +140,7 @@ pub fn generate_equivalence_class(seq : &QuadSeq) -> HashSet<QuadSeq> {
         let mut new = HashSet::new();
 
         for seq in &class {
-            for equivalence in [equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism, equivalent_reverse] {
+            for equivalence in seqtype.equivalences() {
                 for equ in equivalence(&seq){
                     if !class.contains(&equ) {
                         new.insert(equ);
@@ -161,16 +163,16 @@ pub fn generate_equivalence_class(seq : &QuadSeq) -> HashSet<QuadSeq> {
 }
 
 
-pub fn generate_equivalent_qts(qts_list : &Vec<QuadSeq>) -> Vec<QuadSeq> {
+pub fn generate_equivalent_quad_seqs(quad_seq_list : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
 
     let mut result = HashSet::new();
 
-    for qts in qts_list {
-        if result.contains(qts) {
+    for quad_seq in quad_seq_list {
+        if result.contains(quad_seq) {
             continue;
         }
 
-        let class = generate_equivalence_class(qts);
+        let class = generate_equivalence_class(quad_seq, seqtype.clone());
         for elm in class {
             result.insert(elm);
         }

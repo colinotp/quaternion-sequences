@@ -378,7 +378,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     }
 
     eprintln!("\ncount before equivalences {}", result.len());
-    let reduced = reduce_to_equivalence(&result);
+    let reduced = reduce_to_equivalence(&result, seqtype);
     eprintln!("count after equivalences {}", reduced.len());
 
     reduced
