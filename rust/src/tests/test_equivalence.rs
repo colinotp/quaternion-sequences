@@ -81,7 +81,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_negate(&will);
+        let equivalent = equivalent_double_negate(&will);
         assert!(equivalent.len() == 16);
 
         for seq in equivalent {

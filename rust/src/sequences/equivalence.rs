@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::symmetries::SequenceType;
+use crate::sequences::{symmetries::SequenceType};
 
 use super::williamson::{QuadSeq, SequenceTag};
 
@@ -283,10 +283,33 @@ pub fn alt_negated(seq : &Vec<i8>, frequency : usize) -> Vec<i8> {
     s
 }
 
-
-
+// For WS, WTS
 pub fn equivalent_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
-    // computes all equivalent sequences by negation
+    // computes all equivalent sequences by negation of any sequence
+    let (a,b,c,d) = seq.sequences();
+    let (nega_a,nega_b,nega_c,nega_d) = (negated(&a), negated(&b), negated(&c), negated(&d));
+
+    let mut res : Vec<QuadSeq> = vec![];
+
+    for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z, SequenceTag::W] {
+        let quad = match tag {
+            SequenceTag::X => (&nega_a, &b, &c, &d),
+            SequenceTag::Y => (&a, &nega_b, &c, &d),
+            SequenceTag::Z => (&a, &b, &nega_c, &d),
+            SequenceTag::W => (&a, &b, &c, &nega_d)
+        };
+        let mut new_seq = QuadSeq::new(seq.size());
+        new_seq.set_all_values(quad);
+
+        res.push(new_seq);
+    }
+
+    res
+}
+
+// For QTS only
+pub fn equivalent_double_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
+    // computes all equivalent sequences by negation of two sequences
 
     let (a,b,c,d) = seq.sequences();
     let (nega_a,nega_b,nega_c,nega_d) = (negated(&a), negated(&b), negated(&c), negated(&d));
@@ -312,7 +335,6 @@ pub fn equivalent_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
 
     res
 }
-
 
 pub fn equivalent_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
 
