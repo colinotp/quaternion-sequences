@@ -218,6 +218,10 @@ fn str_to_seqtype(n : &str) -> SequenceType {
         "qts" => SequenceType::QuaternionType,
         "wts" => SequenceType::WilliamsonType,
         "ws" => SequenceType::Williamson,
+        "its" => SequenceType::ItoType,
+        "et1" => SequenceType::ExtraTypeI,
+        "et2" => SequenceType::ExtraTypeII,
+        "et3" => SequenceType::ExtraTypeIII,
         _ => {panic!("Invalid sequence type passed")}
     }
 }
