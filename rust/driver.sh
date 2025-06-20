@@ -26,7 +26,7 @@ rowsum_pairing="XW"
 while getopts "dp:" flag; do
 	case $flag in
 		d)
-		./pair_file_cleanup.sh $n
+		./pair_file_cleanup.sh $type $n
 		;;
 		p)
 		rowsum_pairing=$OPTARG
