@@ -176,6 +176,14 @@ impl QuadSeq{
         true
     }
 
+    pub fn verify_ws(&self) -> bool {
+        if !(self.verify_wts() && self.is_symmetric()) {
+            return false;
+        }
+
+        true
+    }
+
     pub fn is_periodic_complementary(&self) -> bool{
         // tests if the sequences are periodic complementary
         for offset in 1..=((self.size-1)) {
@@ -218,8 +226,8 @@ impl QuadSeq{
     pub fn is_symmetric(&self) -> bool {
         // tests if the sequence is symmetric
         let n = self.size;
-        for t in 1..=((self.size)/2) { // Trying half the values is sufficient
-            if self.values(t) != self.values(n-t) {
+        for t in 0..=((self.size)/2) { // Trying half the values is sufficient
+            if self.values(t) != self.values(n-t-1) {
                 return false;
             }
         }

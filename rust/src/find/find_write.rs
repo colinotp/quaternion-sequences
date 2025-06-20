@@ -552,6 +552,7 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
                 let condition: Box<dyn Fn(&QuadSeq) -> bool> = match seqtype {
                     SequenceType::QuaternionType => Box::new(|quad| quad.to_qs().is_perfect()),
                     SequenceType::WilliamsonType => Box::new(|quad| quad.verify_wts()),
+                    SequenceType::Williamson => Box::new(|quad| quad.verify_ws()),
                     _ => Box::new(|_| false)
                 };
                 if condition(&quad_seq) {
