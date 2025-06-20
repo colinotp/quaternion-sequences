@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::{symmetries::SequenceType};
+use crate::sequences::{rowsum::Quad, symmetries::SequenceType};
 
 use super::williamson::{QuadSeq, SequenceTag};
 
@@ -202,7 +202,23 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
 }
 
 pub fn equivalent_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
-    // computes all equivalent sequences by reorder
+    // computes all equivalent sequences by reordering, one swap at a time
+    let mut res = vec![seq.clone()];
+
+    let couples = [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)];
+
+    for couple in couples {
+        let mut new_seq = seq.clone();
+        
+        swap(&mut new_seq, couple.0, couple.1);
+        res.push(new_seq);    
+    }
+
+    res
+}
+
+pub fn equivalent_double_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
+    // computes all equivalent sequences by reordering, two swaps at a time
 
     let mut res = vec![seq.clone()];
 
@@ -225,8 +241,27 @@ pub fn equivalent_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+pub fn equivalent_uniform_half_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
+    // computes equivalent sequences by shifting a single sequence by half length (assuming sequence is even length)
+    let mut res = vec![seq.clone()];
+    if seq.size() % 2 == 1 {
+        return res;
+    }
+
+    let offset = seq.size() / 2;
+    for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z, SequenceTag::W] {
+        let mut s = seq.clone();
+        let tag_seq = seq.sequence(tag.clone());
+
+        for index in 0..seq.size() {
+            s.set_single_value(tag_seq[(index + offset) % seq.size()], &tag, index);
+        }
+        res.push(s);
+    }
 
 
+    res
+}
 
 pub fn equivalent_uniform_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by shift
