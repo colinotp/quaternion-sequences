@@ -372,6 +372,24 @@ pub fn equivalent_double_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
 }
 
 pub fn equivalent_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
+    let frequency = 2;
+
+    let (a,b,c,d) = seq.sequences();
+
+    let mut res = vec![];
+
+    let quads = (&alt_negated(&a, frequency), &alt_negated(&b, frequency), &alt_negated(&c, frequency), &alt_negated(&d, frequency));
+
+    let mut s = QuadSeq::new(seq.size());
+    s.set_all_values(quads);
+
+    res.push(seq.clone());
+    res.push(s);
+
+    res
+}
+
+pub fn equivalent_even_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
 
     if seq.size() % 2 == 1 {
         return vec![seq.clone()];
