@@ -201,6 +201,7 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     will.set_sequence(&seq1, &seqtag2);
 }
 
+// Reorder the sequences A, B, C, D in any way
 pub fn equivalent_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by reordering, one swap at a time
     let mut res = vec![seq.clone()];
@@ -217,6 +218,7 @@ pub fn equivalent_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+// Swap any two pairs of A, B, C, D
 pub fn equivalent_double_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by reordering, two swaps at a time
 
@@ -241,6 +243,7 @@ pub fn equivalent_double_reorder(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+// If n is even, cyclically shift all the entries in any of A, B, C, or D by an offset of n/2
 pub fn equivalent_uniform_half_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes equivalent sequences by shifting a single sequence by half length (assuming sequence is even length)
     let mut res = vec![seq.clone()];
@@ -263,6 +266,7 @@ pub fn equivalent_uniform_half_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+// Cyclically shift all the entries of A, B, C, and D simultaneously by any amount
 pub fn equivalent_uniform_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by shift
 
@@ -279,6 +283,7 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+// Reverse every sequence simultaneously
 pub fn equivalent_reverse(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by shift
 
@@ -318,7 +323,7 @@ pub fn alt_negated(seq : &Vec<i8>, frequency : usize) -> Vec<i8> {
     s
 }
 
-// For WS, WTS
+// Negate all the entries of any of A, B, C, or D
 pub fn equivalent_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by negation of any sequence
     let (a,b,c,d) = seq.sequences();
@@ -342,7 +347,7 @@ pub fn equivalent_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
-// For QTS only
+// Negate any two sequences of A, B, C, or D
 pub fn equivalent_double_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by negation of two sequences
 
@@ -371,6 +376,7 @@ pub fn equivalent_double_negate(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+// Multiply every other element of A, B, C, and D by -1 simultaneously
 pub fn equivalent_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
     let frequency = 2;
 
@@ -389,6 +395,7 @@ pub fn equivalent_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
     res
 }
 
+// If n is even, multiply every other element of A, B, C, and D by -1 simultaneously
 pub fn equivalent_even_alternated_negation(seq : &QuadSeq) -> Vec<QuadSeq> {
 
     if seq.size() % 2 == 1 {
@@ -433,7 +440,7 @@ fn permute(seq : &Vec<i8>, coprime : usize) -> Vec<i8> {
 
 
 
-
+// Apply an automorphism of the cyclic group C_n to all the indices of the entries of each of A, B, C, and D simultaneously
 pub fn equivalent_automorphism(seq : &QuadSeq) -> Vec<QuadSeq> {
     // computes all equivalent sequences by permutation
 
