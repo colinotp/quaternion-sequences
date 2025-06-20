@@ -21,7 +21,7 @@ impl SequenceType {
     pub fn equivalences(&self) -> Vec<fn(&QuadSeq) -> Vec<QuadSeq>> {
         match self {
             Self::QuaternionType => vec![equivalent_double_negate, equivalent_uniform_shift, equivalent_double_reorder, equivalent_alternated_negation, equivalent_automorphism, equivalent_reverse],
-            Self::WilliamsonType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism, equivalent_reverse],     // TODO: verify these are correct for WTS
+            Self::WilliamsonType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism, equivalent_reverse],
             Self::Williamson => vec![equivalent_negate, equivalent_uniform_half_shift, equivalent_reorder, equivalent_alternated_negation, equivalent_automorphism],
             _ => vec![]
         }

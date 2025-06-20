@@ -131,7 +131,7 @@ pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType)
 
 
 pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
-    // This function generates the representative of the equivalence class that seq belongs to
+    // This function generates the equivalence class that seq belongs to
     
     let mut class = HashSet::new();
     class.insert(seq.clone());
