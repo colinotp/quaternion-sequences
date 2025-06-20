@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::{rowsum::Quad, symmetries::SequenceType};
+use crate::sequences::{symmetries::SequenceType};
 
 use super::williamson::{QuadSeq, SequenceTag};
 
