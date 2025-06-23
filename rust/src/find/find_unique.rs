@@ -126,16 +126,16 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
     let mut classes : Vec<HashSet<QuadSeq>> = vec![];
 
     for seq in sequences {
+        let seq_class = generate_equivalence_class(seq, seqtype.clone());
         let mut new_seq = true;
         for class in &classes {
-            if class.contains(&seq) {
+            if seq_class.iter().any(|equiv_seq| class.contains(equiv_seq)) {
                 new_seq = false;
                 break;
             }
         }
         if new_seq {
-            let new_class = generate_equivalence_class(&seq, seqtype.clone());
-            classes.push(new_class);
+            classes.push(seq_class);
         }
     }
     
