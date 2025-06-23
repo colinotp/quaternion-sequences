@@ -1,5 +1,7 @@
 use cgmath::Quaternion;
 
+use crate::sequences::{equivalence::generate_equivalence_class, symmetries::SequenceType};
+
 use super::sequence::{QS, QPLUS, Q24};
 
 
@@ -232,6 +234,16 @@ impl QuadSeq{
             }
         }
         true
+    }
+
+    pub fn equivalent_to(&self, quad_seq : QuadSeq, seqtype : SequenceType) -> bool {
+        let equiv_class = generate_equivalence_class(&self, seqtype);
+
+        if equiv_class.contains(&quad_seq) {
+            return true;
+        }
+        
+        false
     }
 
     pub fn to_qs(&self) -> QS {
