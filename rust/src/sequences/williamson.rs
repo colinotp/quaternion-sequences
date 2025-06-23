@@ -236,14 +236,9 @@ impl QuadSeq{
         true
     }
 
+    // Checks if self is equivalent to another sequence
     pub fn equivalent_to(&self, quad_seq : QuadSeq, seqtype : SequenceType) -> bool {
-        let equiv_class = generate_equivalence_class(&self, seqtype);
-
-        if equiv_class.contains(&quad_seq) {
-            return true;
-        }
-        
-        false
+        generate_equivalence_class(&self, seqtype).contains(&quad_seq)
     }
 
     pub fn to_qs(&self) -> QS {
