@@ -163,6 +163,15 @@ impl QuadSeq{
         qts
     }
 
+    // Verifies that self is valid seqtype
+    pub fn verify(&self, seqtype : SequenceType) -> bool {
+        match seqtype {
+            SequenceType::QuaternionType => {self.verify_qts()},
+            SequenceType::WilliamsonType => {self.verify_wts()},
+            SequenceType::Williamson => {self.verify_ws()},
+            _ => {false}
+        }
+    }
 
     pub fn verify_qts(&self) -> bool {
         if !(self.is_periodic_complementary() && self.verify_cross_correlation()) {

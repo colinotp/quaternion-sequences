@@ -18,7 +18,7 @@ pub enum SequenceType{ // enum for the different types of Quadruplets of sequenc
 
 impl SequenceType {
     // Returns a list of equivalence operations for the given sequence type
-    pub fn equivalences(&self) -> Vec<fn(&QuadSeq) -> Vec<QuadSeq>> {
+    pub fn equivalences(&self) -> Vec<fn(&QuadSeq, SequenceType) -> Vec<QuadSeq>> {
         match self {
             Self::QuaternionType => vec![equivalent_double_negate, equivalent_uniform_shift, equivalent_double_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_reverse],
             Self::WilliamsonType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_reverse],

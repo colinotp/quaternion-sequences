@@ -35,7 +35,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_double_reorder(&will);
+        let equivalent = equivalent_double_reorder(&will, SequenceType::QuaternionType);
         assert_eq!(equivalent.len(), 24);
 
         for seq in equivalent {
@@ -58,7 +58,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_uniform_shift(&will);
+        let equivalent = equivalent_uniform_shift(&will, SequenceType::QuaternionType);
         assert!(equivalent.len() == 10);
 
         for seq in equivalent {
@@ -81,7 +81,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_double_negate(&will);
+        let equivalent = equivalent_double_negate(&will, SequenceType::QuaternionType);
         assert!(equivalent.len() == 16);
 
         for seq in equivalent {
@@ -102,7 +102,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_even_alternated_negation(&will);
+        let equivalent = equivalent_even_alternated_negation(&will, SequenceType::QuaternionType);
         assert!(equivalent.len() == 2);
 
         for seq in equivalent {
@@ -160,7 +160,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_automorphism(&will);
+        let equivalent = equivalent_automorphism(&will, SequenceType::QuaternionType);
         // assert_eq!(equivalent.len(), factorial(size));
 
         for seq in equivalent {
