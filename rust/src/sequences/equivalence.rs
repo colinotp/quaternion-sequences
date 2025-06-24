@@ -29,7 +29,7 @@ lazy_static!(
     pub static ref COPRIMES : Vec<Vec<usize>> = {
         let mut list = vec![];
 
-        for i in 0..N {
+        for i in 1..N {
 
             let mut coprimes = vec![];
 
@@ -461,6 +461,8 @@ pub fn equivalent_automorphism(seq : &QuadSeq) -> Vec<QuadSeq> {
         let quad = (&permute(&a, *k), &permute(&b, *k), &permute(&c, *k), &permute(&d, *k));
 
         will.set_all_values(quad);
+
+        assert!(will.is_symmetric(), "Function equivalent_automorphism produced asymmetric ws");
 
         result.push(will);
 
