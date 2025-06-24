@@ -29,6 +29,9 @@ lazy_static!(
     pub static ref COPRIMES : Vec<Vec<usize>> = {
         let mut list = vec![];
 
+        // Fixes indexing
+        list.push(vec![]);
+
         for i in 1..N {
 
             let mut coprimes = vec![];
