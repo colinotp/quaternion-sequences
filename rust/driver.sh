@@ -60,6 +60,11 @@ start=`date +%s`
 # Creating every necessary file
 start2=`date +%s`
 ./target/release/rust pairs $type $n $rowsum_pairing &> $filename
+if [ $? -ne 0 ]
+then
+	echo 'ERROR: pairs exited unsuccessfully. See log for details'
+	exit 1
+fi
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. 
 echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
@@ -67,6 +72,11 @@ echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $
 # sorting the files
 start2=`date +%s`
 ./sortpairs.sh $type $n &>> $filename
+if [ $? -ne 0 ]
+then
+	echo 'ERROR: sort exited unsuccessfully. See log for details'
+	exit 1
+fi
 end2=`date +%s`
 echo Sorting the files took `expr $end2 - $start2` seconds.
 echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
@@ -74,6 +84,11 @@ echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filen
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
 ./target/release/rust join $type $n &>> $filename
+if [ $? -ne 0 ]
+then
+	echo 'ERROR: join exited unsuccessfully. See log for details'
+	exit 1
+fi
 end2=`date +%s`
 echo Matching the sequences took `expr $end2 - $start2` seconds.
 echo -e Matching the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
