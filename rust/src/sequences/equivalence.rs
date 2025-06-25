@@ -444,10 +444,10 @@ fn permute(seq : &Vec<i8>, coprime : usize) -> Vec<i8> {
 
     let n = seq.len();
 
-    let mut result = vec![];
+    let mut result = vec![0;n];
 
     for index in 0..n {
-        result.push(seq[index * coprime % n]);
+        result[(index * coprime) % n] = seq[index];
     }
 
     result
