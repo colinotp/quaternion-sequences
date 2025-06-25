@@ -216,7 +216,7 @@ pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType) -> Vec<QuadSeq
         
         swap(&mut new_seq, couple.0, couple.1);
 
-        assert!(new_seq.verify(seqtype.clone()), "equivalent_reorder function produced invalid {}", seqtype.to_string());
+        debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_reorder function produced invalid {}", seqtype.to_string());
         res.push(new_seq);    
     }
 
@@ -241,7 +241,7 @@ pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType) -> Vec<
             swap(&mut new_seq, seq21, seq22);
         }
 
-        assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+        debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
 
         res.push(new_seq);
     
@@ -267,7 +267,7 @@ pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType) -> 
             s.set_single_value(tag_seq[(index + offset) % seq.size()], &tag, index);
         }
 
-        assert!(s.verify(seqtype.clone()), "equivalent_uniform_half_shift function produced invalid {}", seqtype.to_string());
+        debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_half_shift function produced invalid {}", seqtype.to_string());
         res.push(s);
     }
 
@@ -287,7 +287,7 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType) -> Vec<Q
             s.set_sequence_value(&seq.values((index + offset) % seq.size()), index)
         }
 
-        assert!(s.verify(seqtype.clone()), "equivalent_uniform_shift function produced invalid {}", seqtype.to_string());
+        debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_shift function produced invalid {}", seqtype.to_string());
         res.push(s);
     }
 
@@ -304,7 +304,7 @@ pub fn equivalent_reverse(seq : &QuadSeq, seqtype : SequenceType) -> Vec<QuadSeq
     for index in 0..seq.size() {
         s.set_sequence_value(&seq.values(seq.size() - 1 - index), index)
     }
-    assert!(s.verify(seqtype.clone()), "equivalent_reverse function produced invalid {}", seqtype.to_string());
+    debug_assert!(s.verify(seqtype.clone()), "equivalent_reverse function produced invalid {}", seqtype.to_string());
     res.push(s);
 
     res
@@ -353,7 +353,7 @@ pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType) -> Vec<QuadSeq>
         let mut new_seq = QuadSeq::new(seq.size());
         new_seq.set_all_values(quad);
 
-        assert!(new_seq.verify(seqtype.clone()), "equivalent_negate function produced invalid {}", seqtype.to_string());
+        debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate function produced invalid {}", seqtype.to_string());
         res.push(new_seq);
     }
 
@@ -383,7 +383,7 @@ pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType) -> Vec<Q
         let mut s = QuadSeq::new(seq.size());
         s.set_all_values(quad);
 
-        assert!(s.verify(seqtype.clone()), "equivalent_double_negate function produced invalid {}. Original: {}\nNew: {}", seqtype.to_string(), seq.to_string(), s.to_string());
+        debug_assert!(s.verify(seqtype.clone()), "equivalent_double_negate function produced invalid {}. Original: {}\nNew: {}", seqtype.to_string(), seq.to_string(), s.to_string());
         res.push(s);
     }
 
@@ -403,7 +403,7 @@ pub fn equivalent_alternated_negation(seq : &QuadSeq, seqtype : SequenceType) ->
     let mut s = QuadSeq::new(seq.size());
     s.set_all_values(quads);
 
-    assert!(s.verify(seqtype.clone()), "equivalent_alternated_negation function produced invalid {}", seqtype.to_string());
+    debug_assert!(s.verify(seqtype.clone()), "equivalent_alternated_negation function produced invalid {}", seqtype.to_string());
     res.push(seq.clone());
     res.push(s);
 
@@ -428,7 +428,7 @@ pub fn equivalent_even_alternated_negation(seq : &QuadSeq, seqtype : SequenceTyp
     let mut s = QuadSeq::new(seq.size());
     s.set_all_values(quads);
 
-    assert!(s.verify(seqtype.clone()), "equivalent_even_alternated_negation function produced invalid {}", seqtype.to_string());
+    debug_assert!(s.verify(seqtype.clone()), "equivalent_even_alternated_negation function produced invalid {}", seqtype.to_string());
     res.push(seq.clone());
     res.push(s);
 
@@ -478,7 +478,7 @@ pub fn equivalent_automorphism(seq : &QuadSeq, seqtype : SequenceType) -> Vec<Qu
 
         will.set_all_values(quad);
 
-        assert!(will.verify(seqtype.clone()), "equivalent_automorphism function produced invalid {}", seqtype.to_string());
+        debug_assert!(will.verify(seqtype.clone()), "equivalent_automorphism function produced invalid {}", seqtype.to_string());
         result.push(will);
 
     }
