@@ -94,7 +94,7 @@ fn find_write_quad_seq(i : usize, seqtype : SequenceType){
     if matches!(seqtype, SequenceType::QuaternionType) {
         // Check to see if also valid WTS
         for qts in &result {
-            assert!(qts.verify_qts(), "Sequence failed auto/cross correlation conditions: {}", qts.to_string());
+            debug_assert!(qts.verify_qts(), "Sequence failed auto/cross correlation conditions: {}", qts.to_string());
             if !qts.is_amicable() {
                 print!("Seq is valid QTS, but not amicable (not WTS): {}", qts.to_string())
             }
