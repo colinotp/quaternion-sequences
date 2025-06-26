@@ -188,7 +188,7 @@ impl QuadSeq{
     }
 
     pub fn verify_ws(&self) -> bool {
-        if !(self.verify_wts() && self.is_symmetric()) {
+        if !(self.is_periodic_complementary() && self.is_symmetric()) {
             return false;
         }
 
