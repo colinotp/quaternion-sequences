@@ -23,8 +23,11 @@ foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
 
 # Empty out existing .pair files to avoid conflicts
-while getopts "dp:" flag; do
+while getopts "rdp:" flag; do
 	case $flag in
+		r)
+		cargo build --release
+		;;
 		d)
 		./pair_file_cleanup.sh $type $n
 		;;
@@ -46,7 +49,11 @@ for d in "$foldername"/rowsum_*; do
   fi
 done
 
-
+release_dir="./target/release/rust"
+if [ ! -e $release_dir ]
+then
+	cargo build --release
+fi
 
 filename="$foldername/result.log"
 
