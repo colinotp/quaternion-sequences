@@ -150,24 +150,25 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
             result += &(op(a).to_string() + &"_");
         }
         
-        // In the case of WTS, we want to filter out pairs with nonzero crosscorrelation values
-        if matches!(seqtype, SequenceType::WilliamsonType) {
-            let mut crossc_result = "".to_string();
-            for c in crossc_values {
-                if c == 0 {
-                    crossc_result = "".to_string();
-                    break;
+        // Depending on the sequence type, crosscorrelation values might not need to be stored, or even computed
+        match seqtype {
+            SequenceType::QuaternionType => {
+                for c in crossc_values {
+                    result += &(op(c).to_string() + &"_");
                 }
-                crossc_result += &(op(c).to_string() + &"_");
-                
-            }
-            result += &crossc_result;
+            },
+            SequenceType::WilliamsonType => {
+                if crossc_values.into_iter().any(|val| val != 0) {
+                    continue;
+                }
+            },
+            // Williamson sequences only require symmetry, and the PAF conditions
+            SequenceType::Williamson => {}
+            _ => {panic!("Not implemented yet");}
         }
-        else {
-            for c in crossc_values {
-                result += &(op(c).to_string() + &"_");
-            }
-        }
+        
+        
+        
         
 
         result += &(":_".to_string() + &index0.to_string() + "_" + &index1.to_string() + &"\n");
