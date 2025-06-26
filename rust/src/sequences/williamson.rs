@@ -237,8 +237,8 @@ impl QuadSeq{
     pub fn is_symmetric(&self) -> bool {
         // tests if the sequence is symmetric
         let n = self.size;
-        for t in 0..=((self.size)/2) { // Trying half the values is sufficient
-            if self.values(t) != self.values(n-t-1) {
+        for t in 1..=((self.size)/2) { // Trying half the values is sufficient
+            if self.values(t) != self.values(n-t) {
                 return false;
             }
         }
