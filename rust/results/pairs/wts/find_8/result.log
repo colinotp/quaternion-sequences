@@ -1,0 +1,24 @@
+(0, 0, 4, 4)
+generated 1 different rowsums
+results/pairs/wts/find_8/rowsum_0_0_4_4
+The function took: 0.0015944 seconds to generate sequences with rowsums: 4, 4, 0, 0
+The function took: 0.0268152 seconds to go through the two sets of pairs
+
+Creating the sequences took 0 seconds. 
+ 
+
+results/pairs/wts/find_8/rowsum_0_0_4_4/pair_WX.pair
+results/pairs/wts/find_8/rowsum_0_0_4_4/pair_ZY.pair
+Sorting the files took 0 seconds. 
+ 
+
+./results/pairs/wts/find_8
+Folder rowsum_0_0_4_4 : sequences have order (Z, Y, W, X)
+
+count before equivalences 541
+The function found a total of 12288 sequences without any equivalences
+count after equivalences 7
+Matching the sequences took 1 seconds. 
+ 
+
+Total execution time was 1 seconds.
