@@ -181,7 +181,7 @@ impl QuadSeq{
     }
 
     pub fn verify_wts(&self) -> bool {
-        if !(self.verify_qts() && self.is_amicable()) {
+        if !(self.is_periodic_complementary() && self.is_amicable()) {
             return false;
         }
         true
