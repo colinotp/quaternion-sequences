@@ -1,0 +1,48 @@
+(0, 0, 6, 6)
+(0, 2, 2, 8)
+(2, 4, 4, 6)
+(-2, 4, 4, 6)
+generated 4 different rowsums
+results/pairs/ws/find_18/rowsum_0_0_6_6
+The function took: 0.044047 seconds to generate sequences with rowsums: 6, 6, 0, 0
+The function took: 0.5124151 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_18/rowsum_0_2_2_8
+The function took: 0.0414202 seconds to generate sequences with rowsums: 8, 2, 2, 0
+The function took: 0.7234261 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_18/rowsum_2_4_4_6
+The function took: 0.031264 seconds to generate sequences with rowsums: 6, 4, 4, 2
+The function took: 0.50030035 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_18/rowsum_-2_4_4_6
+The function took: 0.0312548 seconds to generate sequences with rowsums: 6, 4, 4, -2
+The function took: 0.5488703 seconds to go through the two sets of pairs
+
+Creating the sequences took 2 seconds. 
+ 
+
+results/pairs/ws/find_18/rowsum_-2_4_4_6/pair_WX.pair
+results/pairs/ws/find_18/rowsum_-2_4_4_6/pair_YZ.pair
+results/pairs/ws/find_18/rowsum_0_0_6_6/pair_WX.pair
+results/pairs/ws/find_18/rowsum_0_0_6_6/pair_ZY.pair
+results/pairs/ws/find_18/rowsum_0_2_2_8/pair_WX.pair
+results/pairs/ws/find_18/rowsum_0_2_2_8/pair_YZ.pair
+results/pairs/ws/find_18/rowsum_2_4_4_6/pair_WX.pair
+results/pairs/ws/find_18/rowsum_2_4_4_6/pair_YZ.pair
+Sorting the files took 0 seconds. 
+ 
+
+./results/pairs/ws/find_18
+Folder rowsum_2_4_4_6 : sequences have order (W, X, Y, Z)
+Folder rowsum_0_0_6_6 : sequences have order (Z, Y, W, X)
+Folder rowsum_0_2_2_8 : sequences have order (W, X, Y, Z)
+Folder rowsum_-2_4_4_6 : sequences have order (W, X, Y, Z)
+
+count before equivalences 13122
+The function found a total of 622080 sequences without any equivalences
+count after equivalences 23
+Matching the sequences took 55 seconds. 
+ 
+
+Total execution time was 57 seconds.

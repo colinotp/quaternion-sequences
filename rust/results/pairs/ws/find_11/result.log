@@ -2,14 +2,14 @@
 (-1, 3, 3, 5)
 generated 2 different rowsums
 results/pairs/ws/find_11/rowsum_1_3_3_5
-The function took: 0.006612 seconds to generate sequences with rowsums: 5, 3, 3, 1
-The function took: 1.842844 seconds to go through the two sets of pairs
+The function took: 0.0007703 seconds to generate sequences with rowsums: 5, 3, 3, 1
+The function took: 0.0022569 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_11/rowsum_-1_3_3_5
-The function took: 0.0038816 seconds to generate sequences with rowsums: 5, 3, 3, -1
-The function took: 1.3532382 seconds to go through the two sets of pairs
+The function took: 0.0012623 seconds to generate sequences with rowsums: 5, 3, 3, -1
+The function took: 0.0010565 seconds to go through the two sets of pairs
 
-Creating the sequences took 3 seconds. 
+Creating the sequences took 0 seconds. 
  
 
 results/pairs/ws/find_11/rowsum_-1_3_3_5/pair_WX.pair
@@ -23,10 +23,10 @@ Sorting the files took 0 seconds.
 Folder rowsum_-1_3_3_5 : sequences have order (W, X, Y, Z)
 Folder rowsum_1_3_3_5 : sequences have order (W, X, Y, Z)
 
-count before equivalences 20
+count before equivalences 48
 The function found a total of 1920 sequences without any equivalences
 count after equivalences 1
-Matching the sequences took 3 seconds. 
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 6 seconds.
+Total execution time was 0 seconds.

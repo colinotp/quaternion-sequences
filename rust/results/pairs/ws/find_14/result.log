@@ -1,0 +1,32 @@
+(0, 2, 4, 6)
+(0, 2, 6, 4)
+generated 2 different rowsums
+results/pairs/ws/find_14/rowsum_0_2_4_6
+The function took: 0.0066603 seconds to generate sequences with rowsums: 6, 4, 2, 0
+The function took: 0.0141916 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_14/rowsum_0_2_6_4
+The function took: 0.002537999 seconds to generate sequences with rowsums: 6, 4, 2, 0
+The function took: 0.0118052 seconds to go through the two sets of pairs
+
+Creating the sequences took 0 seconds. 
+ 
+
+results/pairs/ws/find_14/rowsum_0_2_4_6/pair_WX.pair
+results/pairs/ws/find_14/rowsum_0_2_4_6/pair_ZY.pair
+results/pairs/ws/find_14/rowsum_0_2_6_4/pair_WY.pair
+results/pairs/ws/find_14/rowsum_0_2_6_4/pair_ZX.pair
+Sorting the files took 0 seconds. 
+ 
+
+./results/pairs/ws/find_14
+Folder rowsum_0_2_4_6 : sequences have order (Z, Y, W, X)
+Folder rowsum_0_2_6_4 : sequences have order (Z, X, W, Y)
+
+count before equivalences 1086
+The function found a total of 87552 sequences without any equivalences
+count after equivalences 5
+Matching the sequences took 6 seconds. 
+ 
+
+Total execution time was 6 seconds.

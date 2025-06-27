@@ -1,30 +1,32 @@
 (1, 3, 3, 5)
 (-1, 3, 3, 5)
 generated 2 different rowsums
-results/pairs/wts/find_11/rowsum_1_3_3_5
-The function took: 0.060189392 seconds to generate sequences with rowsums: 5, 3, 3, 1
-The function took: 1.7374074 seconds to go through the two sets of pairs
+results/pairs/qts/find_11/rowsum_1_3_3_5
+The function took: 0.0044365 seconds to generate sequences with rowsums: 5, 3, 3, 1
+The function took: 1.7233142 seconds to go through the two sets of pairs
 
-results/pairs/wts/find_11/rowsum_-1_3_3_5
-The function took: 0.032988567 seconds to generate sequences with rowsums: 5, 3, 3, -1
-The function took: 1.4323784 seconds to go through the two sets of pairs
+results/pairs/qts/find_11/rowsum_-1_3_3_5
+The function took: 0.004238599 seconds to generate sequences with rowsums: 5, 3, 3, -1
+The function took: 1.5491152 seconds to go through the two sets of pairs
 
-Creating the sequences took 4 seconds. 
+Creating the sequences took 3 seconds. 
  
 
-results/pairs/wts/find_11/rowsum_-1_3_3_5/pair_WY.pair
-results/pairs/wts/find_11/rowsum_-1_3_3_5/pair_ZX.pair
-results/pairs/wts/find_11/rowsum_1_3_3_5/pair_WY.pair
-results/pairs/wts/find_11/rowsum_1_3_3_5/pair_ZX.pair
-Sorting the files took 1 seconds. 
+results/pairs/qts/find_11/rowsum_-1_3_3_5/pair_WX.pair
+results/pairs/qts/find_11/rowsum_-1_3_3_5/pair_YZ.pair
+results/pairs/qts/find_11/rowsum_1_3_3_5/pair_WX.pair
+results/pairs/qts/find_11/rowsum_1_3_3_5/pair_YZ.pair
+Sorting the files took 0 seconds. 
  
 
-./results/pairs/wts/find_11
-Folder rowsum_1_3_3_5 : sequences have order (Z, X, W, Y)
-thread 'main' panicked at src/find/find_write.rs:468:40:
-index out of bounds: the len is 330 but the index is 341
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Matching the sequences took 0 seconds. 
+./results/pairs/qts/find_11
+Folder rowsum_-1_3_3_5 : sequences have order (W, X, Y, Z)
+Folder rowsum_1_3_3_5 : sequences have order (W, X, Y, Z)
+
+count before equivalences 250
+The function found a total of 21120 sequences without any equivalences
+count after equivalences 4
+Matching the sequences took 2 seconds. 
  
 
-Total execution time was 5 seconds.
+Total execution time was 6 seconds.

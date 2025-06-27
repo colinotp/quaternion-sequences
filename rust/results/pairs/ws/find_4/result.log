@@ -3,16 +3,16 @@
 (-2, 2, 2, 2)
 generated 3 different rowsums
 results/pairs/ws/find_4/rowsum_0_0_0_4
-The function took: 0.0008813 seconds to generate sequences with rowsums: 4, 0, 0, 0
-The function took: 0.0005466 seconds to go through the two sets of pairs
+The function took: 0.0001448 seconds to generate sequences with rowsums: 4, 0, 0, 0
+The function took: 0.0006348 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_4/rowsum_2_2_2_2
-The function took: 0.0001613 seconds to generate sequences with rowsums: 2, 2, 2, 2
-The function took: 0.0002421 seconds to go through the two sets of pairs
+The function took: 0.0003674 seconds to generate sequences with rowsums: 2, 2, 2, 2
+The function took: 0.000125 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_4/rowsum_-2_2_2_2
-The function took: 0.000131 seconds to generate sequences with rowsums: 2, 2, 2, -2
-The function took: 0.0003408 seconds to go through the two sets of pairs
+The function took: 0.0001174 seconds to generate sequences with rowsums: 2, 2, 2, -2
+The function took: 0.0000993 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  

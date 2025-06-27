@@ -1,0 +1,40 @@
+(0, 0, 4, 8)
+(2, 2, 6, 6)
+(-2, 2, 6, 6)
+generated 3 different rowsums
+results/pairs/ws/find_20/rowsum_0_0_4_8
+The function took: 0.1373062 seconds to generate sequences with rowsums: 8, 4, 0, 0
+The function took: 0.5187068 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_20/rowsum_2_2_6_6
+The function took: 0.15299991 seconds to generate sequences with rowsums: 6, 6, 2, 2
+The function took: 0.54006433 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_20/rowsum_-2_2_6_6
+The function took: 0.1074944 seconds to generate sequences with rowsums: 6, 6, 2, -2
+The function took: 0.64386 seconds to go through the two sets of pairs
+
+Creating the sequences took 2 seconds. 
+ 
+
+results/pairs/ws/find_20/rowsum_-2_2_6_6/pair_WY.pair
+results/pairs/ws/find_20/rowsum_-2_2_6_6/pair_ZX.pair
+results/pairs/ws/find_20/rowsum_0_0_4_8/pair_WX.pair
+results/pairs/ws/find_20/rowsum_0_0_4_8/pair_ZY.pair
+results/pairs/ws/find_20/rowsum_2_2_6_6/pair_WX.pair
+results/pairs/ws/find_20/rowsum_2_2_6_6/pair_ZY.pair
+Sorting the files took 0 seconds. 
+ 
+
+./results/pairs/ws/find_20
+Folder rowsum_2_2_6_6 : sequences have order (Z, Y, W, X)
+Folder rowsum_0_0_4_8 : sequences have order (Z, Y, W, X)
+Folder rowsum_-2_2_6_6 : sequences have order (Z, X, W, Y)
+
+count before equivalences 15324
+The function found a total of 577536 sequences without any equivalences
+count after equivalences 17
+Matching the sequences took 85 seconds. 
+ 
+
+Total execution time was 87 seconds.

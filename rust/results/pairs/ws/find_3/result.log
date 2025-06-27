@@ -2,12 +2,12 @@
 (-1, 1, 1, 3)
 generated 2 different rowsums
 results/pairs/ws/find_3/rowsum_1_1_1_3
-The function took: 0.0002021 seconds to generate sequences with rowsums: 3, 1, 1, 1
-The function took: 0.0014809 seconds to go through the two sets of pairs
+The function took: 0.000207 seconds to generate sequences with rowsums: 3, 1, 1, 1
+The function took: 0.0004517 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_3/rowsum_-1_1_1_3
-The function took: 0.0002837 seconds to generate sequences with rowsums: 3, 1, 1, -1
-The function took: 0.0001249 seconds to go through the two sets of pairs
+The function took: 0.0006032 seconds to generate sequences with rowsums: 3, 1, 1, -1
+The function took: 0.0001328 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  

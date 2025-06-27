@@ -1,8 +1,8 @@
 (0, 0, 2, 2)
 generated 1 different rowsums
 results/pairs/ws/find_2/rowsum_0_0_2_2
-The function took: 0.0001606 seconds to generate sequences with rowsums: 2, 2, 0, 0
-The function took: 0.0004598 seconds to go through the two sets of pairs
+The function took: 0.000205 seconds to generate sequences with rowsums: 2, 2, 0, 0
+The function took: 0.0004592 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  

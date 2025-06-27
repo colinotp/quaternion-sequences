@@ -1,0 +1,56 @@
+(0, 0, 2, 10)
+(0, 2, 6, 8)
+(0, 2, 8, 6)
+(4, 4, 6, 6)
+(-4, 4, 6, 6)
+generated 5 different rowsums
+results/pairs/ws/find_26/rowsum_0_0_2_10
+The function took: 24.118706 seconds to generate sequences with rowsums: 10, 2, 0, 0
+The function took: 104.68591 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_26/rowsum_0_2_6_8
+The function took: 7.7687373 seconds to generate sequences with rowsums: 8, 6, 2, 0
+The function took: 97.83497 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_26/rowsum_0_2_8_6
+The function took: 7.56018 seconds to generate sequences with rowsums: 8, 6, 2, 0
+The function took: 96.01026 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_26/rowsum_4_4_6_6
+The function took: 6.278503 seconds to generate sequences with rowsums: 6, 6, 4, 4
+The function took: 89.23183 seconds to go through the two sets of pairs
+
+results/pairs/ws/find_26/rowsum_-4_4_6_6
+The function took: 6.0331917 seconds to generate sequences with rowsums: 6, 6, 4, -4
+The function took: 89.65815 seconds to go through the two sets of pairs
+
+Creating the sequences took 530 seconds. 
+ 
+
+results/pairs/ws/find_26/rowsum_-4_4_6_6/pair_WY.pair
+results/pairs/ws/find_26/rowsum_-4_4_6_6/pair_ZX.pair
+results/pairs/ws/find_26/rowsum_0_0_2_10/pair_WX.pair
+results/pairs/ws/find_26/rowsum_0_0_2_10/pair_ZY.pair
+results/pairs/ws/find_26/rowsum_0_2_6_8/pair_WX.pair
+results/pairs/ws/find_26/rowsum_0_2_6_8/pair_ZY.pair
+results/pairs/ws/find_26/rowsum_0_2_8_6/pair_WY.pair
+results/pairs/ws/find_26/rowsum_0_2_8_6/pair_ZX.pair
+results/pairs/ws/find_26/rowsum_4_4_6_6/pair_WX.pair
+results/pairs/ws/find_26/rowsum_4_4_6_6/pair_ZY.pair
+Sorting the files took 0 seconds. 
+ 
+
+./results/pairs/ws/find_26
+Folder rowsum_-4_4_6_6 : sequences have order (Z, X, W, Y)
+Folder rowsum_0_0_2_10 : sequences have order (Z, Y, W, X)
+Folder rowsum_0_2_6_8 : sequences have order (Z, Y, W, X)
+Folder rowsum_0_2_8_6 : sequences have order (Z, X, W, Y)
+Folder rowsum_4_4_6_6 : sequences have order (Z, Y, W, X)
+
+count before equivalences 18297
+The function found a total of 1064448 sequences without any equivalences
+count after equivalences 26
+Matching the sequences took 151 seconds. 
+ 
+
+Total execution time was 681 seconds.

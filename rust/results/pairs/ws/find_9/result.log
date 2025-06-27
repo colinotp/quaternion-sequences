@@ -4,20 +4,20 @@
 (-3, 3, 3, 3)
 generated 4 different rowsums
 results/pairs/ws/find_9/rowsum_1_1_3_5
-The function took: 0.0027815 seconds to generate sequences with rowsums: 5, 3, 1, 1
-The function took: 0.1160558 seconds to go through the two sets of pairs
+The function took: 0.0002541 seconds to generate sequences with rowsums: 5, 3, 1, 1
+The function took: 0.00075 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_9/rowsum_-1_1_3_5
-The function took: 0.004315601 seconds to generate sequences with rowsums: 5, 3, 1, -1
-The function took: 0.0998278 seconds to go through the two sets of pairs
+The function took: 0.0002634 seconds to generate sequences with rowsums: 5, 3, 1, -1
+The function took: 0.0003247 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_9/rowsum_3_3_3_3
-The function took: 0.0012316 seconds to generate sequences with rowsums: 3, 3, 3, 3
-The function took: 0.0988157 seconds to go through the two sets of pairs
+The function took: 0.0002734 seconds to generate sequences with rowsums: 3, 3, 3, 3
+The function took: 0.000256 seconds to go through the two sets of pairs
 
 results/pairs/ws/find_9/rowsum_-3_3_3_3
-The function took: 0.0014051 seconds to generate sequences with rowsums: 3, 3, 3, -3
-The function took: 0.0958458 seconds to go through the two sets of pairs
+The function took: 0.0003358 seconds to generate sequences with rowsums: 3, 3, 3, -3
+The function took: 0.0002588 seconds to go through the two sets of pairs
 
 Creating the sequences took 0 seconds. 
  
@@ -39,10 +39,10 @@ Folder rowsum_1_1_3_5 : sequences have order (Z, Y, W, X)
 Folder rowsum_-1_1_3_5 : sequences have order (Z, Y, W, X)
 Folder rowsum_-3_3_3_3 : sequences have order (Z, W, Y, X)
 
-count before equivalences 66
+count before equivalences 80
 The function found a total of 2112 sequences without any equivalences
 count after equivalences 3
-Matching the sequences took 2 seconds. 
+Matching the sequences took 0 seconds. 
  
 
-Total execution time was 2 seconds.
+Total execution time was 0 seconds.
