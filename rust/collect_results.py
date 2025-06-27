@@ -49,8 +49,11 @@ def reduced_QTS_count(result_dir):
 # Total Hadamard matrix count up to hadamard equivalence
 def hadamard_reduced_QTS_count(path):
     result_mat = path + '/result.mat'
-    with open(result_mat, 'r') as file:
-        count = len(file.readlines())
+    try:
+        with open(result_mat, 'r') as file:
+            count = len(file.readlines())
+    except:
+        return -1
     return count
     
 # Count generated pairs
@@ -97,7 +100,7 @@ def create_table(n, total, S_equ, M_equ, time, pairs, disk, latex):
 
 start = input("This script collects data from a computation generate given lengths of QTS.\nStart: ")
 end = input("End: ")
-seqtype = input("Sequence type (qts/wts): ")
+seqtype = input("Sequence type (qts/wts/ws): ")
 latex = True if input("Tab-separated values (t) or LaTeX formatting (l)? ") == 'l' else False
 
 runtime=[]
