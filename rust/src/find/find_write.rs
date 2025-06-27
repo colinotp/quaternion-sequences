@@ -326,13 +326,31 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
     println!("{}",folder_path);
     fs::create_dir_all(&folder_path).expect("Error when creating the dir");
+
+    let seqtype = str_to_seqtype(folder);
     
     let now = Instant::now();
     // We generate all the sequences possible for each rowsums
-    let sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
-    let sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
-    let sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
-    let sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
+    let sequences_0 : Vec<Vec<i8>>;
+    let sequences_1 : Vec<Vec<i8>>;
+    let sequences_2 : Vec<Vec<i8>>;
+    let sequences_3 : Vec<Vec<i8>>;
+    
+    match seqtype {
+        SequenceType::Williamson => {
+            sequences_0 = generate_sequences_with_rowsum(rowsums[0], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            sequences_1 = generate_sequences_with_rowsum(rowsums[1], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            sequences_2 = generate_sequences_with_rowsum(rowsums[2], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            sequences_3 = generate_sequences_with_rowsum(rowsums[3], p).into_iter().filter(|seq| symmetric(seq)).collect();
+        },
+        _ => {
+            sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
+            sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
+            sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
+            sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
+        }
+    }
+    
 
     write_sequences(&sequences_0, &tags[0], &folder_path);
     write_sequences(&sequences_1, &tags[1], &folder_path);
@@ -342,7 +360,6 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     let elapsed_time = now.elapsed().as_secs_f32();
     eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
 
-    let seqtype = str_to_seqtype(folder);
 
     let now = Instant::now();
 
@@ -366,7 +383,17 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
 }
 
+pub fn symmetric(seq : &Vec<i8>) -> bool {
+    // tests if the sequence is symmetric
+    let n = seq.len();
 
+    for t in 1..=(n/2) { // Trying half the values is sufficient
+        if seq[t] != seq[n-t] {
+            return false;
+        }
+    }
+    true
+}
 
 
 
