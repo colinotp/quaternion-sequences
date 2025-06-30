@@ -66,16 +66,16 @@ def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
         width = 13
         with open('results.tab', 'w') as file:
             file.write('n'.ljust(width, ' '))
-            file.write('Total (s)'.ljust(width, ' '))
+            file.write('Total'.ljust(width, ' '))
             file.write('S_{equ}'.ljust(width, ' '))
             file.write('M_{equ}'.ljust(width, ' '))
-            file.write('Time'.ljust(width, ' '))
+            file.write('Time (s)'.ljust(width, ' '))
             file.write('Pairs'.ljust(width, ' '))
             file.write('Disk usage (MB)'.ljust(width, ' '))
             file.write('\n')
             
-            for i, n in enumerate(range(start, end)):
-                file.write(str(i+1).ljust(width, ' '))
+            for i, n in enumerate(range(start, end+1)):
+                file.write(str(n).ljust(width, ' '))
                 file.write(str(total[i]).ljust(width, ' '))
                 file.write(str(S_equ[i]).ljust(width, ' '))
                 file.write(str(M_equ[i]).ljust(width, ' '))
@@ -88,11 +88,11 @@ def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
     else:
         with open('results.tab', 'w') as file:
             file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Pairs & Disk space (MB)\\\\\n')
-            for i, n in enumerate(range(start, end)):
+            for i, n in enumerate(range(start, end+1)):
                 if disk[i] < 10:
-                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
+                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
                 else: 
-                    file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
+                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
 
 
 
