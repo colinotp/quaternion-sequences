@@ -91,6 +91,25 @@ mod tests {
     }
 
     #[test]
+    fn equ_negate_swap() {
+        let x = vec![-1,-1,-1];
+        let y = vec![-1,-1,1];
+        let z = vec![-1,-1,1];
+        let w = vec![1,1,-1];
+
+        let size = x.len();
+
+        let mut qts = QuadSeq::new(size);
+        qts.set_all_values((&x,&y,&z,&w));
+
+        let equivalent = equivalent_negate_swap(&qts, SequenceType::QuaternionType);
+        for seq in equivalent {
+            println!("{}", seq.to_qs().to_string_raw());
+            assert!(seq.to_qs().is_perfect());
+        }
+    }
+
+    #[test]
     fn equ_alt_negate() {
 
         let size = 8;

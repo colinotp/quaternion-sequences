@@ -204,6 +204,35 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     will.set_sequence(&seq1, &seqtag2);
 }
 
+// Applies a single swap and a single negation
+pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType) -> Vec<QuadSeq> {
+    let mut res = vec![seq.clone()];
+    let (a,b,c,d) = seq.sequences();
+    let (nega_a, nega_b, nega_c, nega_d) = (negated(&a), negated(&b), negated(&c), negated(&d));
+
+    let couples = [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)];
+
+    for couple in couples {
+        for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z, SequenceTag::W] {
+            let mut new_seq = seq.clone();
+            
+            match tag {
+                SequenceTag::X => new_seq.set_sequence(&nega_a, &tag),
+                SequenceTag::Y => new_seq.set_sequence(&nega_b, &tag),
+                SequenceTag::W => new_seq.set_sequence(&nega_c, &tag),
+                SequenceTag::Z => new_seq.set_sequence(&nega_d, &tag)
+            }
+
+            swap(&mut new_seq, couple.0.clone(), couple.1.clone());
+            
+            debug_assert!(new_seq.verify(seqtype.clone()));
+            res.push(new_seq);
+        }
+    }
+
+    res
+}
+
 // Reorder the sequences A, B, C, D in any way
 pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType) -> Vec<QuadSeq> {
     // computes all equivalent sequences by reordering, one swap at a time
