@@ -1,5 +1,7 @@
 use itertools::*;
 
+use crate::sequences::symmetries::SequenceType;
+
 
 // * Sequence generation with specific rowsum
 
@@ -132,7 +134,7 @@ pub fn sum_of_four_squares(p : usize) -> Vec<Quad> {
 
 
 
-pub fn generate_other_quadruplets(quad : &Quad) -> Vec<Quad> {
+pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Quad> {
     // returns all the permutations of the quadruplet up to equivalence
     
     // generate all permutations and filter them
@@ -149,9 +151,11 @@ pub fn generate_other_quadruplets(quad : &Quad) -> Vec<Quad> {
     let mut result = vec![];
     for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q)).collect::<Vec<Quad>>() {
         result.push(elm.clone());
-        let mut nega_elm = elm.clone();
-        nega_elm.0 = - nega_elm.0;
-        result.push(nega_elm)
+        if matches!(seqtype, SequenceType::QuaternionType) {
+            let mut nega_elm = elm.clone();
+            nega_elm.0 = - nega_elm.0;
+            result.push(nega_elm)
+        }
     }
 
     result.into_iter().unique().collect()
@@ -228,7 +232,7 @@ fn equivalent(quad : &Quad) -> Quad {
 
 
 
-pub fn generate_rowsums(p : usize) -> Vec<Quad>{
+pub fn generate_rowsums(p : usize, seqtype : SequenceType) -> Vec<Quad>{
     // generates all quadruplets of integers such that the sum of their squares equal 4*p
     // it also generates their permutation, but only up to equivalence
     let quads = sum_of_four_squares(4*p);
@@ -239,7 +243,7 @@ pub fn generate_rowsums(p : usize) -> Vec<Quad>{
 
     for elm in quads {
         if parity == elm.0 % 2 && parity == elm.1 % 2 && parity == elm.2 % 2 && parity == elm.3 % 2 {
-            total_quadruplets.append(&mut generate_other_quadruplets(&elm));
+            total_quadruplets.append(&mut generate_other_quadruplets(&elm, seqtype.clone()));
         }
     }
 

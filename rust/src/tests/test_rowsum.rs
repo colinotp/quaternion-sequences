@@ -3,7 +3,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::sequences::rowsum::*;
+    use crate::sequences::{rowsum::*, symmetries::SequenceType};
 
     #[test]
     fn test_rowsum(){
@@ -79,22 +79,22 @@ mod tests {
     #[test]
     fn test_gen_quads(){
 
-        let quads = generate_other_quadruplets(&(1,1,5,7));
+        let quads = generate_other_quadruplets(&(1,1,5,7), SequenceType::QuaternionType);
         assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (1,1,5,7));
         assert_eq!(quads[1], (-1,1,5,7));
         
-        let quads = generate_other_quadruplets(&(1,3,3,7));
+        let quads = generate_other_quadruplets(&(1,3,3,7), SequenceType::QuaternionType);
         assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (1,3,3,7));
         assert_eq!(quads[1], (-1,3,3,7));
 
-        let quads = generate_other_quadruplets(&(3,3,3,8));
+        let quads = generate_other_quadruplets(&(3,3,3,8), SequenceType::QuaternionType);
         assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (3,3,3,8));
         assert_eq!(quads[1], (-3,3,3,8));
 
-        let quads = generate_other_quadruplets(&(3,3,5,5));
+        let quads = generate_other_quadruplets(&(3,3,5,5), SequenceType::QuaternionType);
         assert_eq!(quads.len(), 2);
         assert_eq!(quads[0], (3,3,5,5));
         assert_eq!(quads[1], (-3,3,5,5));
@@ -105,7 +105,7 @@ mod tests {
     #[test]
     fn test_possible_rowsums(){
 
-        let rowsums = generate_rowsums(17);
+        let rowsums = generate_rowsums(17, SequenceType::QuaternionType);
         
         assert_eq!(rowsums.len(), 4);
         assert_eq!(rowsums[0], (1,3,3,7));
