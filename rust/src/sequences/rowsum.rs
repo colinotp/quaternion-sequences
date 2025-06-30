@@ -151,11 +151,11 @@ pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Q
     let mut result = vec![];
     for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q)).collect::<Vec<Quad>>() {
         result.push(elm.clone());
-        if matches!(seqtype, SequenceType::QuaternionType) {
-            let mut nega_elm = elm.clone();
-            nega_elm.0 = - nega_elm.0;
-            result.push(nega_elm)
-        }
+        //if matches!(seqtype, SequenceType::QuaternionType) {
+        //    let mut nega_elm = elm.clone();
+        //    nega_elm.0 = - nega_elm.0;
+        //    result.push(nega_elm)
+        //}
     }
 
     result.into_iter().unique().collect()
