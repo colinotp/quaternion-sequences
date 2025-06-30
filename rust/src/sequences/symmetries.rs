@@ -20,7 +20,7 @@ impl SequenceType {
     // Returns a list of equivalence operations for the given sequence type
     pub fn equivalences(&self) -> Vec<fn(&QuadSeq, SequenceType) -> Vec<QuadSeq>> {
         match self {
-            Self::QuaternionType => vec![equivalent_double_negate, equivalent_uniform_shift, equivalent_double_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_reverse],
+            Self::QuaternionType => vec![equivalent_double_negate, equivalent_uniform_shift, equivalent_double_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_reverse, equivalent_negate_swap],
             Self::WilliamsonType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_reverse],
             Self::Williamson => vec![equivalent_negate, equivalent_uniform_half_shift, equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism],
             _ => vec![]
