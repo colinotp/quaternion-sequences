@@ -57,11 +57,11 @@ def hadamard_reduced_QTS_count(path):
     return count
     
 # Count generated pairs
-def count_pairs(n):
-    return int(os.popen('./countpairs.sh ' + str(n)).read())
+def count_pairs(seqtype, n):
+    return int(os.popen('./countpairs.sh ' + seqtype + ' ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
-def create_table(n, total, S_equ, M_equ, time, pairs, disk, latex):
+def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
     if latex is False:
         width = 13
         with open('results.tab', 'w') as file:
@@ -74,7 +74,7 @@ def create_table(n, total, S_equ, M_equ, time, pairs, disk, latex):
             file.write('Disk usage (MB)'.ljust(width, ' '))
             file.write('\n')
             
-            for i in range(n):
+            for i, n in enumerate(range(start, end)):
                 file.write(str(i+1).ljust(width, ' '))
                 file.write(str(total[i]).ljust(width, ' '))
                 file.write(str(S_equ[i]).ljust(width, ' '))
@@ -88,7 +88,7 @@ def create_table(n, total, S_equ, M_equ, time, pairs, disk, latex):
     else:
         with open('results.tab', 'w') as file:
             file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Pairs & Disk space (MB)\\\\\n')
-            for i in range(n):
+            for i, n in enumerate(range(start, end)):
                 if disk[i] < 10:
                     file.write(f'{i+1} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
                 else: 
@@ -110,7 +110,7 @@ QTS_reduced=[]
 QTS_hadamard_reduced=[]
 pairs=[]
 
-for n in range(int(start), int(end)+1):
+for i, n in enumerate(range(int(start), int(end)+1)):
     filePath = "./results/pairs/" + seqtype + "/find_" + str(n)
     result_dir = filePath + "/result.log"
 
@@ -119,15 +119,15 @@ for n in range(int(start), int(end)+1):
     QTS_total.append(total_QTS_count(result_dir))
     QTS_reduced.append(reduced_QTS_count(result_dir))
     QTS_hadamard_reduced.append(hadamard_reduced_QTS_count(filePath))
-    pairs.append(count_pairs(n))
+    pairs.append(count_pairs(seqtype, n))
     
     print(f'=========================== Length {n} ===========================')
-    print(f'Runtime: {runtime[n-1]} seconds')
-    print(f'Disk usage: {disk_usage[n-1]} MB')
-    print(f'QTS without equivalence: {QTS_total[n-1]}')
-    print(f'QTS after sequence equivalence: {QTS_reduced[n-1]}')
-    print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[n-1]}')
-    print(f'Total pairs generated: {pairs[n-1]}\n')
+    print(f'Runtime: {runtime[i]} seconds')
+    print(f'Disk usage: {disk_usage[i]} MB')
+    print(f'QTS without equivalence: {QTS_total[i]}')
+    print(f'QTS after sequence equivalence: {QTS_reduced[i]}')
+    print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
+    print(f'Total pairs generated: {pairs[i]}\n')
 
-create_table(int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, pairs, disk_usage, latex)
+create_table(int(start), int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, pairs, disk_usage, latex)
     
