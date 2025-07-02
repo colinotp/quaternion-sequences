@@ -11,9 +11,4 @@
 type=$1
 n=$2
 
-
-# sorting the files
-start2=`date +%s`
-./target/release/rust convert $type $n
-end2=`date +%s`
-echo Converting to matrices up to Hadamard equivalence took `expr $end2 - $start2` seconds.
+./convert.sh $type $n
