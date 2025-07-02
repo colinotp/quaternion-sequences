@@ -7,6 +7,14 @@ use crate::sequences::symmetries::SequenceType;
 
 pub type Quad = (isize,isize,isize,isize);
 
+pub fn quad_contains_zero(quad : &Quad) -> bool {
+    (quad.0 == 0) || (quad.1 == 0) || (quad.2 == 0) || (quad.3 == 0)
+}
+
+pub fn quad_contains_dup(quad : &Quad) -> bool {
+    (quad.0 == quad.1) || (quad.0 == quad.2) || (quad.0 == quad.3) || (quad.1 == quad.2) || (quad.1 == quad.3) || (quad.2 == quad.3)
+}
+
 pub fn sequence_to_string(seq: &Vec<i8>) -> String {
     let mut res_str: String = "".to_owned();
 
@@ -151,11 +159,11 @@ pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Q
     let mut result = vec![];
     for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q)).collect::<Vec<Quad>>() {
         result.push(elm.clone());
-        //if matches!(seqtype, SequenceType::QuaternionType) {
-        //    let mut nega_elm = elm.clone();
-        //    nega_elm.0 = - nega_elm.0;
-        //    result.push(nega_elm)
-        //}
+        if matches!(seqtype, SequenceType::QuaternionType) && !quad_contains_zero(&elm) && !quad_contains_dup(&elm) {
+            let mut nega_elm = elm.clone();
+            nega_elm.0 = - nega_elm.0;
+            result.push(nega_elm)
+        }
     }
 
     result.into_iter().unique().collect()
