@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::{symmetries::SequenceType};
+use crate::sequences::{symmetries::SequenceType, williamson::tag_to_string};
 
 use super::williamson::{QuadSeq, SequenceTag};
 
@@ -219,13 +219,13 @@ pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType) -> Vec<Qua
             match tag {
                 SequenceTag::X => new_seq.set_sequence(&nega_a, &tag),
                 SequenceTag::Y => new_seq.set_sequence(&nega_b, &tag),
-                SequenceTag::W => new_seq.set_sequence(&nega_c, &tag),
-                SequenceTag::Z => new_seq.set_sequence(&nega_d, &tag)
+                SequenceTag::Z => new_seq.set_sequence(&nega_c, &tag),
+                SequenceTag::W => new_seq.set_sequence(&nega_d, &tag)
             }
 
             swap(&mut new_seq, couple.0.clone(), couple.1.clone());
-            
-            debug_assert!(new_seq.verify(seqtype.clone()));
+            // implement sequencetag.to_string if it's not already done
+            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), tag_to_string(&couple.0) + &tag_to_string(&couple.1), tag_to_string(&tag));
             res.push(new_seq);
         }
     }
