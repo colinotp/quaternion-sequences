@@ -21,10 +21,14 @@ shift
 shift
 foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
+use_slurm=false
 
 # Empty out existing .pair files to avoid conflicts
-while getopts "rdp:" flag; do
+while getopts "srdp:" flag; do
 	case $flag in
+		s)
+		use_slurm=true
+		;;
 		r)
 		cargo build --release
 		;;
@@ -78,7 +82,12 @@ echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $
 
 # sorting the files
 start2=`date +%s`
+if [ "$use_slurm" = true ]; then
+	./sortpairs.sh $type $n -s &>> $filename
+else
 ./sortpairs.sh $type $n &>> $filename
+fi
+
 if [ $? -ne 0 ]
 then
 	echo 'ERROR: sort exited unsuccessfully. See log for details'

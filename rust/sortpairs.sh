@@ -14,7 +14,22 @@ fi
 
 type=$1
 n=$2
+shift
+shift
 
+use_slurm=false
+# Empty out existing .pair files to avoid conflicts
+while getopts "s" flag; do
+	case $flag in
+		s)
+		use_slurm=true
+		;;
+		/?)
+		echo "Invalid argument(s) passed. Exiting."
+		exit 1
+		;;
+	esac
+done
 
 export LC_ALL=C
 
@@ -25,10 +40,11 @@ do
 		for filename in $dirname/*.pair;
 		do
 			echo $filename
-#			Use this command for sorting on compute canada
-#			sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
-#			Use this command for any sorting done not using SLURM
+			if [ "$use_slurm" = true ]; then
+				sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
+			else
 			sort -S 1G -T tmp/ $filename > $filename.sorted
+			fi
 		done
 	fi
 done
