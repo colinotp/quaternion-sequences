@@ -2,8 +2,8 @@
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
-	echo "This driver sorts the .pair files generated for a given length n in the first part of the algorithm, using a combination of merge sort and bash quick sort for handling of large files."
-	echo "Example usage: ./sortpairs_split.sh n"
+	echo "This driver sorts the .pair files generated for a given length n in the first part of the algorithm, using a combination of merge sort and bash quick sort for handling of large files. It is intended for use in an environment with a SLURM job manager."
+	echo "Example usage: ./sortpairs_split.sh <sequencetype> <n>"
 	exit 0
 fi
 

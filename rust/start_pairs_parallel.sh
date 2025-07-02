@@ -3,7 +3,10 @@
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
 	echo "This driver runs the first part of the algorithm with parallelization, stopping after generating the lists of auto/cross correlation values. It is intended for use in an environment with the SLURM job manager."
-	echo "Example usage: ./driver_parallel.sh n"
+	echo "Example usage: ./driver_parallel.sh <sequencetype> <n>"
+	echo "Optional flags:"
+    echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
 fi
 

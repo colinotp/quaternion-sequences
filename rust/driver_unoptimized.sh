@@ -1,7 +1,7 @@
 #! /bin/bash
 
 # This driver computes sequences for the given length n:
-# ./driver.sh qts n
+# ./driver_unoptimized.sh qts n
 #
 # Optional flags:
 # -d: delete existing .seq, .pair and .sorted files
@@ -10,8 +10,11 @@
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
-	echo "This driver computes sequences for the given length n:"
-	echo "./driver.sh qts n"
+	echo "This driver computes sequences for the given length n, with additional error checking and debugging turned on:"
+	echo "./driver.sh <sequencetype> <n>"
+	echo "Optional flags:"
+	echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
 fi
 

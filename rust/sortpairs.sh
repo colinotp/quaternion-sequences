@@ -3,7 +3,9 @@
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
 	echo "This script sorts all of the generated .pair files for a given length n:"
-	echo "./driver.sh wts n"
+	echo "./driver.sh <sequencetype> <n>"
+	echo "Optional flags:"
+	echo "  * -s: Use when sorting in a SLURM job"
 	exit 0
 fi
 
@@ -43,7 +45,7 @@ do
 			if [ "$use_slurm" = true ]; then
 				sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
 			else
-			sort -S 1G -T tmp/ $filename > $filename.sorted
+				sort -S 1G -T tmp/ $filename > $filename.sorted
 			fi
 		done
 	fi

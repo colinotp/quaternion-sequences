@@ -11,7 +11,12 @@
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
 	echo "This driver computes sequences for the given length n:"
-	echo "./driver.sh qts n"
+	echo "./driver.sh <sequencetype> <n>"
+	echo "Optional flags:"
+	echo "  * -s: Use this flag for SLURM jobs"
+	echo "  * -r: Recompile code (optimized build)"
+	echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
 fi
 
@@ -85,7 +90,7 @@ start2=`date +%s`
 if [ "$use_slurm" = true ]; then
 	./sortpairs.sh $type $n -s &>> $filename
 else
-./sortpairs.sh $type $n &>> $filename
+	./sortpairs.sh $type $n &>> $filename
 fi
 
 if [ $? -ne 0 ]

@@ -4,8 +4,10 @@ if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
 	echo "This script submits a job to SLURM for each rowsum corresponding to a given length n."
     echo "The job executes the first part of the algorithm, and stops after generating the lists of auto and cross correlation values for the pairs."
-	echo "Example usage: ./start_pairs_batches n -p XY"
-    echo "The -p flag is an optional flag that allows you to specify the pairing of the sequences based off of their rowsum."
+	echo "Example usage: ./start_pairs_batches <sequencetype> <n>"
+	echo "Optional flags:"
+    echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
 fi
 
