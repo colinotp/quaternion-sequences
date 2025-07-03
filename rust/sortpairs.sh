@@ -44,8 +44,15 @@ do
 			echo $filename
 			if [ "$use_slurm" = true ]; then
 				sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
+				status=$?
 			else
 				sort -S 1G -T tmp/ $filename > $filename.sorted
+				status=$?
+			fi
+
+			# If sort was successful, remove .pair files
+			if [ $status -eq 0 ]; then
+				rm $filename
 			fi
 		done
 	fi
