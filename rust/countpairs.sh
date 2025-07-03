@@ -22,7 +22,7 @@ for dirname in results/pairs/$type/find_$n/*;
 do
 	if [ -d $dirname ]
 	then
-		for filename in $dirname/*.pair;
+		for filename in $dirname/*.sorted;
 		do
 			str=$(wc -l $filename)
 			arr=($str)
