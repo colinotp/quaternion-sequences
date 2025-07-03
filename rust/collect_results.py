@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 from pathlib import Path
 
 # Calculate runtime
@@ -74,46 +75,51 @@ def count_pairs(seqtype, n):
 def create_table(start, end, total, S_equ, M_equ, time, equiv_time, pairs, disk, latex):
     if latex is False:
         width = 13
-        with open('results.tab', 'w') as file:
-            file.write('n'.ljust(width, ' '))
-            file.write('Total'.ljust(width, ' '))
-            file.write('S_{equ}'.ljust(width, ' '))
-            file.write('M_{equ}'.ljust(width, ' '))
-            file.write('Time (s)'.ljust(width, ' '))
-            file.write('Equ Time (s)'.ljust(width, ' '))
-            file.write('Pairs'.ljust(width, ' '))
-            file.write('Disk usage (MB)'.ljust(width, ' '))
-            file.write('\n')
-            
-            for i, n in enumerate(range(start, end+1)):
-                file.write(str(n).ljust(width, ' '))
-                file.write(str(total[i]).ljust(width, ' '))
-                file.write(str(S_equ[i]).ljust(width, ' '))
-                file.write(str(M_equ[i]).ljust(width, ' '))
-                file.write(str(time[i]).ljust(width, ' '))
-                file.write(str(equiv_time[i]).ljust(width, ' '))
-                file.write(str(pairs[i]).ljust(width, ' '))
-                if disk[i] < 10:
-                    file.write(str(round(disk[i], 1)).ljust(width, ' ') + '\n')
-                else:
-                    file.write(str(round(disk[i])).ljust(width, ' ') + '\n')
+    
+        print('n'.ljust(width, ' '), end='')
+        print('Total'.ljust(width, ' '), end='')
+        print('S_{equ}'.ljust(width, ' '), end='')
+        print('M_{equ}'.ljust(width, ' '), end='')
+        print('Time (s)'.ljust(width, ' '), end='')
+        print('Equ Time (s)'.ljust(width, ' '), end='')
+        print('Pairs'.ljust(width, ' '), end='')
+        print('Disk usage (MB)'.ljust(width, ' '))
+        
+        for i, n in enumerate(range(start, end+1)):
+            print(str(n).ljust(width, ' '), end='')
+            print(str(total[i]).ljust(width, ' '), end='')
+            print(str(S_equ[i]).ljust(width, ' '), end='')
+            print(str(M_equ[i]).ljust(width, ' '), end='')
+            print(str(time[i]).ljust(width, ' '), end='')
+            print(str(equiv_time[i]).ljust(width, ' '), end='')
+            print(str(pairs[i]).ljust(width, ' '), end='')
+            if disk[i] < 10:
+                print(str(round(disk[i], 1)).ljust(width, ' '))
+            else:
+                print(str(round(disk[i])).ljust(width, ' '))
     else:
         with open('results.tab', 'w') as file:
-            file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Equ Time (s) & Pairs & Disk space (MB)\\\\\n')
+            print(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Equ Time (s) & Pairs & Disk space (MB)\\\\')
             for i, n in enumerate(range(start, end+1)):
                 if disk[i] < 10:
-                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
+                    print(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\')
                 else: 
-                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
+                    print(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i])}\\\\')
 
 
 
 # Start execution
+verbose = False
+if len(sys.argv) == 6 and sys.argv[5] == "verbose":
+    verbose = True
+elif len(sys.argv) != 5:
+    print("This script collects data from a computation generate given lengths of QTS.")
+    print("To generate table for sequences of lengths a-b (inclusive), use args <a> <b> <sequencetype> <t/l>, where t is used to generate a tsv table, and l is used to generate a latex table.")
+    print("If 'verbose' is passed as an additional argument, the output will be verbose.")
+    exit(0)
 
-start = input("This script collects data from a computation generate given lengths of QTS.\nStart: ")
-end = input("End: ")
-seqtype = input("Sequence type (qts/wts/ws): ")
-latex = True if input("Tab-separated values (t) or LaTeX formatting (l)? ") == 'l' else False
+start, end, seqtype = int(sys.argv[1]), int(sys.argv[2]), sys.argv[3]
+latex = True if sys.argv[4] == 'l' else False
 
 runtime=[]
 equivalence_time=[]
@@ -135,14 +141,15 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     QTS_hadamard_reduced.append(hadamard_reduced_QTS_count(filePath))
     pairs.append(count_pairs(seqtype, n))
     
-    print(f'=========================== Length {n} ===========================')
-    print(f'Runtime: {runtime[i]} seconds')
-    print(f'Time to reduce to equivalence: {round(equivalence_time[i])} seconds')
-    print(f'Disk usage: {disk_usage[i]} MB')
-    print(f'QTS without equivalence: {QTS_total[i]}')
-    print(f'QTS after sequence equivalence: {QTS_reduced[i]}')
-    print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
-    print(f'Total pairs generated: {pairs[i]}\n')
+    if verbose:
+        print(f'=========================== Length {n} ===========================')
+        print(f'Runtime: {runtime[i]} seconds')
+        print(f'Time to reduce to equivalence: {round(equivalence_time[i])} seconds')
+        print(f'Disk usage: {disk_usage[i]} MB')
+        print(f'QTS without equivalence: {QTS_total[i]}')
+        print(f'QTS after sequence equivalence: {QTS_reduced[i]}')
+        print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
+        print(f'Total pairs generated: {pairs[i]}\n')
+
 
 create_table(int(start), int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, equivalence_time, pairs, disk_usage, latex)
-    
