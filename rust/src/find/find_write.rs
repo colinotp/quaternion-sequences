@@ -166,10 +166,10 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
             SequenceType::Williamson => {}
             _ => {panic!("Not implemented yet");}
         }
-        
-        
-        
-        
+
+        if result.len() == 0 {
+            result += &"_";
+        }
 
         result += &(":_".to_string() + &index0.to_string() + "_" + &index1.to_string() + &"\n");
 
