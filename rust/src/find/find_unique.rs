@@ -140,7 +140,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
     }
     
     let count : usize = classes.iter().map(|c| c.len()).sum();
-    eprintln!("The function found a total of {count} sequences without any equivalences");
+    eprintln!("The function found a total of {count} sequences before reducing to equivalence");
 
     classes.iter()
         .map(|c| find_minimum(c))
