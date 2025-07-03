@@ -14,6 +14,7 @@ then
 	echo "./driver.sh <sequencetype> <n>"
 	echo "Optional flags:"
 	echo "  * -s: Use this flag for SLURM jobs"
+	echo "  * -h: Convert sequences to Hadamard matrices when finished"
 	echo "  * -r: Recompile code (optimized build)"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
 	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
@@ -27,12 +28,16 @@ shift
 foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
 use_slurm=false
+hadamard=false
 
 # Empty out existing .pair files to avoid conflicts
-while getopts "srdp:" flag; do
+while getopts "hsrdp:" flag; do
 	case $flag in
 		s)
 		use_slurm=true
+		;;
+		h)
+		hadamard=true
 		;;
 		d)
 		./pair_file_cleanup.sh $type $n
@@ -112,6 +117,14 @@ fi
 end2=`date +%s`
 echo Matching the sequences took `expr $end2 - $start2` seconds.
 echo -e Matching the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
+
+
+if [ $hadamard = true ]; then
+	./convert.sh $type $n >> $filename
+	filename2="$foldername/result.mat"
+	matcount=$(wc -l < $filename2)
+	echo "$matcount matrices were found after converting up to Hadamard equivalence." >> $filename
+fi
 
 end=`date +%s`
 echo Total execution time was `expr $end - $start` seconds.
