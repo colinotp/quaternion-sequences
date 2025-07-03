@@ -34,9 +34,6 @@ while getopts "srdp:" flag; do
 		s)
 		use_slurm=true
 		;;
-		r)
-		cargo build --release
-		;;
 		d)
 		./pair_file_cleanup.sh $type $n
 		;;
@@ -59,9 +56,11 @@ for d in "$foldername"/rowsum_*; do
 done
 
 release_dir="./target/release/rust"
-if [ ! -e $release_dir ]
-then
+if [ $use_slurm = false ]; then
+	# Cargo automatically checks if source files have changed before deciding whether to compile
 	cargo build --release
+elif [ ! -e $release_dir ]; then
+	echo "ERROR: Binary not found, compile with 'cargo build --release'"
 fi
 
 filename="$foldername/result.log"
