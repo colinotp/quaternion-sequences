@@ -26,7 +26,7 @@ impl MatchData {
 
 pub fn compute_auto_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<isize> {
     let mut res = vec![];
-    for offset in 1..seq1.len() {
+    for offset in 1..=(seq1.len() / 2) {
         res.push(periodic_autocorrelation(seq1, offset) + periodic_autocorrelation(seq2, offset));
     }
     res
@@ -46,7 +46,7 @@ pub fn compute_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(Seq
     };
 
     let mut res = vec![];
-    for offset in 0..seq1.len() {
+    for offset in 1..=(seq1.len() / 2) {
         res.push(compute_crossc_with_offset(seq1, seq2, offset));
     }
     res
