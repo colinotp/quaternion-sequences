@@ -423,8 +423,13 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     }
 
     eprintln!("\ncount before equivalences {}", result.len());
+    let time = Instant::now();
     let reduced = reduce_to_equivalence(&result, seqtype);
+    let elapsed = time.elapsed().as_secs_f32();
+
     eprintln!("count after equivalences {}", reduced.len());
+    eprintln!("Reducing to equivalence took: {} seconds.", elapsed);
+    
 
     reduced
 

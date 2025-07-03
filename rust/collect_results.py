@@ -14,6 +14,16 @@ def read_runtimes(result_dir):
                 runtimes.append(int(match.group(1)))
     return sum(runtimes)
 
+# Get time taken to reduce to equivalence
+def get_equivalence_time(result_dir):
+    pattern = r'Reducing to equivalence took: (\d+(?:\.\d+)?) seconds'
+    with open(result_dir, "r") as file:
+        for line in file:
+            match = re.search(pattern, line)
+            if match:
+                return round(float(match.group(1)))
+        return -1
+
 # Disk usage used
 def get_disk_usage(path):
     total = 0
@@ -61,7 +71,7 @@ def count_pairs(seqtype, n):
     return int(os.popen('./countpairs.sh ' + seqtype + ' ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
-def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
+def create_table(start, end, total, S_equ, M_equ, time, equiv_time, pairs, disk, latex):
     if latex is False:
         width = 13
         with open('results.tab', 'w') as file:
@@ -70,6 +80,7 @@ def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
             file.write('S_{equ}'.ljust(width, ' '))
             file.write('M_{equ}'.ljust(width, ' '))
             file.write('Time (s)'.ljust(width, ' '))
+            file.write('Equ Time (s)'.ljust(width, ' '))
             file.write('Pairs'.ljust(width, ' '))
             file.write('Disk usage (MB)'.ljust(width, ' '))
             file.write('\n')
@@ -80,6 +91,7 @@ def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
                 file.write(str(S_equ[i]).ljust(width, ' '))
                 file.write(str(M_equ[i]).ljust(width, ' '))
                 file.write(str(time[i]).ljust(width, ' '))
+                file.write(str(equiv_time[i]).ljust(width, ' '))
                 file.write(str(pairs[i]).ljust(width, ' '))
                 if disk[i] < 10:
                     file.write(str(round(disk[i], 1)).ljust(width, ' ') + '\n')
@@ -87,12 +99,12 @@ def create_table(start, end, total, S_equ, M_equ, time, pairs, disk, latex):
                     file.write(str(round(disk[i])).ljust(width, ' ') + '\n')
     else:
         with open('results.tab', 'w') as file:
-            file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Pairs & Disk space (MB)\\\\\n')
+            file.write(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Equ Time (s) & Pairs & Disk space (MB)\\\\\n')
             for i, n in enumerate(range(start, end+1)):
                 if disk[i] < 10:
-                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
+                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\\n')
                 else: 
-                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
+                    file.write(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i])}\\\\\n')
 
 
 
@@ -104,6 +116,7 @@ seqtype = input("Sequence type (qts/wts/ws): ")
 latex = True if input("Tab-separated values (t) or LaTeX formatting (l)? ") == 'l' else False
 
 runtime=[]
+equivalence_time=[]
 disk_usage=[]
 QTS_total=[]
 QTS_reduced=[]
@@ -115,6 +128,7 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     result_dir = filePath + "/result.log"
 
     runtime.append(read_runtimes(result_dir))
+    equivalence_time.append(get_equivalence_time(result_dir))
     disk_usage.append(get_disk_usage(filePath))
     QTS_total.append(total_QTS_count(result_dir))
     QTS_reduced.append(reduced_QTS_count(result_dir))
@@ -123,11 +137,12 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     
     print(f'=========================== Length {n} ===========================')
     print(f'Runtime: {runtime[i]} seconds')
+    print(f'Time to reduce to equivalence: {round(equivalence_time[i])} seconds')
     print(f'Disk usage: {disk_usage[i]} MB')
     print(f'QTS without equivalence: {QTS_total[i]}')
     print(f'QTS after sequence equivalence: {QTS_reduced[i]}')
     print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
     print(f'Total pairs generated: {pairs[i]}\n')
 
-create_table(int(start), int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, pairs, disk_usage, latex)
+create_table(int(start), int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, equivalence_time, pairs, disk_usage, latex)
     
