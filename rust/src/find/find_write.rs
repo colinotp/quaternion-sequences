@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples, matching::{compute_auto_correlations, compute_cross_correlations}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlations_dft, compute_cross_correlations}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -138,11 +138,11 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     let mut buffer_counter = 0;
 
     // We iterate over the couples of sequences, but we filter out some with the dft checks
-    for ((index0, seq0), (index1, seq1)) in iter_over_enumerate_filtered_couples(sequences.0, sequences.1, 4.*p as f64){
+    for ((index0, seq0), (index1, seq1), psd0, psd1) in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
         let mut result = "".to_string();
 
         // We compute the auto and cross correlation values when considered on the other side of the equation
-        let autoc_values = compute_auto_correlations(seq0, seq1);
+        let autoc_values = compute_auto_correlations_dft(&psd0, seq0.len(), &psd1, seq1.len());
         let crossc_values = compute_cross_correlations(seq0, seq1, &(tags.0.clone(), tags.1.clone()));
         
         // We add these values to the current line
