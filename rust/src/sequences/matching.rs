@@ -17,7 +17,7 @@ pub struct MatchData {
 impl MatchData {
 
     pub fn from(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(SequenceTag, SequenceTag)) -> MatchData {
-        MatchData { auto_correlation_values: compute_auto_correlations(seq1, seq2), cross_correlation_values: compute_cross_correlations(seq1, seq2, tags) }
+        MatchData { auto_correlation_values: compute_auto_correlation_pair(seq1, seq2), cross_correlation_values: compute_cross_correlations(seq1, seq2, tags) }
     }
 
     pub fn new(auto_correlation_values : Vec<isize>, cross_correlation_values : Vec<isize>) -> MatchData {
@@ -26,10 +26,25 @@ impl MatchData {
 
 }
 
-pub fn compute_auto_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<isize> {
+// Compute vector of autocorrelation values for a given sequence. Omits first entry
+// No longer used in favour of compute_auto_correlation_psd
+pub fn compute_auto_correlation(seq : &Vec<i8>) -> Vec<isize> {
     let mut res = vec![];
-    for offset in 1..=(seq1.len() / 2) {
-        res.push(periodic_autocorrelation(seq1, offset) + periodic_autocorrelation(seq2, offset));
+    for offset in 1..=(seq.len() / 2) {
+        res.push(periodic_autocorrelation(seq, offset));
+    }
+
+    res
+}
+
+// Compute vector for sum of autocorrelations of two sequences
+pub fn compute_auto_correlation_pair(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<isize> {
+    let auto1 = compute_auto_correlation(&seq1);
+    let auto2 = compute_auto_correlation(&seq2);
+    
+    let mut res = vec![];
+    for offset in 0..(seq1.len() / 2) {
+        res.push(auto1[offset] + auto2[offset]);
     }
     res
 }
