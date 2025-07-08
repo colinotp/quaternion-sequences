@@ -58,8 +58,8 @@ mod tests {
         let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
         let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
 
-        assert_eq!(compute_auto_correlations(&seq_x, &seq_y), compute_complementary_auto_correlations(&seq_z, &seq_w));
-        assert_eq!(compute_auto_correlations(&seq_w, &seq_y), compute_complementary_auto_correlations(&seq_z, &seq_x));
+        assert_eq!(compute_auto_correlation_pair(&seq_x, &seq_y), compute_complementary_auto_correlations(&seq_z, &seq_w));
+        assert_eq!(compute_auto_correlation_pair(&seq_w, &seq_y), compute_complementary_auto_correlations(&seq_z, &seq_x));
 
     }
 
