@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlations_dft, compute_cross_correlations}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_correlations}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -142,7 +142,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         let mut result = "".to_string();
 
         // We compute the auto and cross correlation values when considered on the other side of the equation
-        let autoc_values = compute_auto_correlations_dft(&psd0, seq0.len(), &psd1, seq1.len());
+        let autoc_values = compute_auto_correlation_pair_dft(&psd0, seq0.len(), &psd1, seq1.len());
         let crossc_values = compute_cross_correlations(seq0, seq1, &(tags.0.clone(), tags.1.clone()));
         
         // We add these values to the current line

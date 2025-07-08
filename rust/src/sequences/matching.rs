@@ -49,20 +49,22 @@ pub fn compute_auto_correlation_pair(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<is
     res
 }
 
-pub fn compute_auto_correlations_dft(psd_vec1 : &Vec<f64>, len1 : usize, psd_vec2 : &Vec<f64>, len2 : usize) -> Vec<isize> {
-    let complex1 : Vec<Complex<f64>> = psd_vec1.iter().map(|&elm| Complex::new(elm as f64, 0.0)).collect();
-    let complex2 : Vec<Complex<f64>> = psd_vec2.iter().map(|&elm| Complex::new(elm as f64, 0.0)).collect();
+pub fn compute_auto_correlation_dft(psd_vec : &Vec<f64>, len : usize) -> Vec<isize> {
+    let complex_psd : Vec<Complex<f64>> = psd_vec.iter().map(|&elm| Complex::new(elm as f64, 0.0)).collect();
+    let mut res : Vec<isize> = inverse_dft(&complex_psd, len).into_iter().map(|elm| elm.round() as isize).collect();
+    res.remove(0);
 
-    let mut res1 : Vec<isize> = inverse_dft(&complex1, len1).into_iter().map(|elm| elm.round() as isize).collect();
-    let mut res2 : Vec<isize> = inverse_dft(&complex2, len2).into_iter().map(|elm| elm.round() as isize).collect();
-    res1.remove(0);
-    res2.remove(0);
+    res
+}
+
+pub fn compute_auto_correlation_pair_dft(psd_vec1 : &Vec<f64>, len1 : usize, psd_vec2 : &Vec<f64>, len2 : usize) -> Vec<isize> {
+    let auto1 = compute_auto_correlation_dft(&psd_vec1, len1);
+    let auto2 = compute_auto_correlation_dft(&psd_vec2, len2);
 
     let mut res = vec![];
 
-    
-    for offset in 0..=(res1.len() / 2) {
-        res.push(res1[offset] + res2[offset]);
+    for offset in 0..=(auto1.len() / 2) {
+        res.push(auto1[offset] + auto2[offset]);
     }
     res
 }
