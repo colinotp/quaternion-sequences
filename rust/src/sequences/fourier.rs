@@ -4,11 +4,18 @@ use fftw::plan::*;
 use fftw::types::*;
 use itertools::iproduct;
 use num_complex::Complex;
+use std::sync::{OnceLock, Mutex};
+
+static R2C_PLAN : OnceLock<Mutex<R2CPlan64>> = OnceLock::new();
+static C2R_PLAN : OnceLock<Mutex<C2RPlan64>> = OnceLock::new();
 
 pub fn dft_sequence(seq : &Vec<i8>) -> Vec<Complex<f64>>{
     // returns the dft of the sequence
     let n = seq.len();
-    let mut plan: R2CPlan64 = R2CPlan::aligned(&[n], Flag::MEASURE).unwrap();
+    
+    let mutex = R2C_PLAN.get_or_init(|| Mutex::new(R2CPlan::aligned(&[n], Flag::MEASURE).expect("Failed to create Mutex for FFTW plan")));
+    let mut plan = mutex.lock().unwrap();
+
     let mut a = AlignedVec::new(n);
     let mut b = AlignedVec::new(n/2+1);
     for i in 0..n {
@@ -20,7 +27,10 @@ pub fn dft_sequence(seq : &Vec<i8>) -> Vec<Complex<f64>>{
 }
 
 pub fn inverse_dft(freq: &Vec<Complex<f64>>, n: usize) -> Vec<f64> {
-    let mut plan: C2RPlan64 = C2RPlan::aligned(&[n], Flag::MEASURE).unwrap();
+    let mutex = C2R_PLAN.get_or_init(|| Mutex::new(C2RPlan::aligned(&[n], Flag::MEASURE).expect("Failed to create Mutex for FFTW plan")));
+    let mut plan = mutex.lock().unwrap();
+    
+    //let plan = C2R_PLAN.get_or_init(|| C2RPlan::aligned(&[n], Flag::MEASURE).expect("Failed to create FFT plan"));
     let mut a = AlignedVec::new(n / 2 + 1);
     let mut b = AlignedVec::new(n);
     for i in 0..a.len() {
