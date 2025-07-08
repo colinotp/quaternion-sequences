@@ -115,8 +115,8 @@ then
 	exit 1
 fi
 end2=`date +%s`
-echo Matching the sequences took `expr $end2 - $start2` seconds.
-echo -e Matching the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
+echo Join function took `expr $end2 - $start2` seconds.
+echo -e Join function took `expr $end2 - $start2` seconds. "\n\n" >> $filename
 
 
 if [ $hadamard = true ]; then

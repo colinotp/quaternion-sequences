@@ -400,6 +400,7 @@ pub fn symmetric(seq : &Vec<i8>) -> bool {
 
 pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     // This is the starting point of the part of the algorithm that goes through the sorted files and finds valid QTS
+    let time = Instant::now();
 
     let mut result = vec![];
 
@@ -421,6 +422,9 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
             result.append(&mut join_pairs_files(&pathnames, seqtype.clone(), &order, &sequences));
         }
     }
+
+    let elapsed = time.elapsed().as_secs_f32();
+    eprintln!("Matching step took: {} seconds.", elapsed);
 
     eprintln!("\ncount before equivalences {}", result.len());
     let time = Instant::now();
