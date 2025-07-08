@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{matching::{compute_auto_correlations, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, verify_cross_correlation}, symmetries::SequenceType}};
+    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{fourier::dft_sequence, matching::{compute_auto_correlation, compute_auto_correlation_dft, compute_auto_correlation_pair, compute_auto_correlation_pair_dft, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, verify_cross_correlation}, symmetries::SequenceType}};
     use crate::sequences::williamson::SequenceTag;
 
 
@@ -61,6 +61,41 @@ mod tests {
         assert_eq!(compute_auto_correlation_pair(&seq_x, &seq_y), compute_complementary_auto_correlations(&seq_z, &seq_w));
         assert_eq!(compute_auto_correlation_pair(&seq_w, &seq_y), compute_complementary_auto_correlations(&seq_z, &seq_x));
 
+    }
+
+    #[test]
+    fn test_autocorrelation_dft() {
+        // Test sequences
+        let seq1 = vec![1,-1,-1,-1,1,1,-1,1,-1,1];
+        let seq2 = vec![-1,1,1,1,-1,1,-1,-1,-1,1];
+        let seq3 = vec![1,1,1,1,1,-1,-1,1,-1,-1];
+        let seq4 = vec![1,1,-1,1,1,1,1,-1,1,1];
+
+        // Compute PSD vectors from DFT
+        let psd1 : Vec<f64> = dft_sequence(&seq1).iter().map(|elm| elm.norm_sqr()).collect();
+        let psd2 : Vec<f64> = dft_sequence(&seq2).iter().map(|elm| elm.norm_sqr()).collect();
+        let psd3 : Vec<f64> = dft_sequence(&seq3).iter().map(|elm| elm.norm_sqr()).collect();
+        let psd4 : Vec<f64> = dft_sequence(&seq4).iter().map(|elm| elm.norm_sqr()).collect();
+
+        // Computing and filtering out second half of autocorrelation values to make output vector align with normal autocorrelation
+        let auto_dft1 : Vec<isize> = compute_auto_correlation_dft(&psd1, seq1.len()).iter().enumerate().filter_map(|(i, &elm)| if i < seq1.len() / 2 {Some(elm)} else {None}).collect();
+        let auto_dft2 : Vec<isize> = compute_auto_correlation_dft(&psd2, seq1.len()).iter().enumerate().filter_map(|(i, &elm)| if i < seq1.len() / 2 {Some(elm)} else {None}).collect();
+        let auto_dft3 : Vec<isize> = compute_auto_correlation_dft(&psd3, seq1.len()).iter().enumerate().filter_map(|(i, &elm)| if i < seq1.len() / 2 {Some(elm)} else {None}).collect();
+        let auto_dft4 : Vec<isize> = compute_auto_correlation_dft(&psd4, seq1.len()).iter().enumerate().filter_map(|(i, &elm)| if i < seq1.len() / 2 {Some(elm)} else {None}).collect();
+
+        // Verify autocorrelation functions are equivalent
+        assert_eq!(compute_auto_correlation(&seq1), auto_dft1);
+        assert_eq!(compute_auto_correlation(&seq2), auto_dft2);
+        assert_eq!(compute_auto_correlation(&seq3), auto_dft3);
+        assert_eq!(compute_auto_correlation(&seq4), auto_dft4);
+
+        // Verify pair autocorrelation functions are equivalent
+        assert_eq!(compute_auto_correlation_pair(&seq1, &seq2), compute_auto_correlation_pair_dft(&psd1, seq1.len(), &psd2, seq2.len()));
+        assert_eq!(compute_auto_correlation_pair(&seq1, &seq3), compute_auto_correlation_pair_dft(&psd1, seq1.len(), &psd3, seq3.len()));
+        assert_eq!(compute_auto_correlation_pair(&seq1, &seq4), compute_auto_correlation_pair_dft(&psd1, seq1.len(), &psd4, seq4.len()));
+        assert_eq!(compute_auto_correlation_pair(&seq2, &seq3), compute_auto_correlation_pair_dft(&psd2, seq2.len(), &psd3, seq3.len()));
+        assert_eq!(compute_auto_correlation_pair(&seq2, &seq4), compute_auto_correlation_pair_dft(&psd2, seq2.len(), &psd4, seq4.len()));
+        assert_eq!(compute_auto_correlation_pair(&seq3, &seq4), compute_auto_correlation_pair_dft(&psd3, seq3.len(), &psd4, seq4.len()));
     }
 
     #[test]
