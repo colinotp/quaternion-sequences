@@ -108,14 +108,13 @@ echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filen
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
-./target/release/rust join $type $n &>> $filename
+./target/release/rust join $type $n >> $filename
 if [ $? -ne 0 ]
 then
 	echo 'ERROR: join exited unsuccessfully. See log for details'
 	exit 1
 fi
 end2=`date +%s`
-echo Join function took `expr $end2 - $start2` seconds.
 echo -e Join function took `expr $end2 - $start2` seconds. "\n\n" >> $filename
 
 

@@ -407,7 +407,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     let folder = seqtype.to_string();
 
     let find_i = fs::read_dir("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string()).unwrap();
-    eprintln!("{}", "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string());
+    println!("{}", "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string());
 
     for rowsum_x_y in find_i {
         let directory = rowsum_x_y.unwrap();
@@ -417,21 +417,23 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
             let sequences = get_sequences_from_dir(&directory);
     
             let (pathnames, order) = get_order_from_dir(&directory);
-            eprintln!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
+            println!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
     
             result.append(&mut join_pairs_files(&pathnames, seqtype.clone(), &order, &sequences));
         }
     }
 
     let elapsed = time.elapsed().as_secs_f32();
-    eprintln!("Matching step took: {} seconds.", elapsed);
+    println!("Matching took: {} seconds.", elapsed);
+    eprintln!("Matching took: {} seconds.", elapsed);
 
-    eprintln!("\ncount before equivalences {}", result.len());
+    println!("\ncount before equivalences {}", result.len());
     let time = Instant::now();
     let reduced = reduce_to_equivalence(&result, seqtype);
     let elapsed = time.elapsed().as_secs_f32();
 
-    eprintln!("count after equivalences {}", reduced.len());
+    println!("count after equivalences {}", reduced.len());
+    println!("Reducing to equivalence took: {} seconds.", elapsed);
     eprintln!("Reducing to equivalence took: {} seconds.", elapsed);
     
 
