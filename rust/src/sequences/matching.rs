@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use num_complex::Complex;
 
-use crate::sequences::fourier::{inverse_dft, iter_over_filtered_couples};
+use crate::sequences::{fourier::{dft_sequence, inverse_dft, iter_over_filtered_couples}, sequence::{transpose, seq_multiply_pointwise_complex}};
 
 use super::williamson::{SequenceTag, periodic_autocorrelation, cross_correlation};
 
@@ -87,6 +87,42 @@ pub fn compute_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(Seq
         res.push(compute_crossc_with_offset(seq1, seq2, offset));
     }
     res
+}
+
+// Computes crosscorrelation sums on a given side of the equation, using DFT
+pub fn compute_cross_correlations_dft(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(SequenceTag, SequenceTag)) -> Vec<isize> {
+    let crossc1 = compute_cross_correlations_dft_aux(seq1, seq2);
+    let crossc2 = compute_cross_correlations_dft_aux(seq2, seq1);
+
+    let cross_at_offset : Box<dyn Fn(usize) -> isize> = match tags {
+        (SequenceTag::W, _) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::X) => {
+            Box::new(|offset| crossc2[offset] - crossc1[offset])
+        }
+        (_, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::Z, SequenceTag::Y) | (SequenceTag::X, SequenceTag::Z) => {
+            Box::new(|offset| crossc1[offset] - crossc2[offset])
+        }
+        _ => {panic!("incorrect tags entered !")}
+    };
+
+    
+    let mut res : Vec<isize> = vec![];
+    for offset in 1..=(seq1.len() / 2) {
+        res.push(cross_at_offset(offset));
+    }
+
+    res
+}
+
+// Computes crosscorrelation vector for seq1, seq2 via DFT
+pub fn compute_cross_correlations_dft_aux(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<isize> {
+    let seq1_t = transpose(seq1);
+    
+    let dft1 = dft_sequence(&seq1_t);
+    let dft2 = dft_sequence(&seq2);
+
+    let product : Vec<Complex<f64>> = seq_multiply_pointwise_complex(&dft1, &dft2);
+
+    inverse_dft(&product, seq1.len()).into_iter().map(|elm| elm.round() as isize).collect()
 }
 
 

@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{fourier::dft_sequence, matching::{compute_auto_correlation, compute_auto_correlation_dft, compute_auto_correlation_pair, compute_auto_correlation_pair_dft, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, verify_cross_correlation}, symmetries::SequenceType}};
+    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{fourier::dft_sequence, matching::{compute_auto_correlation, compute_auto_correlation_dft, compute_auto_correlation_pair, compute_auto_correlation_pair_dft, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, compute_cross_correlations_dft_aux, verify_cross_correlation}, symmetries::SequenceType, williamson::cross_correlation}};
     use crate::sequences::williamson::SequenceTag;
 
 
@@ -108,6 +108,51 @@ mod tests {
         assert_eq!(compute_cross_correlations(&seq_x, &seq_y, &(SequenceTag::X, SequenceTag::Y)), compute_complementary_cross_correlations(&seq_z, &seq_w, &(SequenceTag::Z, SequenceTag::W)));
         assert_eq!(compute_cross_correlations(&seq_w, &seq_y, &(SequenceTag::W, SequenceTag::Y)), compute_complementary_cross_correlations(&seq_z, &seq_x, &(SequenceTag::Z, SequenceTag::X)));
 
+    }
+
+    #[test]
+    fn test_crosscorrelation_dft() {
+        let seq_x = vec![1,-1,-1,-1,1,1,-1,1,-1,1];
+        let seq_y = vec![-1,1,1,1,-1,1,-1,-1,-1,1];
+        let seq_z = vec![1,1,1,1,1,-1,-1,1,-1,-1];
+        let seq_w = vec![1,1,-1,1,1,1,1,-1,1,1];
+
+        let dft_xy = compute_cross_correlations_dft_aux(&seq_x, &seq_y);
+        let mut xy_vec = vec![];
+        for offset in 0..seq_x.len() {
+            xy_vec.push(cross_correlation(&seq_x, &seq_y, offset));
+        }
+
+        assert_eq!(dft_xy, xy_vec);
+
+        for offset in 1..seq_x.len() {
+            assert_eq!(dft_xy[offset], cross_correlation(&seq_x, &seq_y, offset));
+        }
+
+        let dft_xz = compute_cross_correlations_dft_aux(&seq_x, &seq_z);
+        for offset in 1..seq_x.len() {
+            assert_eq!(dft_xz[offset], cross_correlation(&seq_x, &seq_z, offset));
+        }
+
+        let dft_xw = compute_cross_correlations_dft_aux(&seq_x, &seq_w);
+        for offset in 1..seq_x.len() {
+            assert_eq!(dft_xw[offset], cross_correlation(&seq_x, &seq_w, offset));
+        }
+        
+        let dft_yz = compute_cross_correlations_dft_aux(&seq_y, &seq_z);
+        for offset in 1..seq_x.len() {
+            assert_eq!(dft_yz[offset], cross_correlation(&seq_y, &seq_z, offset));
+        }
+        
+        let dft_yw = compute_cross_correlations_dft_aux(&seq_y, &seq_w);
+        for offset in 1..seq_x.len() {
+            assert_eq!(dft_yw[offset], cross_correlation(&seq_y, &seq_w, offset));
+        }
+        
+        let dft_zw = compute_cross_correlations_dft_aux(&seq_z, &seq_w);
+        for offset in 1..seq_x.len() {
+            assert_eq!(dft_zw[offset], cross_correlation(&seq_z, &seq_w, offset));
+        }
     }
 
 

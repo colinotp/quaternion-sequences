@@ -2,6 +2,7 @@
 use cgmath::{*, num_traits::PrimInt};
 
 use super::symmetries::*;
+use num_complex::Complex;
 
 pub const N : usize = 16;
 
@@ -174,7 +175,22 @@ impl QS{
 }
 
 
+// Transforms sequence mapping index x -> -x mod n
+pub fn transpose(seq: &Vec<i8>) -> Vec<i8> {
+    let n = seq.len();
 
+    let mut res : Vec<i8> = vec![0;n];
+    for (i, elm) in seq.iter().enumerate() {
+        res[(-(i as isize)).rem_euclid(n as isize) as usize] = *elm;
+    }
+
+    res
+}
+
+// Multiply two sequences entry-wise
+pub fn seq_multiply_pointwise_complex(seq1 : &Vec<Complex<f64>>, seq2 : &Vec<Complex<f64>>) -> Vec<Complex<f64>> {
+    seq1.into_iter().zip(seq2.into_iter()).map(|(x1, x2)| x1 * x2).collect()
+}
 
 
 pub fn quaternion_to_string(quat : &Quaternion<f32>) -> String {
