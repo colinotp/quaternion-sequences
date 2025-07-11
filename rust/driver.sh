@@ -15,7 +15,6 @@ then
 	echo "Optional flags:"
 	echo "  * -s: Use this flag for SLURM jobs"
 	echo "  * -h: Convert sequences to Hadamard matrices when finished"
-	echo "  * -r: Recompile code (optimized build)"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
 	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
@@ -31,7 +30,7 @@ use_slurm=false
 hadamard=false
 
 # Empty out existing .pair files to avoid conflicts
-while getopts "hsrdp:" flag; do
+while getopts "hsdp:" flag; do
 	case $flag in
 		s)
 		use_slurm=true
