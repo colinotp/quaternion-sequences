@@ -176,15 +176,22 @@ impl QS{
 
 
 // Transforms sequence mapping index x -> -x mod n
-pub fn transpose(seq: &Vec<i8>) -> Vec<i8> {
-    let n = seq.len();
+pub fn transpose<T : Copy>(seq : &mut Vec<T>) {
+    let mut l = 1;
+    let mut r = seq.len() - 1;
 
-    let mut res : Vec<i8> = vec![0;n];
-    for (i, elm) in seq.iter().enumerate() {
-        res[(-(i as isize)).rem_euclid(n as isize) as usize] = *elm;
+    while l < r {
+        swap(seq, l, r);
+        l+=1;
+        r-=1;
     }
+}
 
-    res
+// Swap two elements in a vec
+fn swap<T : Copy>(seq : &mut Vec<T>, ind1 : usize, ind2 : usize) {
+    let temp = seq[ind1];
+    seq[ind1] = seq[ind2];
+    seq[ind2] = temp;
 }
 
 // Multiply two sequences entry-wise

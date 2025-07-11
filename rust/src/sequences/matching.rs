@@ -91,8 +91,11 @@ pub fn compute_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(Seq
 
 // Computes crosscorrelation sums on a given side of the equation, using DFT
 pub fn compute_cross_correlations_dft(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(SequenceTag, SequenceTag)) -> Vec<isize> {
-    let crossc1 = compute_cross_correlations_dft_aux(seq1, seq2);
-    let crossc2 = compute_cross_correlations_dft_aux(seq2, seq1);
+    let mut mut_seq1 = seq1.clone();
+    let mut mut_seq2 = seq2.clone();
+    
+    let crossc1 = compute_cross_correlations_dft_aux(&mut mut_seq1, &mut mut_seq2);
+    let crossc2 = compute_cross_correlations_dft_aux(&mut mut_seq2, &mut mut_seq1);
 
     let cross_at_offset : Box<dyn Fn(usize) -> isize> = match tags {
         (SequenceTag::W, _) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::X) => {
@@ -114,10 +117,10 @@ pub fn compute_cross_correlations_dft(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &
 }
 
 // Computes crosscorrelation vector for seq1, seq2 via DFT
-pub fn compute_cross_correlations_dft_aux(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<isize> {
-    let seq1_t = transpose(seq1);
-    
-    let dft1 = dft_sequence(&seq1_t);
+pub fn compute_cross_correlations_dft_aux(seq1 : &mut Vec<i8>, seq2 : &mut Vec<i8>) -> Vec<isize> {
+    transpose(seq1);
+
+    let dft1 = dft_sequence(&seq1);
     let dft2 = dft_sequence(&seq2);
 
     let product : Vec<Complex<f64>> = seq_multiply_pointwise_complex(&dft1, &dft2);
