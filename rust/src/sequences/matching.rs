@@ -61,6 +61,11 @@ pub fn compute_auto_correlation_pair_dft(psd_vec1 : &Vec<f64>, len1 : usize, psd
     let auto1 = compute_auto_correlation_dft(&psd_vec1, len1);
     let auto2 = compute_auto_correlation_dft(&psd_vec2, len2);
 
+    // Happens with sequences of length 1
+    if auto1.len() == 0 {
+        return vec![];
+    }
+
     let mut res = vec![];
 
     for offset in 0..=(auto1.len() / 2) {
