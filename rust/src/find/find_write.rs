@@ -69,10 +69,10 @@ pub fn print_memory_usage(message : &str) {
 
 fn index_to_tag(index: usize) -> SequenceTag {
     match index {
-        0 => {SequenceTag::X}
-        1 => {SequenceTag::Y}
-        2 => {SequenceTag::Z}
-        3 => {SequenceTag::W}
+        0 => {SequenceTag::W}
+        1 => {SequenceTag::X}
+        2 => {SequenceTag::Y}
+        3 => {SequenceTag::Z}
         _ => {panic!("incorrect index")}
     }
 }
@@ -90,10 +90,10 @@ pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_pat
 
 pub fn verify_rowsums(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), rs : (isize, isize, isize, isize)) -> bool {
     let rowsum_0 : isize = match tags.0 {
-            SequenceTag::X => rs.0,
-            SequenceTag::Y => rs.1,
-            SequenceTag::Z => rs.2,
-            SequenceTag::W => rs.3
+            SequenceTag::W => rs.0,
+            SequenceTag::X => rs.1,
+            SequenceTag::Y => rs.2,
+            SequenceTag::Z => rs.3
         };
     
 
@@ -104,10 +104,10 @@ pub fn verify_rowsums(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Seque
     }
 
     let rowsum_1 : isize = match tags.1 {
-            SequenceTag::X => rs.0,
-            SequenceTag::Y => rs.1,
-            SequenceTag::Z => rs.2,
-            SequenceTag::W => rs.3
+            SequenceTag::W => rs.0,
+            SequenceTag::X => rs.1,
+            SequenceTag::Y => rs.2,
+            SequenceTag::Z => rs.3
         };
     
 
@@ -190,12 +190,12 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
 pub fn get_indices(pairing: Option<RowsumPairing>, pair: u8) -> Option<(usize, usize)> {
     match (pairing, pair) {
-        (Some(RowsumPairing::XY), 1) => Some((0, 1)),     // XY
-        (Some(RowsumPairing::XY), 2) => Some((2, 3)),     // ZW
-        (Some(RowsumPairing::XZ), 1) => Some((0, 2)),     // XZ
-        (Some(RowsumPairing::XZ), 2) => Some((1, 3)),     // YW
-        (Some(RowsumPairing::XW), 1) => Some((0, 3)),     // XW
-        (Some(RowsumPairing::XW), 2) => Some((1, 2)),     // YZ
+        (Some(RowsumPairing::WX), 1) => Some((0, 1)),     // WX
+        (Some(RowsumPairing::WX), 2) => Some((2, 3)),     // YZ
+        (Some(RowsumPairing::WY), 1) => Some((0, 2)),     // WY
+        (Some(RowsumPairing::WY), 2) => Some((1, 3)),     // XZ
+        (Some(RowsumPairing::WZ), 1) => Some((0, 3)),     // WZ
+        (Some(RowsumPairing::WZ), 2) => Some((1, 2)),     // XY
         _ => None
     }
 }
@@ -282,15 +282,15 @@ pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize,
     let path2 : String;
 
     match pairing {
-        Some(RowsumPairing::XY) => {
+        Some(RowsumPairing::WX) => {
             path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[1]) + ".pair";
             path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[2]) + &tag_to_string(&tags[3]) + ".pair";
         },
-        Some(RowsumPairing::XZ) => {
+        Some(RowsumPairing::WY) => {
             path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[2]) + ".pair";
             path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[1]) + &tag_to_string(&tags[3]) + ".pair";
         },
-        Some(RowsumPairing::XW) => {
+        Some(RowsumPairing::WZ) => {
             path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[3]) + ".pair";
             path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[1]) + &tag_to_string(&tags[2]) + ".pair";
         },
@@ -365,15 +365,15 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
 
     // Uses sequences to generate .pair files based on chosen pairing (default pairing is XW)
     match pairing {
-        Some(RowsumPairing::XY) => {
+        Some(RowsumPairing::WX) => {
             write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype.clone(), rs, p, &folder_path, EquationSide::LEFT);
             write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype.clone(), rs, p, &folder_path, EquationSide::RIGHT);
         },
-        Some(RowsumPairing::XZ) => {
+        Some(RowsumPairing::WY) => {
             write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype.clone(), rs, p, &folder_path, EquationSide::LEFT);
             write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype.clone(), rs, p, &folder_path, EquationSide::RIGHT);
         },
-        Some(RowsumPairing::XW) | None => {
+        Some(RowsumPairing::WZ) | None => {
             write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype.clone(), rs, p, &folder_path, EquationSide::LEFT);
             write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype.clone(), rs, p, &folder_path, EquationSide::RIGHT);
         }
@@ -460,16 +460,16 @@ pub fn get_sequences_from_dir(directory : &DirEntry) -> (Vec<Vec<i8>>,Vec<Vec<i8
             let filename = pathname.split("/").last().expect("No last element ???");
             // eprintln!("Name: {}", filename);
             match filename {
+                "seq_W.seq" => {sequence_w = file_to_sequences(&pathname)}
                 "seq_X.seq" => {sequence_x = file_to_sequences(&pathname)}
                 "seq_Y.seq" => {sequence_y = file_to_sequences(&pathname)}
                 "seq_Z.seq" => {sequence_z = file_to_sequences(&pathname)}
-                "seq_W.seq" => {sequence_w = file_to_sequences(&pathname)}
                 _ => {panic!("Unexpected file ending in .seq : {filename}")}
             }
         }
     }
 
-    (sequence_x, sequence_y, sequence_z, sequence_w)
+    (sequence_w, sequence_x, sequence_y, sequence_z)
 }
 
 
@@ -537,17 +537,17 @@ pub fn get_tag_from_filename(filename : &str) -> (SequenceTag, SequenceTag) {
     // This reads the name of a file and returns what are the corresponding tags
 
     let tag1 = match filename.chars().nth(5).expect("File name not long enough") {
+        'W' => {SequenceTag::W}
         'X' => {SequenceTag::X}
         'Y' => {SequenceTag::Y}
         'Z' => {SequenceTag::Z}
-        'W' => {SequenceTag::W}
         _ => {panic!("Unexpected character : {}",filename.chars().nth(5).unwrap())}
     };
     let tag2 = match filename.chars().nth(6).expect("File name not long enough") {
+        'W' => {SequenceTag::W}
         'X' => {SequenceTag::X}
         'Y' => {SequenceTag::Y}
         'Z' => {SequenceTag::Z}
-        'W' => {SequenceTag::W}
         _ => {panic!("Unexpected character : {}",filename.chars().nth(6).unwrap())}
     };
 
@@ -648,12 +648,12 @@ pub fn get_line_from(seq : &Option<Result<String, Error>>) -> (String, (usize, u
 pub fn get_sequences<'a>(sequences : &'a (Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>>), order : &'a (SequenceTag, SequenceTag, SequenceTag, SequenceTag), indices : &'a (usize, usize, usize, usize)) -> (&'a Vec<i8>, &'a Vec<i8>, &'a Vec<i8>, &'a Vec<i8>) {
     // This function returns the sequences corresponding to the indices in a specific order
 
+    let seqw = get_sequence_aux(sequences, order, indices, SequenceTag::W);
     let seqx = get_sequence_aux(sequences, order, indices, SequenceTag::X);
     let seqy = get_sequence_aux(sequences, order, indices, SequenceTag::Y);
     let seqz = get_sequence_aux(sequences, order, indices, SequenceTag::Z);
-    let seqw = get_sequence_aux(sequences, order, indices, SequenceTag::W);
 
-    (seqx, seqy, seqz, seqw)
+    (seqw, seqx, seqy, seqz)
 }
 
 
@@ -670,9 +670,9 @@ fn get_sequence_aux<'a>(sequences : &'a (Vec<Vec<i8>>, Vec<Vec<i8>>, Vec<Vec<i8>
     };
 
     match tag {
-        SequenceTag::X => {&sequences.0[index]},
-        SequenceTag::Y => {&sequences.1[index]},
-        SequenceTag::Z => {&sequences.2[index]},
-        SequenceTag::W => {&sequences.3[index]},
+        SequenceTag::W => {&sequences.0[index]},
+        SequenceTag::X => {&sequences.1[index]},
+        SequenceTag::Y => {&sequences.2[index]},
+        SequenceTag::Z => {&sequences.3[index]}
     }
 }

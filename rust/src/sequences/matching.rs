@@ -78,10 +78,10 @@ pub fn compute_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(Seq
 
     let compute_crossc_with_offset = 
         match tags {
-            (SequenceTag::W, _) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::X) => {
+            (SequenceTag::Z, _) | (SequenceTag::W, SequenceTag::X) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::W) => {
                 |s1, s2, offset| cross_correlation(s1, s2, offset) - cross_correlation(s2, s1, offset)
             }
-            (_, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::Z, SequenceTag::Y) | (SequenceTag::X, SequenceTag::Z) => {
+            (_, SequenceTag::Z) | (SequenceTag::X, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::W, SequenceTag::Y) => {
                 |s1, s2, offset| cross_correlation(s2, s1, offset) - cross_correlation(s1, s2, offset)
             }
             _ => {panic!("incorrect tags entered !")}
@@ -103,10 +103,10 @@ pub fn compute_cross_correlations_dft(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &
     let crossc2 = compute_cross_correlations_dft_aux(&mut mut_seq2, &mut mut_seq1);
 
     let cross_at_offset : Box<dyn Fn(usize) -> isize> = match tags {
-        (SequenceTag::W, _) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::X) => {
+        (SequenceTag::Z, _) | (SequenceTag::W, SequenceTag::X) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::W) => {
             Box::new(|offset| crossc2[offset] - crossc1[offset])
         }
-        (_, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::Z, SequenceTag::Y) | (SequenceTag::X, SequenceTag::Z) => {
+        (_, SequenceTag::Z) | (SequenceTag::X, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::W, SequenceTag::Y) => {
             Box::new(|offset| crossc1[offset] - crossc2[offset])
         }
         _ => {panic!("incorrect tags entered !")}
@@ -147,10 +147,10 @@ pub fn compute_complementary_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>
 
     let compute_crossc_with_offset = 
         match tags {
-            (SequenceTag::W, _) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::X) => {
+            (SequenceTag::Z, _) | (SequenceTag::W, SequenceTag::X) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::W) => {
                 |s1, s2, offset| cross_correlation(s1, s2, offset) - cross_correlation(s2, s1, offset)
             }
-            (_, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::Z, SequenceTag::Y) | (SequenceTag::X, SequenceTag::Z) => {
+            (_, SequenceTag::Z) | (SequenceTag::X, SequenceTag::W) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::W, SequenceTag::Y) => {
                 |s1, s2, offset| cross_correlation(s2, s1, offset) - cross_correlation(s1, s2, offset)
             }
             _ => {panic!("incorrect tags entered :{:?}, {:?}", tags.0, tags.1)}
@@ -168,6 +168,15 @@ pub fn compute_complementary_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>
 
 pub fn verify_cross_correlation(sequences : &[&Vec<i8>; 4], tags : &Vec<SequenceTag>) -> bool {
 
+    let seqw : &Vec<i8> = {
+        let mut res = None;
+        for i in 0..4 {
+            if tags[i] == SequenceTag::W { 
+                res =  Some(sequences[i]);
+            } 
+        }
+        res.expect("Missing tag W !")
+    };
     let seqx : &Vec<i8> = {
         let mut res = None;
         for i in 0..4 {
@@ -195,26 +204,18 @@ pub fn verify_cross_correlation(sequences : &[&Vec<i8>; 4], tags : &Vec<Sequence
         }
         res.expect("Missing tag Z !")
     };
-    let seqw : &Vec<i8> = {
-        let mut res = None;
-        for i in 0..4 {
-            if tags[i] == SequenceTag::W { 
-                res =  Some(sequences[i]);
-            } 
-        }
-        res.expect("Missing tag W !")
-    };
+    
 
 
     let (seq_for_cond1, seq_for_cond2) = match (tags[0].clone(), tags[1].clone()) {
-        (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::X) | (SequenceTag::W, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::W) => {
-            ((seqw, seqx, seqy, seqz,), (seqw, seqy, seqz, seqx))
+        (SequenceTag::W, SequenceTag::X) | (SequenceTag::X, SequenceTag::W) | (SequenceTag::Z, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::Z) => {
+            ((seqz, seqw, seqx, seqy,), (seqz, seqx, seqy, seqw))
         }
-        (SequenceTag::X, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::X) | (SequenceTag::W, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::W) => {
-            ((seqw, seqx, seqy, seqz,), (seqw, seqz, seqx, seqy))
+        (SequenceTag::W, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::W) | (SequenceTag::Z, SequenceTag::X) | (SequenceTag::X, SequenceTag::Z) => {
+            ((seqz, seqw, seqx, seqy,), (seqz, seqy, seqw, seqx))
         }
-        (SequenceTag::X, SequenceTag::W) | (SequenceTag::W, SequenceTag::X) | (SequenceTag::Y, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::Y) => {
-            ((seqw, seqy, seqz, seqx,), (seqw, seqz, seqx, seqy))
+        (SequenceTag::W, SequenceTag::Z) | (SequenceTag::Z, SequenceTag::W) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::X) => {
+            ((seqz, seqx, seqy, seqw,), (seqz, seqy, seqw, seqx))
         }
         _ => {panic!("Incompatible tags !")}
     };

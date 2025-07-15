@@ -7,15 +7,15 @@ use super::sequence::{QS, QPLUS, Q24};
 
 #[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Hash, Debug)]
 pub enum SequenceTag { // enum for choosing a specific sequence
-    X, Y, Z, W
+    W, X, Y, Z
 }
 
 pub fn tag_to_string(tag : &SequenceTag) -> String{
     match *tag {
+        SequenceTag::W => {"W".to_string()}
         SequenceTag::X => {"X".to_string()}
         SequenceTag::Y => {"Y".to_string()}
         SequenceTag::Z => {"Z".to_string()}
-        SequenceTag::W => {"W".to_string()}
     }
 }
 
@@ -89,10 +89,10 @@ impl QuadSeq{
 
     pub fn sequence(&self, seqtag : SequenceTag) -> Vec<i8>{
         match seqtag {
-            SequenceTag::X => {self.a.clone()}
-            SequenceTag::Y => {self.b.clone()}
-            SequenceTag::Z => {self.c.clone()}
-            SequenceTag::W => {self.d.clone()}
+            SequenceTag::W => {self.a.clone()}
+            SequenceTag::X => {self.b.clone()}
+            SequenceTag::Y => {self.c.clone()}
+            SequenceTag::Z => {self.d.clone()}
         }
     }
 
@@ -117,26 +117,26 @@ impl QuadSeq{
     pub fn set_sequence(&mut self, seq : &Vec<i8>, tag : &SequenceTag){
         // sets a value for a specific sequence
         match &tag {
-            SequenceTag::X => self.a = seq.clone(),
-            SequenceTag::Y => self.b = seq.clone(),
-            SequenceTag::Z => self.c = seq.clone(),
-            SequenceTag::W => self.d = seq.clone()
+            SequenceTag::W => self.a = seq.clone(),
+            SequenceTag::X => self.b = seq.clone(),
+            SequenceTag::Y => self.c = seq.clone(),
+            SequenceTag::Z => self.d = seq.clone()
         }
     }
 
     pub fn set_single_value(&mut self, value : i8, tag : &SequenceTag, index: usize){
         // sets a value for a specific sequence and specific index
         match &tag {
-            SequenceTag::X => self.a[index] = value,
-            SequenceTag::Y => self.b[index] = value,
-            SequenceTag::Z => self.c[index] = value,
-            SequenceTag::W => self.d[index] = value
+            SequenceTag::W => self.a[index] = value,
+            SequenceTag::X => self.b[index] = value,
+            SequenceTag::Y => self.c[index] = value,
+            SequenceTag::Z => self.d[index] = value
         }
     }
 
     pub fn set_sequence_value(&mut self, value : &(i8, i8, i8, i8), index: usize){
         // sets a value for all 4 sequences on a specific index
-        // EXPECTED ORDER IS X Y Z W
+        // EXPECTED ORDER IS W X Y Z
         self.a[index] = value.0;
         self.b[index] = value.1;
         self.c[index] = value.2;
@@ -148,17 +148,17 @@ impl QuadSeq{
 
         let mut qts = QuadSeq::new(pqs.size());
 
-        let (mut seqx, mut seqy, mut seqz, mut seqw) = (vec![], vec![], vec![], vec![]);
+        let (mut seqw, mut seqx, mut seqy, mut seqz) = (vec![], vec![], vec![], vec![]);
 
         for elm in pqs.values() {
-            let (x,y,z,w) = quaternion_to_quad(&elm);
+            let (w,x,y,z) = quaternion_to_quad(&elm);
+            seqw.push(w);
             seqx.push(x);
             seqy.push(y);
             seqz.push(z);
-            seqw.push(w);
         }
 
-        qts.set_all_values((&seqx, &seqy, &seqz, &seqw));
+        qts.set_all_values((&seqw, &seqx, &seqy, &seqz));
 
         qts
     }

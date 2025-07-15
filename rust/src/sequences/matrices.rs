@@ -164,10 +164,10 @@ impl HM {
         let size = will.size();
         let mut hm = HM::new(4*size);
 
+        let matw = HM::from_sequence(&will.sequence(super::williamson::SequenceTag::W));
         let matx = HM::from_sequence(&will.sequence(super::williamson::SequenceTag::X));
         let maty = HM::from_sequence(&will.sequence(super::williamson::SequenceTag::Y));
         let matz = HM::from_sequence(&will.sequence(super::williamson::SequenceTag::Z));
-        let matw = HM::from_sequence(&will.sequence(super::williamson::SequenceTag::W));
 
         match seqtype {
             SequenceType::QuaternionType => {

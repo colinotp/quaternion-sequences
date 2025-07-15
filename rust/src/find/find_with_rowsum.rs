@@ -28,10 +28,10 @@ fn get_two_best(quad: &Quad) -> ((isize, usize),(isize, usize)){
 
 fn index_to_tag(index: usize) -> SequenceTag {
     match index {
-        0 => {SequenceTag::X}
-        1 => {SequenceTag::Y}
-        2 => {SequenceTag::Z}
-        3 => {SequenceTag::W}
+        0 => {SequenceTag::W}
+        1 => {SequenceTag::X}
+        2 => {SequenceTag::Y}
+        3 => {SequenceTag::Z}
         _ => {panic!("incorrect index")}
     }
 }

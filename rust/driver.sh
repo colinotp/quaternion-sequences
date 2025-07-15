@@ -16,7 +16,7 @@ then
 	echo "  * -s: Use this flag for SLURM jobs"
 	echo "  * -h: Convert sequences to Hadamard matrices when finished"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
-	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
+	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include WX, WY, WZ. Default is WZ"
 	exit 0
 fi
 
@@ -25,7 +25,7 @@ n=$2
 shift
 shift
 foldername="./results/pairs/$type/find_$n"
-rowsum_pairing="XW"
+rowsum_pairing="WZ"
 use_slurm=false
 hadamard=false
 

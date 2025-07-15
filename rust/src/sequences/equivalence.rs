@@ -191,12 +191,12 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     let (a,b,c,d) = will.sequences();
 
     let (seq1, seq2) = match (&seqtag1, &seqtag2) {
-        (SequenceTag::X, SequenceTag::Y) => {(a, b)},
-        (SequenceTag::X, SequenceTag::Z) => {(a, c)},
-        (SequenceTag::X, SequenceTag::W) => {(a, d)},
-        (SequenceTag::Y, SequenceTag::Z) => {(b, c)},
-        (SequenceTag::Y, SequenceTag::W) => {(b, d)},
-        (SequenceTag::Z, SequenceTag::W) => {(c, d)},
+        (SequenceTag::W, SequenceTag::X) => {(a, b)},
+        (SequenceTag::W, SequenceTag::Y) => {(a, c)},
+        (SequenceTag::W, SequenceTag::Z) => {(a, d)},
+        (SequenceTag::X, SequenceTag::Y) => {(b, c)},
+        (SequenceTag::X, SequenceTag::Z) => {(b, d)},
+        (SequenceTag::Y, SequenceTag::Z) => {(c, d)},
         _ => {panic!("Incorrect tags entered !")}
     };
 
@@ -211,17 +211,17 @@ pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType) -> HashSet
     let (a,b,c,d) = seq.sequences();
     let (nega_a, nega_b, nega_c, nega_d) = (negated(&a), negated(&b), negated(&c), negated(&d));
 
-    let couples = [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)];
+    let couples = [(SequenceTag::W, SequenceTag::X), (SequenceTag::W, SequenceTag::Y), (SequenceTag::W, SequenceTag::Z), (SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::Y, SequenceTag::Z)];
 
     for couple in couples {
-        for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z, SequenceTag::W] {
+        for tag in [SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
             let mut new_seq = seq.clone();
             
             match tag {
-                SequenceTag::X => new_seq.set_sequence(&nega_a, &tag),
-                SequenceTag::Y => new_seq.set_sequence(&nega_b, &tag),
-                SequenceTag::Z => new_seq.set_sequence(&nega_c, &tag),
-                SequenceTag::W => new_seq.set_sequence(&nega_d, &tag)
+                SequenceTag::W => new_seq.set_sequence(&nega_a, &tag),
+                SequenceTag::X => new_seq.set_sequence(&nega_b, &tag),
+                SequenceTag::Y => new_seq.set_sequence(&nega_c, &tag),
+                SequenceTag::Z => new_seq.set_sequence(&nega_d, &tag)
             }
 
             swap(&mut new_seq, couple.0.clone(), couple.1.clone());
@@ -239,7 +239,7 @@ pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Qua
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
 
-    let couples = [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)];
+    let couples = [(SequenceTag::W, SequenceTag::X), (SequenceTag::W, SequenceTag::Y), (SequenceTag::W, SequenceTag::Z), (SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::Y, SequenceTag::Z)];
 
     for couple in couples {
         let mut new_seq = seq.clone();
@@ -260,7 +260,7 @@ pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType) -> Hash
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
 
-    let couples = [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)];
+    let couples = [(SequenceTag::W, SequenceTag::X), (SequenceTag::W, SequenceTag::Y), (SequenceTag::W, SequenceTag::Z), (SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::Y, SequenceTag::Z)];
 
     for (couple1, couple2) in iproduct!(couples.clone(), couples) {
         let mut new_seq = seq.clone();
@@ -292,7 +292,7 @@ pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType) -> 
     }
 
     let offset = seq.size() / 2;
-    for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z, SequenceTag::W] {
+    for tag in [SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
         let mut s = seq.clone();
         let tag_seq = seq.sequence(tag.clone());
 
@@ -378,12 +378,12 @@ pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Quad
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
 
-    for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z, SequenceTag::W] {
+    for tag in [SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
         let quad = match tag {
-            SequenceTag::X => (&nega_a, &b, &c, &d),
-            SequenceTag::Y => (&a, &nega_b, &c, &d),
-            SequenceTag::Z => (&a, &b, &nega_c, &d),
-            SequenceTag::W => (&a, &b, &c, &nega_d)
+            SequenceTag::W => (&nega_a, &b, &c, &d),
+            SequenceTag::X => (&a, &nega_b, &c, &d),
+            SequenceTag::Y => (&a, &b, &nega_c, &d),
+            SequenceTag::Z => (&a, &b, &c, &nega_d)
         };
         let mut new_seq = QuadSeq::new(seq.size());
         new_seq.set_all_values(quad);
@@ -405,15 +405,15 @@ pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashS
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
 
-    for tag_couple in [(SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::X, SequenceTag::W), (SequenceTag::Y, SequenceTag::Z), (SequenceTag::Y, SequenceTag::W), (SequenceTag::Z, SequenceTag::W)] {
+    for tag_couple in [(SequenceTag::W, SequenceTag::X), (SequenceTag::W, SequenceTag::Y), (SequenceTag::W, SequenceTag::Z), (SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::Y, SequenceTag::Z)] {
         // this loops through all the couples of a,b,c,d (ordered couples)
         let quad = match tag_couple {
-            (SequenceTag::X, SequenceTag::Y) => {(&nega_a, &nega_b, &c, &d)},
-            (SequenceTag::X, SequenceTag::Z) => {(&nega_a, &b, &nega_c, &d)},
-            (SequenceTag::X, SequenceTag::W) => {(&nega_a, &b, &c, &nega_d)},
-            (SequenceTag::Y, SequenceTag::Z) => {(&a, &nega_b, &nega_c, &d)},
-            (SequenceTag::Y, SequenceTag::W) => {(&a, &nega_b, &c, &nega_d)},
-            (SequenceTag::Z, SequenceTag::W) => {(&a, &b, &nega_c, &nega_d)},
+            (SequenceTag::W, SequenceTag::X) => {(&nega_a, &nega_b, &c, &d)},
+            (SequenceTag::W, SequenceTag::Y) => {(&nega_a, &b, &nega_c, &d)},
+            (SequenceTag::W, SequenceTag::Z) => {(&nega_a, &b, &c, &nega_d)},
+            (SequenceTag::X, SequenceTag::Y) => {(&a, &nega_b, &nega_c, &d)},
+            (SequenceTag::X, SequenceTag::Z) => {(&a, &nega_b, &c, &nega_d)},
+            (SequenceTag::Y, SequenceTag::Z) => {(&a, &b, &nega_c, &nega_d)},
             _ => {panic!("Incorrect tags entered !")}
         };
         let mut s = QuadSeq::new(seq.size());

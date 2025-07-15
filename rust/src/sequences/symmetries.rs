@@ -9,7 +9,7 @@ pub enum Symmetry{ // enum for the different types of Quaternion Sequences
 
 #[derive(Clone)]
 pub enum RowsumPairing{
-    XY, XZ, XW
+    WX, WY, WZ
 }
 
 #[derive(Clone)]

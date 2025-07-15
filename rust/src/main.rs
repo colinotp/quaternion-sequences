@@ -206,9 +206,9 @@ fn verify_qts_eq_wts(p : usize) {
 
 fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     match n.as_str() {
-        "XY" => Some(RowsumPairing::XY),
-        "XZ" => Some(RowsumPairing::XZ),
-        "XW" => Some(RowsumPairing::XW),
+        "WX" => Some(RowsumPairing::WX),
+        "WY" => Some(RowsumPairing::WY),
+        "WZ" => Some(RowsumPairing::WZ),
         _ => None
     }
 }
