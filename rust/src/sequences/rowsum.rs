@@ -157,7 +157,7 @@ pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Q
 
     // filtering and adding negated elements
     let mut result = vec![];
-    for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q)).collect::<Vec<Quad>>() {
+    for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q, seqtype.clone())).collect::<Vec<Quad>>() {
         result.push(elm.clone());
         if matches!(seqtype, SequenceType::QuaternionType) && !quad_contains_zero(&elm) && !quad_contains_dup(&elm) {
             let mut nega_elm = elm.clone();
@@ -223,15 +223,41 @@ fn better_than(q1 : &Quad, q2 : &Quad) -> bool {
     }
 }
 
-fn equivalent(quad : &Quad) -> Quad {
+fn equivalent(quad : &Quad, seqtype : SequenceType) -> Quad {
     // finds the representative of the equivalence class that quad belongs to
     let mut final_quad = quad.clone();
 
-    for swaps in [(0,1,2,3), (0,2,1,3), (0,3,1,2), (0,1,1,2), (0,1,1,3), (0,2,1,2), (0,2,2,3), (0,3,1,3), (0,3,2,3), (1,2,2,3), (1,3,2,3)] {
-        let mut test_quad = quad.clone(); // at the start, this is 1 2 3 4
-        swap(&mut test_quad, swaps.0, swaps.1); 
-        swap(&mut test_quad, swaps.2, swaps.3); // 2 1 4 3
-        if better_than(&test_quad, &final_quad) {final_quad = test_quad.clone()}
+    // If 0's are present, any swap is legal, so just sort the quad. Same if seqtype is WS/WTS
+    if !matches!(seqtype, SequenceType::QuaternionType) || quad.0 == 0 || quad.1 == 0 || quad.2 == 0 || quad.3 == 0 {
+        let mut quad_vec = vec![quad.0, quad.1, quad.2, quad.3];
+        for i in 0..3 {
+            
+            // Find smallest element in subarray
+            let mut min_ind = i;
+            for j in (i+1)..4 {
+                if quad_vec[j] < quad_vec[min_ind] {
+                    min_ind = j;
+                }
+            }
+            
+            // If not already at start of subarray, swap
+            if min_ind != i {
+                let temp = quad_vec[i];
+                quad_vec[i] = quad_vec[min_ind];
+                quad_vec[min_ind] = temp;
+            }
+        }
+
+        final_quad = (quad_vec[0], quad_vec[1], quad_vec[2], quad_vec[3])
+    }
+    // Otherwise, iterate over all even perms and take the 'least'
+    else {
+        for swaps in [(0,1,0,1), (0,1,0,2), (0,1,0,3), (0,1,1,2), (0,1,1,3), (0,1,2,3), (0,2,0,3), (0,2,1,3), (0,2,2,3), (0,3,1,2), (1,2,2,3), (1,3,3,2)] {
+            let mut test_quad = quad.clone(); // at the start, this is 1 2 3 4
+            swap(&mut test_quad, swaps.0, swaps.1); 
+            swap(&mut test_quad, swaps.2, swaps.3); // 2 1 4 3
+            if better_than(&test_quad, &final_quad) {final_quad = test_quad.clone()}
+        }
     }
 
     final_quad
