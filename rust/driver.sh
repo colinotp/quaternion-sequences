@@ -11,17 +11,23 @@
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
 	echo "This driver computes sequences for the given length n:"
-	echo "./driver.sh <sequencetype> <n>"
+	echo "./driver.sh <sequencetype> <n> [flags]"
 	echo "Optional flags:"
 	echo "  * -s: Use this flag for SLURM jobs"
 	echo "  * -h: Convert sequences to Hadamard matrices when finished"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
-	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include WX, WY, WZ. Default is WZ"
+	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include WX, WY and WZ (e.g., WX means that the sequences of rowsum W are paired with the sequences of rowsum X). Note that the code follows the convention W <= X <= Y <= Z. Default is WZ"
 	exit 0
 fi
 
 type=$1
 n=$2
+
+if [ -z "$type" ] || [ -z "$n" ]; then
+	echo 'Incorrect args passed. Try running with --help.'
+	exit 1
+fi
+
 shift
 shift
 foldername="./results/pairs/$type/find_$n"
@@ -114,7 +120,7 @@ then
 	exit 1
 fi
 end2=`date +%s`
-echo -e Join function took `expr $end2 - $start2` seconds. "\n\n" >> $filename
+echo -e Join function took: `expr $end2 - $start2` seconds. "\n\n" >> $filename
 
 
 if [ $hadamard = true ]; then
