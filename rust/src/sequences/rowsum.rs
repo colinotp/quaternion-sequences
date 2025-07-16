@@ -161,7 +161,7 @@ pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Q
         result.push(elm.clone());
         if matches!(seqtype, SequenceType::QuaternionType) && !quad_contains_zero(&elm) && !quad_contains_dup(&elm) {
             let mut nega_elm = elm.clone();
-            nega_elm.0 = - nega_elm.0;
+            nega_elm.3 = - nega_elm.3;
             result.push(nega_elm)
         }
     }
