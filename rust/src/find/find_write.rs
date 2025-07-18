@@ -417,7 +417,6 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
             let sequences = get_sequences_from_dir(&directory);
     
             let (pathnames, order) = get_order_from_dir(&directory);
-            println!("Folder {} : sequences have order {order:?}", directory.file_name().into_string().unwrap());
     
             result.append(&mut join_pairs_files(&pathnames, seqtype.clone(), &order, &sequences));
         }
