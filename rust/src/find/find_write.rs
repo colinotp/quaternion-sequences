@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_correlations_dft}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -138,12 +138,12 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     let mut buffer_counter = 0;
 
     // We iterate over the couples of sequences, but we filter out some with the dft checks
-    for ((index0, seq0), (index1, seq1), psd0, psd1) in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
+    for ((index0, seq0), (index1, seq1), dft0, psd0, dft1, psd1) in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
         let mut result = "".to_string();
 
         // We compute the auto and cross correlation values when considered on the other side of the equation
         let autoc_values = compute_auto_correlation_pair_dft(&psd0, seq0.len(), &psd1, seq1.len());
-        let crossc_values = compute_cross_correlations_dft(seq0, seq1, &(tags.0.clone(), tags.1.clone()));
+        let crossc_values = compute_cross_psd_pair(dft0, dft1, &(tags.0.clone(), tags.1.clone()), seq0.len());
 
         // We add these values to the current line
         for a in autoc_values {
@@ -154,11 +154,11 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         match seqtype {
             SequenceType::QuaternionType => {
                 for c in crossc_values {
-                    result += &(op(c).to_string() + &"_");
+                    result += &(op(c.0).to_string() + &"/" + &op(c.1).to_string() + &"_");
                 }
             },
             SequenceType::WilliamsonType => {
-                if crossc_values.into_iter().any(|val| val != 0) {
+                if crossc_values.into_iter().any(|val| val.0 != 0 || val.1 != 0) {
                     continue;
                 }
             },

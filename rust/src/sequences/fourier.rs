@@ -84,7 +84,8 @@ pub fn iter_over_enumerate_filtered_couples<'a>(sequences1 : &'a Vec<Vec<i8>>, s
         })
 }
 
-pub fn iter_over_enumerate_filtered_couples_psds<'a>(sequences1: &'a Vec<Vec<i8>>, sequences2: &'a Vec<Vec<i8>>, bound: f64,) -> impl Iterator<Item = ((usize, &'a Vec<i8>), (usize, &'a Vec<i8>), Vec<f64>, Vec<f64>)> {
+// TODO: Make struct to encapsulate return type
+pub fn iter_over_enumerate_filtered_couples_psds<'a>(sequences1: &'a Vec<Vec<i8>>, sequences2: &'a Vec<Vec<i8>>, bound: f64,) -> impl Iterator<Item = ((usize, &'a Vec<i8>), (usize, &'a Vec<i8>), Vec<Complex<f64>>, Vec<f64>, Vec<Complex<f64>>, Vec<f64>)> {
     let couples = iproduct!(sequences1.iter().enumerate(), sequences2.iter().enumerate());
 
     couples.filter_map(move |(seq_enum1, seq_enum2)| {
@@ -99,7 +100,7 @@ pub fn iter_over_enumerate_filtered_couples_psds<'a>(sequences1: &'a Vec<Vec<i8>
         if bound_exceeded {
             None
         } else {
-            Some((seq_enum1, seq_enum2, norm1, norm2))
+            Some((seq_enum1, seq_enum2, dft1, norm1, dft2, norm2))
         }
     })
 }
