@@ -154,11 +154,11 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         match seqtype {
             SequenceType::QuaternionType => {
                 for c in crossc_values {
-                    result += &(op(c.0).to_string() + &"/" + &op(c.1).to_string() + &"_");
+                    result += &(op(c.norm().round() as isize).to_string() + &"_");
                 }
             },
             SequenceType::WilliamsonType => {
-                if crossc_values.into_iter().any(|val| val.0 != 0 || val.1 != 0) {
+                if crossc_values.into_iter().any(|val| val.re > 0.0001 || val.im > 0.0001) {
                     continue;
                 }
             },

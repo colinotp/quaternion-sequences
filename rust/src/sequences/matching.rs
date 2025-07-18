@@ -134,11 +134,11 @@ pub fn compute_cross_correlations_dft_aux(seq1 : &mut Vec<i8>, seq2 : &mut Vec<i
 }
 
 
-pub fn compute_cross_psd_pair(dft1 : Vec<Complex<f64>>, dft2 : Vec<Complex<f64>>, tags : &(SequenceTag, SequenceTag), len : usize) -> Vec<(isize, isize)> {
+pub fn compute_cross_psd_pair(dft1 : Vec<Complex<f64>>, dft2 : Vec<Complex<f64>>, tags : &(SequenceTag, SequenceTag), len : usize) -> Vec<Complex<f64>> {
     let cross_psd1 = compute_cross_psd(&dft1, &dft2);
     let cross_psd2 = compute_cross_psd(&dft2, &dft1);
 
-    let cross_at_offset : Box<dyn Fn(usize) -> Complex<isize>> = match tags {
+    let cross_at_offset : Box<dyn Fn(usize) -> Complex<f64>> = match tags {
         (SequenceTag::Z, _) | (SequenceTag::W, SequenceTag::X) | (SequenceTag::X, SequenceTag::Y) | (SequenceTag::Y, SequenceTag::W) => {
             Box::new(|offset| cross_psd1[offset] - cross_psd2[offset])
         }
@@ -148,10 +148,10 @@ pub fn compute_cross_psd_pair(dft1 : Vec<Complex<f64>>, dft2 : Vec<Complex<f64>>
         _ => {panic!("incorrect tags entered !")}
     };
 
-    let mut res : Vec<(isize, isize)> = vec![];
+    let mut res : Vec<Complex<f64>> = vec![];
     for offset in 1..=(len/2) {
         let cpsd = cross_at_offset(offset);
-        res.push((cpsd.re, cpsd.im));
+        res.push(cpsd);
     }
     
     res
@@ -159,10 +159,10 @@ pub fn compute_cross_psd_pair(dft1 : Vec<Complex<f64>>, dft2 : Vec<Complex<f64>>
 
 
 // Computes cross-power-spectral-density vector, with real and imaginary components rounded to the nearest integer
-pub fn compute_cross_psd(dft1 : &Vec<Complex<f64>>, dft2 : &Vec<Complex<f64>>) -> Vec<Complex<isize>> {
+pub fn compute_cross_psd(dft1 : &Vec<Complex<f64>>, dft2 : &Vec<Complex<f64>>) -> Vec<Complex<f64>> {
     dft1.into_iter().zip(dft2.into_iter()).map(|(elm1, elm2)| {
         let product = elm1 * elm2.conj();
-        Complex::new(product.re.round() as isize, product.im.round() as isize)
+        Complex::new(product.re, product.im)
     }).collect()
 }
 
