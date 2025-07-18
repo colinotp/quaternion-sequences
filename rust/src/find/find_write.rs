@@ -418,6 +418,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     
             let (pathnames, order) = get_order_from_dir(&directory);
     
+            println!("Matching files in {:?}", directory.file_name());
             result.append(&mut join_pairs_files(&pathnames, seqtype.clone(), &order, &sequences));
         }
     }
@@ -565,11 +566,14 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
 
     let (file12, file34) = filenames;
 
-    let mut lines12 = read_lines(file12).expect("Invalid vile somehow ?");
-    let mut lines34 = read_lines(file34).expect("Invalid vile somehow ?");
+    let mut lines12 = read_lines(file12).expect("Invalid file somehow ?");
+    let mut lines34 = read_lines(file34).expect("Invalid file somehow ?");
 
     let mut line12 = lines12.next();
     let mut line34 = lines34.next();
+
+    // Count the number of matches made (including extraneous matches)
+    let mut matches = 0;
 
     while line12.is_some() && line34.is_some() {
         // We loop until there's no more lines to read
@@ -584,6 +588,7 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
             let mut possible_matching_12 = vec![];
             while line12.is_some() && current_seq == seq12 {
                 possible_matching_12.push(indices12);
+                matches += 1;
                 (seq12, indices12) = get_line_from(&line12);
                 line12 = lines12.next();
             }
@@ -592,6 +597,7 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
             let mut possible_matching_34 = vec![];
             while line34.is_some() && current_seq == seq34 {
                 possible_matching_34.push(indices34);
+                matches += 1;
                 (seq34, indices34) = get_line_from(&line34);
                 line34 = lines34.next();
             }
@@ -623,6 +629,8 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
         }
 
     }
+
+    println!("Matches found in {:?} and {:?}: {}\n", file12.split("/").last().expect("Filename read error"), file34.split("/").last().expect("Filename read error"), matches);
 
     result
 }
