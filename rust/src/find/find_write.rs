@@ -138,12 +138,12 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     let mut buffer_counter = 0;
 
     // We iterate over the couples of sequences, but we filter out some with the dft checks
-    for ((index0, seq0), (index1, seq1), dft0, psd0, dft1, psd1) in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
+    for pair in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
         let mut result = "".to_string();
 
         // We compute the auto and cross correlation values when considered on the other side of the equation
-        let autoc_values = compute_auto_correlation_pair_dft(&psd0, seq0.len(), &psd1, seq1.len());
-        let crossc_values = compute_cross_psd_pair(dft0, dft1, &(tags.0.clone(), tags.1.clone()), seq0.len());
+        let autoc_values = compute_auto_correlation_pair_dft(&pair.norm1, pair.seq_enum1.1.len(), &pair.norm2, pair.seq_enum2.1.len());
+        let crossc_values = compute_cross_psd_pair(pair.dft1, pair.dft2, &(tags.0.clone(), tags.1.clone()), pair.seq_enum1.1.len());
 
         // We add these values to the current line
         for a in autoc_values {
@@ -171,7 +171,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
             result += &"_";
         }
 
-        result += &(":_".to_string() + &index0.to_string() + "_" + &index1.to_string() + &"\n");
+        result += &(":_".to_string() + &pair.seq_enum1.0.to_string() + "_" + &pair.seq_enum2.0.to_string() + &"\n");
 
         buffer += &result;
         buffer_counter += 1;
