@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use num_complex::Complex;
 
-use crate::sequences::{fourier::{dft_sequence, inverse_dft, iter_over_filtered_couples}, sequence::{transpose, seq_multiply_pointwise_complex}};
+use crate::sequences::{fourier::{inverse_dft, iter_over_filtered_couples}, sequence::seq_multiply_pointwise_complex};
 
 use super::williamson::{SequenceTag, periodic_autocorrelation, cross_correlation};
 
