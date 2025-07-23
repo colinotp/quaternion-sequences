@@ -2,7 +2,7 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{fourier::dft_sequence, matching::{compute_auto_correlation, compute_auto_correlation_dft, compute_auto_correlation_pair, compute_auto_correlation_pair_dft, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, compute_cross_correlations_dft_aux, verify_cross_correlation}, symmetries::SequenceType, williamson::cross_correlation}};
+    use crate::{find::{find_with_rowsum::sort, find_write::join_pairs}, sequences::{fourier::dft_sequence, matching::{compute_auto_correlation, compute_auto_correlation_dft, compute_auto_correlation_pair, compute_auto_correlation_pair_dft, compute_complementary_auto_correlations, compute_complementary_cross_correlations, compute_cross_correlations, verify_cross_correlation}, symmetries::SequenceType}};
     use crate::sequences::williamson::SequenceTag;
 
 
