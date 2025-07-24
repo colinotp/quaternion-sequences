@@ -112,9 +112,7 @@ pub fn compute_cross_correlations_dft(dft1 : &Vec<Complex<f64>>, dft2 : &Vec<Com
     };
 
     let mut res : Vec<isize> = vec![];
-    println!("DEBUG: len/2 = {}", len/2);
     for offset in 1..=(len/2) {
-        println!("DEBUG: Pushing {}", cross_at_offset(offset).round() as isize);
         res.push(cross_at_offset(offset).round() as isize);
     }
     
