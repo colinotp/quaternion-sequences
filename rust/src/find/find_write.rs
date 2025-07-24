@@ -583,12 +583,10 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
         
         let current_seq = seq12.clone();
         if seq12 == seq34 {
-
             // Store every sequence with the same values of auto/cross correlation
             let mut possible_matching_12 = vec![];
             while line12.is_some() && current_seq == seq12 {
                 possible_matching_12.push(indices12);
-                matches += 1;
                 (seq12, indices12) = get_line_from(&line12);
                 line12 = lines12.next();
             }
@@ -597,13 +595,13 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
             let mut possible_matching_34 = vec![];
             while line34.is_some() && current_seq == seq34 {
                 possible_matching_34.push(indices34);
-                matches += 1;
                 (seq34, indices34) = get_line_from(&line34);
                 line34 = lines34.next();
             }
 
             // Loop through the possible matches
             for ((i1, i2),(i3, i4)) in iproduct!(possible_matching_12, possible_matching_34) {
+                matches+=1;
                 let indices = (i1, i2, i3, i4);
                 // test if the sequence is of type seqtype, add them to the result files if it is
                 let sequences = get_sequences(sequences, order, &indices);
