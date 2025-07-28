@@ -128,6 +128,8 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     let path = folder_path.clone() + &"/pair_" + &tag_to_string(&tags.0) + &tag_to_string(&tags.1) + ".pair";
     let mut f = File::create(path).expect("Invalid file ?");
 
+    let f32_tolerance : f32 = f32::EPSILON.sqrt();
+
     let op = match side {
         EquationSide::LEFT => {|x : isize| x}
         EquationSide::RIGHT => {|x : isize| -x}
@@ -154,6 +156,9 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         match seqtype {
             SequenceType::QuaternionType => {
                 for c in crossc_values {
+                    if (c.norm().fract() - 0.5).abs() < f32_tolerance.into() {
+                        println!("WARNING: Cross correlation values approximate half-integer");
+                    }
                     result += &(op(c.norm().round() as isize).to_string() + &"_");
                 }
             },
