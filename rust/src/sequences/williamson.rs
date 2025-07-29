@@ -340,6 +340,15 @@ impl ToString for QuadSeq{
     
 }
 
+impl IntoIterator for QuadSeq {
+    type Item = i8;
+    type IntoIter = Chain<Chain<Chain<IntoIter<i8>, IntoIter<i8>>, IntoIter<i8>>, IntoIter<i8>>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.sequence(SequenceTag::W).into_iter().chain(self.sequence(SequenceTag::X).into_iter()).chain(self.sequence(SequenceTag::Y).into_iter()).chain(self.sequence(SequenceTag::Z).into_iter())
+    }
+}
+
 
 pub fn seq_less_than(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> bool {
 
