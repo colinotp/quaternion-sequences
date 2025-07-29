@@ -4,6 +4,8 @@ use crate::sequences::{equivalence::generate_equivalence_class, symmetries::Sequ
 
 use super::sequence::{QS, QPLUS, Q24};
 
+use std::{iter::Chain, vec::IntoIter};
+
 
 #[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Hash, Debug)]
 pub enum SequenceTag { // enum for choosing a specific sequence
