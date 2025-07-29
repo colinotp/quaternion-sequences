@@ -279,6 +279,9 @@ impl QuadSeq{
         qs
     }
 
+    pub fn to_string_raw(&self) -> String {
+        format!("{:?}\n{:?}\n{:?}\n{:?}", self.sequence(SequenceTag::W), self.sequence(SequenceTag::X), self.sequence(SequenceTag::Y), self.sequence(SequenceTag::Z))
+    }
 }
 
 
