@@ -120,7 +120,7 @@ pub fn will_less_than(will1 : &QuadSeq, will2 : &QuadSeq) -> bool {
 // * Functions to treat the equivalences
 
 pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType) -> QuadSeq{
-    let set = generate_equivalence_class(seq, seqtype);
+    let set = generate_equivalence_class(seq, seqtype, false);
     let mut mini = seq.clone();
     for elm in set {
         if will_less_than(&elm, &mini) {
@@ -133,7 +133,7 @@ pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType)
 
 
 
-pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // This function generates the equivalence class that seq belongs to
     
     let mut class = HashSet::new();
@@ -144,13 +144,12 @@ pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType) -> Has
 
         for seq in &class {
             for equivalence in seqtype.equivalences() {
-                for equ in equivalence(&seq, seqtype.clone()).into_iter() {
+                for equ in equivalence(&seq, seqtype.clone(), symmetry_group).into_iter() {
                     if !class.contains(&equ) {
                         new.insert(equ);
                     }
                 }
             }
-
         }
 
 
@@ -165,6 +164,65 @@ pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType) -> Has
     class
 }
 
+// Generates symbolic symmetry group for sequences of a given length and type
+pub fn generate_symmetry_group(len : usize, seqtype : SequenceType) -> HashSet<QuadSeq> {
+    let w1 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + 1) as i8).collect();
+    let w2 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + len + 1) as i8).collect();
+    let w3 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + (2 * len) + 1) as i8).collect();
+    let w4 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + (3 * len) + 1) as i8).collect();
+
+    let mut w = QuadSeq::new(len);
+    w.set_all_values((&w1, &w2, &w3, &w4));
+    
+    println!("FIXME: Asserts will cause this to panic if turned on. Move the asserts to generate_equivalence_class_fast, since generate_equivalence_class is only used for w_sym.");
+    eprintln!("FIXME: Asserts will cause this to panic if turned on. Move the asserts to generate_equivalence_class_fast, since generate_equivalence_class is only used for w_sym.");
+    generate_equivalence_class(&w, seqtype.clone(), true)
+}
+
+// Generates equivalence class for a sequence using its symmetry group
+pub fn generate_equivalence_class_fast(seq : QuadSeq, symmetries : &HashSet<QuadSeq>) -> HashSet<QuadSeq> {
+    let mut class = HashSet::new();
+    let n = seq.size();
+
+    // Iterate over symmetries
+    for symmetry in symmetries {
+        let mut result = QuadSeq::new(n);
+        let mut res_vec = vec![];
+
+        for elm in symmetry.clone().into_iter() {
+            // Which sequence is elm referring to? (0 => W, 1 => X, etc.)
+            let tag_ind = (elm.abs() - 1 - (((elm.abs() as usize - 1) % n) as i8)) as usize / n;
+            let sub_seq = match tag_ind {
+                0 => {seq.sequence(SequenceTag::W)},
+                1 => {seq.sequence(SequenceTag::X)},
+                2 => {seq.sequence(SequenceTag::Y)},
+                3 => {seq.sequence(SequenceTag::Z)},
+                _ => {panic!("Invalid sequence index {}", tag_ind)}
+            };
+
+            // Index within the subsequence
+            let seq_ind = elm.abs() as usize % n;
+
+
+            if elm < 0 {
+                res_vec.push(-sub_seq[seq_ind] as i8);
+            }
+            else {
+                res_vec.push(sub_seq[seq_ind] as i8);
+            }
+        }
+
+        result.set_sequence(&res_vec[0..n].to_vec(), &SequenceTag::W);
+        result.set_sequence(&res_vec[n..(2*n)].to_vec(), &SequenceTag::X);
+        result.set_sequence(&res_vec[(2*n)..(3*n)].to_vec(), &SequenceTag::Y);
+        result.set_sequence(&res_vec[(3*n)..(4*n)].to_vec(), &SequenceTag::Z);
+        class.insert(result);
+    }
+
+    class
+}
+
+
 
 pub fn generate_equivalent_quad_seqs(quad_seq_list : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
 
@@ -175,7 +233,7 @@ pub fn generate_equivalent_quad_seqs(quad_seq_list : &Vec<QuadSeq>, seqtype : Se
             continue;
         }
 
-        let class = generate_equivalence_class(quad_seq, seqtype.clone());
+        let class = generate_equivalence_class(quad_seq, seqtype.clone(), false);
         for elm in class {
             result.insert(elm);
         }
@@ -205,7 +263,7 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
 }
 
 // Applies a single swap and a single negation
-pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
     let (a,b,c,d) = seq.sequences();
@@ -225,7 +283,12 @@ pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType) -> HashSet
             }
 
             swap(&mut new_seq, couple.0.clone(), couple.1.clone());
-            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), tag_to_string(&couple.0) + &tag_to_string(&couple.1), tag_to_string(&tag));
+
+            // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+            if !symmetry_group {
+                debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), tag_to_string(&couple.0) + &tag_to_string(&couple.1), tag_to_string(&tag));
+            }
+            
             res.insert(new_seq);
         }
     }
@@ -234,7 +297,7 @@ pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType) -> HashSet
 }
 
 // Reorder the sequences A, B, C, D in any way
-pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by reordering, one swap at a time
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
@@ -246,7 +309,11 @@ pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Qua
         
         swap(&mut new_seq, couple.0, couple.1);
 
-        debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_reorder function produced invalid {}", seqtype.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_reorder function produced invalid {}", seqtype.to_string());
+        }
+        
         res.insert(new_seq);
     }
 
@@ -254,7 +321,7 @@ pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Qua
 }
 
 // Swap any two pairs of A, B, C, D
-pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by reordering, two swaps at a time
 
     let mut res : HashSet<QuadSeq> = HashSet::new();
@@ -272,7 +339,11 @@ pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType) -> Hash
             swap(&mut new_seq, seq21, seq22);
         }
 
-        debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+        }
+        
 
         res.insert(new_seq);
     
@@ -282,7 +353,7 @@ pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType) -> Hash
 }
 
 // If n is even, cyclically shift all the entries in any of A, B, C, or D by an offset of n/2
-pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes equivalent sequences by shifting a single sequence by half length (assuming sequence is even length)
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
@@ -300,7 +371,11 @@ pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType) -> 
             s.set_single_value(tag_seq[(index + offset) % seq.size()], &tag, index);
         }
 
-        debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_half_shift function produced invalid {}", seqtype.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_half_shift function produced invalid {}", seqtype.to_string());
+        }
+        
         res.insert(s);
     }
 
@@ -309,7 +384,7 @@ pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType) -> 
 }
 
 // Cyclically shift all the entries of A, B, C, and D simultaneously by any amount
-pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by shift
 
     let mut res : HashSet<QuadSeq> = HashSet::new();
@@ -321,7 +396,11 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType) -> HashS
             s.set_sequence_value(&seq.values((index + offset) % seq.size()), index)
         }
 
-        debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_shift function produced invalid {}", seqtype.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_shift function produced invalid {}", seqtype.to_string());
+        }
+        
         res.insert(s);
     }
 
@@ -329,7 +408,7 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType) -> HashS
 }
 
 // Reverse every sequence simultaneously
-pub fn equivalent_reverse(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_reverse(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by shift
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
@@ -338,7 +417,12 @@ pub fn equivalent_reverse(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Qua
     for index in 0..seq.size() {
         s.set_sequence_value(&seq.values(seq.size() - 1 - index), index)
     }
-    debug_assert!(s.verify(seqtype.clone()), "equivalent_reverse function produced invalid {}", seqtype.to_string());
+
+    // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+    if !symmetry_group {
+        debug_assert!(s.verify(seqtype.clone()), "equivalent_reverse function produced invalid {}", seqtype.to_string());
+    }
+    
     res.insert(s);
 
     res
@@ -370,7 +454,7 @@ pub fn alt_negated(seq : &Vec<i8>, frequency : usize) -> Vec<i8> {
 }
 
 // Negate all the entries of any of A, B, C, or D
-pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by negation of any sequence
     let (a,b,c,d) = seq.sequences();
     let (nega_a,nega_b,nega_c,nega_d) = (negated(&a), negated(&b), negated(&c), negated(&d));
@@ -388,7 +472,11 @@ pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Quad
         let mut new_seq = QuadSeq::new(seq.size());
         new_seq.set_all_values(quad);
 
-        debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate function produced invalid {}", seqtype.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate function produced invalid {}", seqtype.to_string());
+        }
+        
         res.insert(new_seq);
     }
 
@@ -396,7 +484,7 @@ pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<Quad
 }
 
 // Negate any two sequences of A, B, C, or D
-pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by negation of two sequences
 
     let (a,b,c,d) = seq.sequences();
@@ -419,7 +507,11 @@ pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashS
         let mut s = QuadSeq::new(seq.size());
         s.set_all_values(quad);
 
-        debug_assert!(s.verify(seqtype.clone()), "equivalent_double_negate function produced invalid {}. Original: {}\nNew: {}", seqtype.to_string(), seq.to_string(), s.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(s.verify(seqtype.clone()), "equivalent_double_negate function produced invalid {}. Original: {}\nNew: {}", seqtype.to_string(), seq.to_string(), s.to_string());
+        }
+        
         res.insert(s);
     }
 
@@ -427,7 +519,7 @@ pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType) -> HashS
 }
 
 // Multiply every other element of A, B, C, and D by -1 simultaneously
-pub fn equivalent_alternated_negation(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_alternated_negation(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     let frequency = 2;
 
     let (a,b,c,d) = seq.sequences();
@@ -440,7 +532,11 @@ pub fn equivalent_alternated_negation(seq : &QuadSeq, seqtype : SequenceType) ->
     let mut s = QuadSeq::new(seq.size());
     s.set_all_values(quads);
 
-    debug_assert!(s.verify(seqtype.clone()), "equivalent_alternated_negation function produced invalid {}", seqtype.to_string());
+    // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+    if !symmetry_group {
+        debug_assert!(s.verify(seqtype.clone()), "equivalent_alternated_negation function produced invalid {}", seqtype.to_string());
+    }
+    
     res.insert(seq.clone());
     res.insert(s);
 
@@ -448,7 +544,7 @@ pub fn equivalent_alternated_negation(seq : &QuadSeq, seqtype : SequenceType) ->
 }
 
 // If n is even, multiply every other element of A, B, C, and D by -1 simultaneously
-pub fn equivalent_even_alternated_negation(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_even_alternated_negation(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
 
@@ -465,7 +561,11 @@ pub fn equivalent_even_alternated_negation(seq : &QuadSeq, seqtype : SequenceTyp
     let mut s = QuadSeq::new(seq.size());
     s.set_all_values(quads);
 
-    debug_assert!(s.verify(seqtype.clone()), "equivalent_even_alternated_negation function produced invalid {}", seqtype.to_string());
+    // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+    if !symmetry_group {
+        debug_assert!(s.verify(seqtype.clone()), "equivalent_even_alternated_negation function produced invalid {}", seqtype.to_string());
+    }
+    
     res.insert(seq.clone());
     res.insert(s);
 
@@ -494,7 +594,7 @@ fn permute(seq : &Vec<i8>, coprime : usize) -> Vec<i8> {
 
 
 // Apply an automorphism of the cyclic group C_n to all the indices of the entries of each of A, B, C, and D simultaneously
-pub fn equivalent_automorphism(seq : &QuadSeq, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn equivalent_automorphism(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     // computes all equivalent sequences by permutation
 
     let mut res : HashSet<QuadSeq> = HashSet::new();
@@ -511,7 +611,11 @@ pub fn equivalent_automorphism(seq : &QuadSeq, seqtype : SequenceType) -> HashSe
 
         will.set_all_values(quad);
 
-        debug_assert!(will.verify(seqtype.clone()), "equivalent_automorphism function produced invalid {}", seqtype.to_string());
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(will.verify(seqtype.clone()), "equivalent_automorphism function produced invalid {}", seqtype.to_string());
+        }
+        
         res.insert(will);
 
     }

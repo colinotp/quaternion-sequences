@@ -68,7 +68,7 @@ pub fn find(size : usize) -> String{
             }
         }
         if new_seq {
-            let new_class = generate_equivalence_class(&seq, SequenceType::QuaternionType);
+            let new_class = generate_equivalence_class(&seq, SequenceType::QuaternionType, false);
             classes.push(new_class);
         }
     }
@@ -134,7 +134,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
             }
         }
         if new_seq {
-            let new_class = generate_equivalence_class(&seq, seqtype.clone());
+            let new_class = generate_equivalence_class(&seq, seqtype.clone(), false);
             classes.push(new_class);
         }
     }

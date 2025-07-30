@@ -9,6 +9,29 @@ mod tests {
     use crate::read_lines;
 
     #[test]
+    #[ignore]
+    fn test_equiv() {
+        let a = vec![-1,-1,-1];
+        let b = vec![-1,-1,1];
+        let c = vec![-1,-1,1];
+        let d = vec![-1,-1,1];
+
+        let mut qs = QuadSeq::new(3);
+        qs.set_all_values((&a, &b, &c, &d));
+
+        let symmetries = generate_symmetry_group(3, SequenceType::QuaternionType);
+        let equiv = generate_equivalence_class_fast(qs.clone(), &symmetries);
+        let equiv_old = generate_equivalence_class(&qs, SequenceType::QuaternionType, false);
+
+        for elm in equiv.clone() {
+            assert!(equiv_old.contains(&elm), "New fn returns seq not found in unoptimized build: {}", elm.to_string());
+        }
+        for elm in equiv_old.clone() {
+            assert!(equiv.contains(&elm), "Old fn returns seq not found in optimized build: {}", elm.to_string());
+        }
+    }
+
+    #[test]
     fn test_coprime() {
         assert!(coprime(5,7));
         assert!(!coprime(16,12));
@@ -35,7 +58,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_double_reorder(&will, SequenceType::QuaternionType);
+        let equivalent = equivalent_double_reorder(&will, SequenceType::QuaternionType, false);
         assert_eq!(equivalent.len(), 24);
 
         for seq in equivalent {
@@ -58,7 +81,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_uniform_shift(&will, SequenceType::QuaternionType);
+        let equivalent = equivalent_uniform_shift(&will, SequenceType::QuaternionType, false);
         assert!(equivalent.len() == 10);
 
         for seq in equivalent {
@@ -81,7 +104,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_double_negate(&will, SequenceType::QuaternionType);
+        let equivalent = equivalent_double_negate(&will, SequenceType::QuaternionType, false);
         assert!(equivalent.len() == 16);
 
         for seq in equivalent {
@@ -102,7 +125,7 @@ mod tests {
         let mut qts = QuadSeq::new(size);
         qts.set_all_values((&x,&y,&z,&w));
 
-        let equivalent = equivalent_negate_swap(&qts, SequenceType::QuaternionType);
+        let equivalent = equivalent_negate_swap(&qts, SequenceType::QuaternionType, false);
         for seq in equivalent {
             println!("{}", seq.to_qs().to_string_raw());
             assert!(seq.to_qs().is_perfect());
@@ -121,7 +144,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_even_alternated_negation(&will, SequenceType::QuaternionType);
+        let equivalent = equivalent_even_alternated_negation(&will, SequenceType::QuaternionType, false);
         assert!(equivalent.len() == 2);
 
         for seq in equivalent {
@@ -141,7 +164,7 @@ mod tests {
     
         if index >= will.search_size(){
             if will.to_qs().is_perfect() {
-                let equivalent = generate_equivalence_class(&will, SequenceType::QuaternionType);
+                let equivalent = generate_equivalence_class(&will, SequenceType::QuaternionType, false);
                 for seq in equivalent {
                     assert!(seq.to_qs().is_perfect());
                 }
@@ -179,7 +202,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        let equivalent = equivalent_automorphism(&will, SequenceType::QuaternionType);
+        let equivalent = equivalent_automorphism(&will, SequenceType::QuaternionType, false);
         // assert_eq!(equivalent.len(), factorial(size));
 
         for seq in equivalent {
@@ -201,7 +224,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        for elm in generate_equivalence_class(&will, SequenceType::QuaternionType) {
+        for elm in generate_equivalence_class(&will, SequenceType::QuaternionType, false) {
             println!("{}", elm.to_qs().to_string_raw());
             assert!(elm.to_qs().is_perfect());
         }
@@ -249,7 +272,7 @@ mod tests {
             let mut total = vec![];
 
             for seq in sequences {
-                let mut v = generate_equivalence_class(&seq, SequenceType::QuaternionType).into_iter().collect();
+                let mut v = generate_equivalence_class(&seq, SequenceType::QuaternionType, false).into_iter().collect();
                 total.append(&mut v);
             }
 

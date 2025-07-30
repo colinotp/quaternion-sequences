@@ -249,7 +249,7 @@ impl QuadSeq{
 
     // Checks if self is equivalent to another sequence
     pub fn equivalent_to(&self, quad_seq : QuadSeq, seqtype : SequenceType) -> bool {
-        generate_equivalence_class(&self, seqtype).contains(&quad_seq)
+        generate_equivalence_class(&self, seqtype, false).contains(&quad_seq)
     }
 
     pub fn to_qs(&self) -> QS {
