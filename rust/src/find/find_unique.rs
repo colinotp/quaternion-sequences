@@ -3,7 +3,7 @@
 use std::collections::HashSet;
 
 
-use crate::sequences::{equivalence::{generate_equivalence_class, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
+use crate::sequences::{equivalence::{generate_equivalence_class, generate_equivalence_class_fast, generate_symmetry_group, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
 
 
 
@@ -124,6 +124,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
     // This function reduces a set of QTS up to the Sequence equivalence defined in our paper
     
     let mut classes : Vec<HashSet<QuadSeq>> = vec![];
+    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype.clone());
 
     for seq in sequences {
         let mut new_seq = true;
@@ -134,7 +135,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
             }
         }
         if new_seq {
-            let new_class = generate_equivalence_class(&seq, seqtype.clone(), false);
+            let new_class = generate_equivalence_class_fast(seq, &symmetry_group);
             classes.push(new_class);
         }
     }

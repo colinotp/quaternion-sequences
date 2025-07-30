@@ -174,13 +174,11 @@ pub fn generate_symmetry_group(len : usize, seqtype : SequenceType) -> HashSet<Q
     let mut w = QuadSeq::new(len);
     w.set_all_values((&w1, &w2, &w3, &w4));
     
-    println!("FIXME: Asserts will cause this to panic if turned on. Move the asserts to generate_equivalence_class_fast, since generate_equivalence_class is only used for w_sym.");
-    eprintln!("FIXME: Asserts will cause this to panic if turned on. Move the asserts to generate_equivalence_class_fast, since generate_equivalence_class is only used for w_sym.");
     generate_equivalence_class(&w, seqtype.clone(), true)
 }
 
 // Generates equivalence class for a sequence using its symmetry group
-pub fn generate_equivalence_class_fast(seq : QuadSeq, symmetries : &HashSet<QuadSeq>) -> HashSet<QuadSeq> {
+pub fn generate_equivalence_class_fast(seq : &QuadSeq, symmetries : &HashSet<QuadSeq>) -> HashSet<QuadSeq> {
     let mut class = HashSet::new();
     let n = seq.size();
 

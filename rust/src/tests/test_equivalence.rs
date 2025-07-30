@@ -20,7 +20,7 @@ mod tests {
         qs.set_all_values((&a, &b, &c, &d));
 
         let symmetries = generate_symmetry_group(3, SequenceType::QuaternionType);
-        let equiv = generate_equivalence_class_fast(qs.clone(), &symmetries);
+        let equiv = generate_equivalence_class_fast(&qs, &symmetries);
         let equiv_old = generate_equivalence_class(&qs, SequenceType::QuaternionType, false);
 
         for elm in equiv.clone() {
