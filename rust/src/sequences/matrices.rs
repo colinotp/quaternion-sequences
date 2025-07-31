@@ -159,6 +159,7 @@ impl HM {
         hm
     }
 
+    // Forms HM from QuadSeq 
     pub fn from_williamson(will : &QuadSeq, seqtype : SequenceType) -> HM {
 
         let size = will.size();
@@ -195,9 +196,9 @@ impl HM {
     }
 
 
-
+    // Inserts a block matrix into self with upper-leftmost index at row_offset, col_offset
+    // OpMat for applying operations to block when inserting (e.g, insert -X transpose)
     pub fn copy_block_to(&mut self, block : &HM, row_offset : usize, col_offset : usize, opmat : &OpMat) { 
-
         for row in 0..block.size {
             for col in 0..block.size {
                 self.matrix[row + row_offset][col + col_offset] = block.get_with_op_mat(row, col, opmat)
