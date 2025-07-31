@@ -55,7 +55,7 @@ pub fn quaternion_to_quad(quat : &Quaternion<f32>) -> (i8, i8, i8, i8) {
 
 
 
-#[derive(Clone, PartialEq, Eq, Hash)]
+#[derive(Clone, PartialEq, Eq, Hash, Debug)]
 pub struct QuadSeq {
     size : usize,
     a: Vec<i8>,

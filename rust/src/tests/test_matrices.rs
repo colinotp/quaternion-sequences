@@ -5,7 +5,21 @@ mod tests {
 
     use crate::sequences::{sequence::QS, matrices::{QHM, HM, OpMat}, williamson::QuadSeq, symmetries::SequenceType, matrix_equivalence::reduce_to_hadamard_equivalence, equivalence::generate_equivalent_quad_seqs};
 
+    #[test]
+    fn test_qts_from_hm() {
+        let mut qts = QuadSeq::new(3);
+        let w = vec![-1,-1,-1];
+        let x = vec![-1,-1,1];
+        let y = vec![-1,-1,1];
+        let z = vec![-1,-1,1];
+        qts.set_all_values((&w, &x, &y, &z));
 
+        let hm = HM::from_williamson(&qts, SequenceType::QuaternionType);
+
+        let qts_new = hm.get_qts();
+
+        assert_eq!(qts, qts_new);
+    }
 
     #[test]
     fn matrix_from_pqs() {

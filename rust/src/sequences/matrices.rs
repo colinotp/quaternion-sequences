@@ -114,7 +114,7 @@ impl QHM {
 }
 
 
-#[derive(PartialEq, Eq, Hash, Clone)]
+#[derive(PartialEq, Eq, Hash, Clone, Debug)]
 pub struct HM {
     size : usize,
     matrix : Vec<Vec<i8>>
@@ -204,9 +204,20 @@ impl HM {
                 self.matrix[row + row_offset][col + col_offset] = block.get_with_op_mat(row, col, opmat)
             }
         }
+    }
 
+    pub fn get_qts(&self) -> QuadSeq {
+        let len = self.size() / 4;
+        let mut qts = QuadSeq::new(len);
 
+        let seq_w : Vec<i8> = (0..len).map(|i| self.get(0, i)).collect();
+        let seq_x : Vec<i8> = (0..len).map(|i| self.get(len, i)).collect();
+        let seq_y : Vec<i8> = (0..len).map(|i| self.get(2*len, i)).collect();
+        let seq_z : Vec<i8> = (0..len).map(|i| self.get(3*len, i)).collect();
 
+        qts.set_all_values((&seq_w, &seq_x, &seq_y, &seq_z));
+
+        qts
     }
 
     fn get_with_op_mat(&self, row : usize, col : usize, opmat : &OpMat) -> i8 {
