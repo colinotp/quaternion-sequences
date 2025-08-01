@@ -1,9 +1,9 @@
-use std::{path::Path, fs::File, io::Write, env, collections::{HashMap}};
+use std::{collections::HashMap, env, fs::File, io::Write, path::Path, time::Instant};
 
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
-use crate::{sequences::{equivalence::generate_equivalent_quad_seqs, williamson::QuadSeq, symmetries::SequenceType}, read_lines};
+use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{equivalence::generate_equivalent_quad_seqs, symmetries::SequenceType, williamson::QuadSeq}};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -83,15 +83,23 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         
     }
 
-    let all = generate_equivalent_quad_seqs(&quad_seq_list, seqtype);
-
-    println!("generated all sequences");
+    let all = generate_equivalent_quad_seqs(&quad_seq_list, seqtype.clone());
+    let all_size = all.len();
 
     for elm in &all {
         assert!(elm.to_qs().is_perfect());
     }
 
-    let canon_reps : HashMap<CanonLabeling, HM> = all.par_iter().map(|seq| {
+    println!("Generated all {} including equivalent sequences", seqtype.to_string());
+
+    // Filter via equivalence operations
+    let time = Instant::now();
+    let reduced = reduce_to_equivalence(&all, SequenceType::Hadamard);
+    let elapsed = time.elapsed().as_secs_f32().round() as usize;
+    println!("Filtering via equivalence operations took {} seconds and filtered out {} sequences", elapsed, all_size - reduced.len());
+
+    // Fully reduce via graph isomorphism checking
+    let canon_reps : HashMap<CanonLabeling, HM> = reduced.par_iter().map(|seq| {
         let hmat = HM::from_williamson(seq, SequenceType::QuaternionType);
         (canon_hm(&hmat), hmat)
     }).collect();

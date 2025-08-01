@@ -621,3 +621,37 @@ pub fn equivalent_automorphism(seq : &QuadSeq, seqtype : SequenceType, symmetry_
 
     res
 }
+
+
+// Applies hadamard equivalence operation of two disjoint swaps
+pub fn equivalent_disjoint_swaps(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
+    let mut res : HashSet<QuadSeq> = HashSet::new();
+    res.insert(seq.clone());
+
+    // Since the two swaps are disjoint, they can be uniquely described by only a pair of sequences
+    let couples = [(SequenceTag::W, SequenceTag::X), (SequenceTag::W, SequenceTag::Y), (SequenceTag::W, SequenceTag::Z)];
+
+    for couple in couples {
+        let mut new_seq = seq.clone();
+        
+        let (seq11, seq12) = couple;
+        let (seq21, seq22) = match couple {
+            (SequenceTag::W, SequenceTag::X) => (SequenceTag::Y, SequenceTag::Z),
+            (SequenceTag::W, SequenceTag::Y) => (SequenceTag::X, SequenceTag::Z),
+            (SequenceTag::W, SequenceTag::Z) => (SequenceTag::X, SequenceTag::Y),
+            _ => {panic!("Invalid couple")}
+        };
+
+        swap(&mut new_seq, seq11, seq12);
+        swap(&mut new_seq, seq21, seq22);
+
+        // Don't want to verify sequence properties of symmetry groups, as they will not meet them
+        if !symmetry_group {
+            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+        }
+
+        res.insert(new_seq);
+    }
+
+    res
+}

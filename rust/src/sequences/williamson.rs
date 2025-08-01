@@ -7,7 +7,7 @@ use super::sequence::{QS, QPLUS, Q24};
 use std::{iter::Chain, vec::IntoIter};
 
 
-#[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Hash, Debug)]
+#[derive(Eq, PartialEq, PartialOrd, Ord, Clone, Hash, Debug, Copy)]
 pub enum SequenceTag { // enum for choosing a specific sequence
     W, X, Y, Z
 }
@@ -171,6 +171,7 @@ impl QuadSeq{
             SequenceType::QuaternionType => {self.verify_qts()},
             SequenceType::WilliamsonType => {self.verify_wts()},
             SequenceType::Williamson => {self.verify_ws()},
+            SequenceType::Hadamard => {self.verify_qts()},
             _ => {false}
         }
     }

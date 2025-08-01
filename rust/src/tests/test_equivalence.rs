@@ -31,6 +31,25 @@ mod tests {
     }
 
     #[test]
+    fn test_disjoint_swap() {
+        let a = vec![-1,-1,-1];
+        let b = vec![-1,-1,1];
+        let c = vec![-1,1,-1];
+        let d = vec![-1,1,1];
+
+        let mut qs = QuadSeq::new(3);
+        qs.set_all_values((&a, &b, &c, &d));
+
+        let h_equ = equivalent_disjoint_swaps(&qs, SequenceType::Hadamard, false);
+        println!("Orig seq:\n{}\nEquivalence class:", qs.to_string());
+        for seq in h_equ.clone() {
+            println!("{}", seq.to_string());
+        }
+
+        assert_eq!(h_equ.len(), 4);
+    }
+
+    #[test]
     fn test_coprime() {
         assert!(coprime(5,7));
         assert!(!coprime(16,12));
