@@ -9,7 +9,6 @@ mod tests {
     use crate::read_lines;
 
     #[test]
-    #[ignore]
     fn test_equiv() {
         let a = vec![-1,-1,-1];
         let b = vec![-1,-1,1];
