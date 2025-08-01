@@ -72,7 +72,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         seqs.push(QS::from_str(&line.to_string()));
     }
 
-    let quad_seq_list : Vec<QuadSeq> = seqs.iter().map(|s| QuadSeq::from_pqs(s)).collect();
+    let quad_seq_list : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
 
     for quad_seq in &quad_seq_list {
         match seqtype {
