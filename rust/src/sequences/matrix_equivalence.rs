@@ -76,8 +76,9 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     for quad_seq in &quad_seq_list {
         match seqtype {
-            SequenceType::QuaternionType => {assert!(quad_seq.verify_qts(), "qts fails auto/cross correlation condition: {}", quad_seq.to_string());},
-            SequenceType::WilliamsonType => {assert!(quad_seq.verify_wts(), "wts fails auto/cross correlation condition: {}", quad_seq.to_string());},
+            SequenceType::QuaternionType => {assert!(quad_seq.verify(SequenceType::QuaternionType), "qts fails auto/cross correlation condition: {}", quad_seq.to_string());},
+            SequenceType::WilliamsonType => {assert!(quad_seq.verify(SequenceType::WilliamsonType), "wts fails auto/cross correlation condition: {}", quad_seq.to_string());},
+            SequenceType::Williamson => {assert!(quad_seq.verify(SequenceType::Williamson), "ws fails auto/cross correlation condition: {}", quad_seq.to_string());},
             _ => {}
         }
         
