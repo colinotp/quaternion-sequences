@@ -117,9 +117,44 @@ fn find_recursive(will : &mut QuadSeq, size : usize, index : usize, sequences : 
 }
 
 
+// Algorithm 6
+pub fn reduce_to_equivalence_set_dif(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
+    let mut res = HashSet::new();
+    res.extend(sequences.clone().into_iter());
 
+    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype.clone());
+    
+    for seq in sequences {
+        let mut new_class = generate_equivalence_class_fast(seq, &symmetry_group);
+        new_class.remove(seq);
 
+        for elm in new_class {
+            res.remove(&elm);
+        }
+    }
 
+    res.into_iter().collect()
+}
+
+// Algorithm 7
+pub fn reduce_to_equivalence_par(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
+    let mut res = HashSet::new();
+    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype.clone());
+    let mut count = 0;
+
+    for seq in sequences {
+        let new_class = generate_equivalence_class_fast(seq, &symmetry_group);
+        if res.insert(find_minimum(&new_class)) {
+            count += new_class.len();
+        }
+    }
+    
+    println!("The function found a total of {count} sequences before reducing to equivalence");
+
+    res.into_iter().collect()
+}
+
+// Original algorithm
 pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
     // This function reduces a set of QTS up to the Sequence equivalence defined in our paper
     
