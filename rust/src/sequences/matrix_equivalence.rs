@@ -91,14 +91,16 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         assert!(elm.to_qs().is_perfect());
     }
 
-    println!("Generated all {} including equivalent sequences", seqtype.to_string());
+    println!("Generated all {} {} including equivalent sequences via {} equivalence operations\n", all_size, seqtype.to_string(), seqtype.to_string());
+    println!("Filtering sequences via Hadamard equivalence operations...");
 
     // Filter via equivalence operations
     let time = Instant::now();
     let reduced = reduce_to_equivalence(&all, SequenceType::Hadamard);
     let elapsed = time.elapsed().as_secs_f32().round() as usize;
-    println!("Filtering via equivalence operations took {} seconds and filtered out {} sequences", elapsed, all_size - reduced.len());
+    println!("Filtering sequences via equivalence operations took {} seconds and filtered out {} sequences\n", elapsed, all_size - reduced.len());
 
+    println!("Reducing matrices to equivalence via graph isomorphism...");
     // Fully reduce via graph isomorphism checking
     let canon_reps : HashMap<CanonLabeling, HM> = reduced.par_iter().map(|seq| {
         let hmat = HM::from_williamson(seq, SequenceType::QuaternionType);
@@ -109,7 +111,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     let count = equ.len();
 
-    println!("number of matrices up to equivalence : {}", /*equ.len()*/ count);
+    println!("Number of matrices up to equivalence : {}", /*equ.len()*/ count);
 
     let result_name = pathname.split(".").next().expect("No first element").to_string() + &".mat";
 
