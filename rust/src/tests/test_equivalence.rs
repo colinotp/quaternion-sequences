@@ -3,10 +3,120 @@
 #[cfg(test)]
 mod tests {
 
+    use std::{collections::HashMap, time::Instant};
+
     use crate::sequences::{equivalence::*, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
     use crate::sequences::sequence::*;
     use crate::find::find_unique::reduce_to_equivalence;
     use crate::read_lines;
+
+    #[test]
+    fn equ_runtimes() {
+        let w = vec![-1,-1,-1,-1,-1,-1,-1,-1,1,1,-1,1,1];
+        let x = vec![-1,-1,1,1,1,1,-1,-1,-1,1,-1,1,-1];
+        let y = vec![-1,1,-1,1,1,-1,1,-1,1,1,1,1,1];
+        let z = vec![1,-1,-1,1,1,-1,-1,1,1,-1,1,-1,1];
+
+        let mut qs = QuadSeq::new(3);
+        qs.set_all_values((&w, &x, &y, &z));
+
+        assert!(qs.verify(SequenceType::QuaternionType));
+
+        let iterations = 10000;
+
+        let mut times = HashMap::new();
+
+        let avg_negate_swap = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_negate_swap(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Negate swap", avg_negate_swap);
+
+        let avg_reorder = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_reorder(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Reorder", avg_reorder);
+
+        let avg_double_reorder = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_double_reorder(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Double reorder", avg_double_reorder);
+
+        let avg_uni_half_shift = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_uniform_half_shift(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Uniform half shift", avg_uni_half_shift);
+
+        let avg_uni_shift = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_uniform_shift(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Uniform shift", avg_uni_shift);
+
+        let avg_reverse = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_reverse(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Reverse", avg_reverse);
+
+        let avg_negate = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_negate(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Negate", avg_negate);
+
+        let avg_double_negate = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_double_negate(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Double negate", avg_double_negate);
+
+        let avg_alt_negate = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_alternated_negation(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Alternated negation", avg_alt_negate);
+
+        let avg_even_alt_negate = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_even_alternated_negation(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Even alternated negation", avg_even_alt_negate);
+
+        let avg_automorphism = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_automorphism(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Automorphism", avg_automorphism);
+
+        let avg_disjoint_swap = (0..iterations).map(|_| {
+            let time = Instant::now();
+            equivalent_disjoint_swaps(&qs, SequenceType::QuaternionType, true);
+            time.elapsed().as_nanos()
+        }).sum::<u128>() / iterations;
+        times.insert("Disjoint swaps", avg_disjoint_swap);
+
+        let mut sorted : Vec<_> = times.iter().collect();
+        sorted.sort_by(|a, b| b.1.cmp(a.1));
+
+        for data in sorted {
+            println!("{:<25} avg runtime: {}ns", data.0, data.1);
+        }
+    }
 
     #[test]
     fn test_equiv() {
@@ -133,20 +243,27 @@ mod tests {
 
     #[test]
     fn equ_negate_swap() {
-        let x = vec![-1,-1,-1];
+        let w = vec![-1,-1,-1];
+        let x = vec![-1,-1,1];
         let y = vec![-1,-1,1];
-        let z = vec![-1,-1,1];
-        let w = vec![1,1,-1];
+        let z = vec![1,1,-1];
 
         let size = x.len();
 
         let mut qts = QuadSeq::new(size);
-        qts.set_all_values((&x,&y,&z,&w));
+        qts.set_all_values((&w,&x,&y,&z));
 
-        let equivalent = equivalent_negate_swap(&qts, SequenceType::QuaternionType, false);
-        for seq in equivalent {
-            println!("{}", seq.to_qs().to_string_raw());
-            assert!(seq.to_qs().is_perfect());
+        let class = generate_equivalence_class(&qts, SequenceType::Hadamard, false);
+        println!("orig seq: {}\nequivalence class:", qts.to_string());
+
+        for seq in class.iter() {
+            println!("{}", seq.to_string());
+            assert!(seq.verify(SequenceType::QuaternionType));
+
+            let neg_swap = equivalent_negate_swap(&seq, SequenceType::QuaternionType, false);
+            for alt_seq in neg_swap {
+                assert!(class.contains(&alt_seq));
+            }
         }
     }
 
