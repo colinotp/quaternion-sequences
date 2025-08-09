@@ -138,6 +138,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     // Instead of writing each line one by one n the file, we use a buffer to write them by chunks of 1000 lines
     let mut buffer = "".to_string();
     let mut buffer_counter = 0;
+    let mut min_half_int_difference = 1.0;
 
     // We iterate over the couples of sequences, but we filter out some with the dft checks
     for pair in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
@@ -156,9 +157,11 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         match seqtype {
             SequenceType::QuaternionType => {
                 for c in crossc_values {
-                    if (c.norm().fract() - 0.5).abs() < f32_tolerance.into() {
-                        println!("WARNING: Cross correlation values approximate half-integer");
+                    let difference = (c.norm().fract() - 0.5).abs();
+                    if difference < f32_tolerance.into() && difference < min_half_int_difference {
+                        min_half_int_difference = difference;
                     }
+
                     result += &(op(c.norm().round() as isize).to_string() + &"_");
                 }
             },
@@ -187,6 +190,10 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
             buffer_counter = 0;
         }
 
+    }
+
+    if min_half_int_difference < 0.9 {
+        println!("WARNING (pair {}{}): Cross correlation values approximate half-integer with error as small as {}", tags.0.to_string(), tags.1.to_string(), min_half_int_difference);
     }
     
     f.write(buffer.as_bytes()).expect("Error when writing in the file");
