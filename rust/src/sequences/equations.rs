@@ -1,4 +1,4 @@
-use super::{williamson::{SequenceTag, tag_to_string, periodic_autocorrelation, cross_correlation}, symmetries::SequenceType, rowsum::Quad};
+use super::{williamson::{SequenceTag, periodic_autocorrelation, cross_correlation}, symmetries::SequenceType, rowsum::Quad};
 
 
 
@@ -366,5 +366,5 @@ fn generate_equation_non_linear_crosscorrelation(size : usize, offset : usize, o
 
 
 fn additional_comment(tag1 : &SequenceTag, tag2 : &SequenceTag) -> String {
-    "\n* x1 ... xn is ".to_string() + &tag_to_string(tag1) + &", xn+1 ... x2n is " + &tag_to_string(tag2) + &"\n"
+    "\n* x1 ... xn is ".to_string() + &tag1.to_string() + &", xn+1 ... x2n is " + &tag2.to_string() + &"\n"
 }

@@ -2,7 +2,7 @@ use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{tag_to_string, QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -80,7 +80,7 @@ fn index_to_tag(index: usize) -> SequenceTag {
 pub fn write_sequences(sequences : &Vec<Vec<i8>>, tag : &SequenceTag, folder_path : &String) {
     // stores the sequences
 
-    let path = folder_path.clone() + &"/seq_" + &tag_to_string(tag) + ".seq";
+    let path = folder_path.clone() + &"/seq_" + &tag.to_string() + ".seq";
     let mut f = File::create(path).expect("Invalid file ?");
 
     for seq in sequences {
@@ -125,7 +125,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
     assert!(verify_rowsums(sequences, tags, rs));
 
-    let path = folder_path.clone() + &"/pair_" + &tag_to_string(&tags.0) + &tag_to_string(&tags.1) + ".pair";
+    let path = folder_path.clone() + &"/pair_" + &tags.0.to_string() + &tags.1.to_string() + ".pair";
     let mut f = File::create(path).expect("Invalid file ?");
 
     let f32_tolerance : f32 = f32::EPSILON.sqrt();
@@ -288,16 +288,16 @@ pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize,
 
     match pairing {
         Some(RowsumPairing::WX) => {
-            path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[1]) + ".pair";
-            path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[2]) + &tag_to_string(&tags[3]) + ".pair";
+            path1 = folder_path.clone() + &"/pair_" + &tags[0].to_string() + &tags[1].to_string() + ".pair";
+            path2 = folder_path.clone() + &"/pair_" + &tags[2].to_string() + &tags[3].to_string() + ".pair";
         },
         Some(RowsumPairing::WY) => {
-            path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[2]) + ".pair";
-            path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[1]) + &tag_to_string(&tags[3]) + ".pair";
+            path1 = folder_path.clone() + &"/pair_" + &tags[0].to_string() + &tags[2].to_string() + ".pair";
+            path2 = folder_path.clone() + &"/pair_" + &tags[1].to_string() + &tags[3].to_string() + ".pair";
         },
         Some(RowsumPairing::WZ) => {
-            path1 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[0]) + &tag_to_string(&tags[3]) + ".pair";
-            path2 = folder_path.clone() + &"/pair_" + &tag_to_string(&tags[1]) + &tag_to_string(&tags[2]) + ".pair";
+            path1 = folder_path.clone() + &"/pair_" + &tags[0].to_string() + &tags[3].to_string() + ".pair";
+            path2 = folder_path.clone() + &"/pair_" + &tags[1].to_string() + &tags[2].to_string() + ".pair";
         },
         None => {panic!("Missing pairing arg")}
     };

@@ -2,7 +2,7 @@ use std::{isize::MIN, fs::{*, self}, path::Path, io::Write, env, time::Instant};
 
 use memory_stats::memory_stats;
 
-use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft, iter_over_filtered_couples}, equations::generate_equations, williamson::{SequenceTag, tag_to_string, QuadSeq}, symmetries::SequenceType, matching::{generate_matching_table, MatchData, compute_complementary_auto_correlations, compute_complementary_cross_correlations, verify_cross_correlation}};
+use crate::sequences::{rowsum::{generate_rowsums, Quad, generate_sequences_with_rowsum, sequence_to_string}, fourier::{iter_over_filtered_dft, iter_over_filtered_couples}, equations::generate_equations, williamson::{SequenceTag, QuadSeq}, symmetries::SequenceType, matching::{generate_matching_table, MatchData, compute_complementary_auto_correlations, compute_complementary_cross_correlations, verify_cross_correlation}};
 
 
 fn get_two_best(quad: &Quad) -> ((isize, usize),(isize, usize)){
@@ -37,7 +37,7 @@ fn index_to_tag(index: usize) -> SequenceTag {
 }
 
 fn generate_comment(seq1 : &Vec<i8>, tag1 : &SequenceTag, seq2 : &Vec<i8>, tag2 : &SequenceTag, rowsum : &Quad) -> String {
-    let mut comment = "* ".to_string() + &tag_to_string(tag1) + &": " + &sequence_to_string(seq1) + &"\n* " + &tag_to_string(tag2) + &": " + &sequence_to_string(seq2) + &"\n";
+    let mut comment = "* ".to_string() + &tag1.to_string() + &": " + &sequence_to_string(seq1) + &"\n* " + &tag2.to_string() + &": " + &sequence_to_string(seq2) + &"\n";
     comment += &("* rowsum: (".to_string() + &rowsum.0.to_string() + &"," + &rowsum.1.to_string() + &"," + &rowsum.2.to_string() + &"," + &rowsum.3.to_string() + &")");
     comment
 }

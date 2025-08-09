@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::{symmetries::SequenceType, williamson::tag_to_string};
+use crate::sequences::symmetries::SequenceType;
 
 use super::williamson::{QuadSeq, SequenceTag};
 
@@ -284,7 +284,7 @@ pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType, symmetry_g
 
             // Don't want to verify sequence properties of symmetry groups, as they will not meet them
             if !symmetry_group {
-                debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), tag_to_string(&couple.0) + &tag_to_string(&couple.1), tag_to_string(&tag));
+                debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), couple.0.to_string() + &couple.1.to_string(), &tag.to_string());
             }
             
             res.insert(new_seq);

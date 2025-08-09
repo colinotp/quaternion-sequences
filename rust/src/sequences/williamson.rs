@@ -12,12 +12,14 @@ pub enum SequenceTag { // enum for choosing a specific sequence
     W, X, Y, Z
 }
 
-pub fn tag_to_string(tag : &SequenceTag) -> String{
-    match *tag {
-        SequenceTag::W => {"W".to_string()}
-        SequenceTag::X => {"X".to_string()}
-        SequenceTag::Y => {"Y".to_string()}
-        SequenceTag::Z => {"Z".to_string()}
+impl ToString for SequenceTag {
+    fn to_string(&self) -> String {
+        match self {
+            SequenceTag::W => {"W".to_string()}
+            SequenceTag::X => {"X".to_string()}
+            SequenceTag::Y => {"Y".to_string()}
+            SequenceTag::Z => {"Z".to_string()}
+        }
     }
 }
 
