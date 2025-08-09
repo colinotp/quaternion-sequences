@@ -228,7 +228,7 @@ fn equivalent(quad : &Quad, seqtype : SequenceType) -> Quad {
     let mut final_quad = quad.clone();
 
     // If 0's are present, any swap is legal, so just sort the quad. Same if seqtype is WS/WTS
-    if !matches!(seqtype, SequenceType::QuaternionType) || quad.0 == 0 || quad.1 == 0 || quad.2 == 0 || quad.3 == 0 {
+    if !matches!(seqtype, SequenceType::QuaternionType) || quad.0 == 0 || quad.1 == 0 || quad.2 == 0 || quad.3 == 0 || quad_contains_dup(quad) {
         let mut quad_vec = vec![quad.0, quad.1, quad.2, quad.3];
         for i in 0..3 {
             
