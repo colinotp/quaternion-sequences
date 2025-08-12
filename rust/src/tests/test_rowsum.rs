@@ -6,6 +6,17 @@ mod tests {
     use crate::sequences::{rowsum::*, symmetries::SequenceType};
 
     #[test]
+    fn test_rowsum_gen() {
+        for p in 1..23 {
+            println!("\nn={}", p);
+            for rs in generate_rowsums(p) {
+                println!("{:?}", rs);
+                assert_eq!(rs.0*rs.0 + rs.1*rs.1 + rs.2*rs.2 + rs.3*rs.3, 4*p as isize);
+            }
+        }
+    }
+
+    #[test]
     fn test_rowsum(){
 
         let seq = vec![1;18];
@@ -105,7 +116,7 @@ mod tests {
     #[test]
     fn test_possible_rowsums(){
 
-        let rowsums = generate_rowsums(17, SequenceType::QuaternionType);
+        let rowsums = generate_rowsums(17);
         
         assert_eq!(rowsums.len(), 4);
         assert_eq!(rowsums[0], (1,3,3,7));
