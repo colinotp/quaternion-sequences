@@ -3,12 +3,51 @@
 #[cfg(test)]
 mod tests {
 
-    use std::{collections::HashMap, time::Instant};
+    use std::{collections::{HashMap, HashSet}, env, time::Instant};
 
     use crate::sequences::{equivalence::*, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
     use crate::sequences::sequence::*;
     use crate::find::find_unique::reduce_to_equivalence;
     use crate::read_lines;
+
+    #[test]
+    fn reduce_equiv() {
+        let mut seqs = vec![];
+        let pathname = "results/pairs/qts/find_9/result.seq";
+        let seqtype = SequenceType::Hadamard;
+
+        println!("{:?}",env::current_dir());
+        println!("{pathname}");
+        for line_res in read_lines(&pathname).expect("error reading the file") {
+            let line = line_res.expect("Error reading line");
+            println!("{}", &line);
+            seqs.push(QS::from_str(&line.to_string()));
+        }
+
+        let quad_seqs : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
+
+        for quad_seq in &quad_seqs {
+            quad_seq.verify(seqtype.clone());
+        }
+
+        let mut set1in = HashSet::new();
+        let mut set2in = HashSet::new();
+        set1in.extend(quad_seqs.clone().into_iter());
+        set2in.extend(quad_seqs.clone().into_iter());
+        let vec1in : Vec<QuadSeq> = set1in.into_iter().collect();
+        let vec2in : Vec<QuadSeq> = set2in.into_iter().collect();
+
+        assert_ne!(vec1in, vec2in, "sets arranged the same way");
+
+        let vec1out = reduce_to_equivalence(&vec1in, SequenceType::Hadamard);
+        let vec2out = reduce_to_equivalence(&vec2in, SequenceType::Hadamard);
+        let mut set1out = HashSet::new();
+        let mut set2out = HashSet::new();
+        set1out.extend(vec1out.into_iter());
+        set2out.extend(vec2out.into_iter());
+
+        assert_eq!(set1out, set2out);
+    }
 
     #[test]
     fn equ_runtimes() {
