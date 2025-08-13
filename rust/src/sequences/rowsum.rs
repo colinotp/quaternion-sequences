@@ -1,6 +1,8 @@
 use itertools::*;
 
 use crate::sequences::symmetries::SequenceType;
+use crate::QuadSeq;
+use crate::SequenceTag;
 
 
 // * Sequence generation with specific rowsum
@@ -37,7 +39,16 @@ pub fn rowsum(seq : Vec<i8>) -> isize {
     seq.iter().map(|i| *i as isize).sum()
 }
 
-
+// Check if QuadSeq satisfies Proposition 5 in our paper
+pub fn has_sorted_rowsums(seq : &QuadSeq) -> bool {
+    let seqs : Quad = (rowsum(seq.sequence(SequenceTag::W)), rowsum(seq.sequence(SequenceTag::X)), rowsum(seq.sequence(SequenceTag::Y)), rowsum(seq.sequence(SequenceTag::Z)));
+    if quad_contains_dup(&seqs) || quad_contains_zero(&seqs) {
+        0 <= seqs.0 && seqs.0 <= seqs.1 && seqs.1 <= seqs.2 && seqs.2 <= seqs.3
+    }
+    else {
+        0 <= seqs.0 && seqs.0 <= seqs.1 && seqs.1 <= seqs.2 && seqs.2 <= seqs.3.abs()
+    }
+}
 
 pub fn generate_sequences_with_rowsum(rowsum: isize, size : usize) -> Vec<Vec<i8>> {
     // generates all sequences of length size and whose sum equals rowsum

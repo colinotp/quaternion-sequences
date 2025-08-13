@@ -3,7 +3,86 @@
 
 #[cfg(test)]
 mod tests {
-    use crate::sequences::{rowsum::*, symmetries::SequenceType};
+    use std::{collections::HashSet, env};
+
+    use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{equivalence::{filter_by_rowsums, generate_equivalent_quad_seqs}, rowsum::*, sequence::QS, symmetries::SequenceType, williamson::QuadSeq}};
+
+    #[test]
+    fn test_prop_5() {
+        // A few specific test cases
+
+        let w = vec![-1,-1,-1,1,1,1];   // rowsum = 0
+        let x = vec![-1,-1,1,1,1,1];    // rowsum = 2
+        let y = vec![-1,1,1,1,1,1];     // rowsum = 4
+        let z = vec![1,1,1,1,1,1];      // rowsum = 6
+
+        let mut seq : QuadSeq = QuadSeq::new(6);
+        seq.set_all_values((&w,&x,&y,&z));
+        println!("{}", seq.to_string());
+
+        assert!(has_sorted_rowsums(&seq));
+
+
+        let w = vec![-1,-1,1,1,1,1];        // rowsum = 2
+        let x = vec![-1,-1,1,1,1,1];        // rowsum = 2
+        let y = vec![-1,1,1,1,1,1];         // rowsum = 4
+        let z = vec![-1,-1,-1,-1,-1,-1];    // rowsum = -6
+
+        let mut seq : QuadSeq = QuadSeq::new(6);
+        seq.set_all_values((&w,&x,&y,&z));
+        println!("{}", seq.to_string());
+
+        assert!(!has_sorted_rowsums(&seq));
+
+
+        let w = vec![-1,-1,1,1,1,1];        // rowsum = 2
+        let x = vec![-1,-1,1,1,1,1];        // rowsum = 2
+        let y = vec![-1,1,1,1,1,1];         // rowsum = 4
+        let z = vec![1,1,1,1,1,1];    // rowsum = 6
+
+        let mut seq : QuadSeq = QuadSeq::new(6);
+        seq.set_all_values((&w,&x,&y,&z));
+        println!("{}", seq.to_string());
+
+        assert!(has_sorted_rowsums(&seq));
+
+        
+        // Verify that a list filtered by Proposition 5 filters no sequences that are not filtered by NS
+        let mut seqs = vec![];
+        let pathname = "results/pairs/qts/find_9/result.seq";
+        let seqtype = SequenceType::Hadamard;
+
+        println!("{:?}",env::current_dir());
+        println!("{pathname}");
+        for line_res in read_lines(&pathname).expect("error reading the file") {
+            let line = line_res.expect("Error reading line");
+            println!("{}", &line);
+            seqs.push(QS::from_str(&line.to_string()));
+        }
+
+        let quad_seqs : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
+
+        for quad_seq in &quad_seqs {
+            quad_seq.verify(seqtype.clone());
+        }
+
+        // List to be filtered
+        let all = generate_equivalent_quad_seqs(&quad_seqs, seqtype.clone());
+
+        let reduced = reduce_to_equivalence(&all, seqtype.clone()); // Sequences reduced by NS
+        let prop5 = filter_by_rowsums(&all); // Sequences filtered by prop 5
+        let prop5_reduced = reduce_to_equivalence(&prop5, seqtype.clone()); // Reducing the list filtered by prop 5
+
+        // Turn both into sets for comparison
+        let mut reduced_set = HashSet::new();
+        let mut prop5_set = HashSet::new();
+
+        reduced_set.extend(reduced);
+        prop5_set.extend(prop5_reduced);
+
+        assert_eq!(reduced_set, prop5_set, "Proposition 5 filtering too many sequences");
+
+    }
 
     #[test]
     fn test_rowsum_gen() {

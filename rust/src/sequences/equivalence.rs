@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::symmetries::SequenceType;
+use crate::sequences::{rowsum::has_sorted_rowsums, symmetries::SequenceType};
 
 use super::williamson::{QuadSeq, SequenceTag};
 
@@ -240,7 +240,18 @@ pub fn generate_equivalent_quad_seqs(quad_seq_list : &Vec<QuadSeq>, seqtype : Se
     result.into_iter().collect()
 }
 
+pub fn filter_by_rowsums(sequences : &Vec<QuadSeq>) -> Vec<QuadSeq> {
+    sequences.iter().filter(|s| {
+        println!("Checking sequence:\n{}", s.to_string());
+        let sorted = has_sorted_rowsums(s);
+        if sorted {
+            println!("Kept!");
+        }
+        else {println!("Removed!");}
 
+        sorted
+    }).cloned().collect()
+}
 
 fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     
