@@ -168,7 +168,7 @@ pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Q
 
     // filtering and adding negated elements
     let mut result = vec![];
-    for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q, seqtype.clone())).collect::<Vec<Quad>>() {
+    for elm in isomorphism.into_iter().unique_by(|q| equivalent(&q, seqtype)).collect::<Vec<Quad>>() {
         result.push(elm.clone());
         if matches!(seqtype, SequenceType::QuaternionType) && !quad_contains_zero(&elm) && !quad_contains_dup(&elm) {
             let mut nega_elm = elm.clone();

@@ -63,15 +63,15 @@ mod tests {
         let quad_seqs : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
 
         for quad_seq in &quad_seqs {
-            quad_seq.verify(seqtype.clone());
+            quad_seq.verify(seqtype);
         }
 
         // List to be filtered
-        let all = generate_equivalent_quad_seqs(&quad_seqs, seqtype.clone());
+        let all = generate_equivalent_quad_seqs(&quad_seqs, seqtype);
 
-        let reduced = reduce_to_equivalence(&all, seqtype.clone()); // Sequences reduced by NS
+        let reduced = reduce_to_equivalence(&all, seqtype); // Sequences reduced by NS
         let prop5 = filter_by_rowsums(&all); // Sequences filtered by prop 5
-        let prop5_reduced = reduce_to_equivalence(&prop5, seqtype.clone()); // Reducing the list filtered by prop 5
+        let prop5_reduced = reduce_to_equivalence(&prop5, seqtype); // Reducing the list filtered by prop 5
 
         // Turn both into sets for comparison
         let mut reduced_set = HashSet::new();

@@ -144,7 +144,7 @@ pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType, symmet
 
         for seq in &class {
             for equivalence in seqtype.equivalences() {
-                for equ in equivalence(&seq, seqtype.clone(), symmetry_group).into_iter() {
+                for equ in equivalence(&seq, seqtype, symmetry_group).into_iter() {
                     if !class.contains(&equ) {
                         new.insert(equ);
                     }
@@ -174,7 +174,7 @@ pub fn generate_symmetry_group(len : usize, seqtype : SequenceType) -> HashSet<Q
     let mut w = QuadSeq::new(len);
     w.set_all_values((&w1, &w2, &w3, &w4));
     
-    generate_equivalence_class(&w, seqtype.clone(), true)
+    generate_equivalence_class(&w, seqtype, true)
 }
 
 // Generates equivalence class for a sequence using its symmetry group
@@ -231,7 +231,7 @@ pub fn generate_equivalent_quad_seqs(quad_seq_list : &Vec<QuadSeq>, seqtype : Se
             continue;
         }
 
-        let class = generate_equivalence_class(quad_seq, seqtype.clone(), false);
+        let class = generate_equivalence_class(quad_seq, seqtype, false);
         for elm in class {
             result.insert(elm);
         }
@@ -286,7 +286,7 @@ pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType, symmetry_g
 
             // Don't want to verify sequence properties of symmetry groups, as they will not meet them
             if !symmetry_group {
-                debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), couple.0.to_string() + &couple.1.to_string(), &tag.to_string());
+                debug_assert!(new_seq.verify(seqtype), "equivalent_negate_swap produced bad seq. Init: {}\nRes: {}\nSwap: {}\n Negation: {}", seq.to_string(), new_seq.to_string(), couple.0.to_string() + &couple.1.to_string(), &tag.to_string());
             }
             
             res.insert(new_seq);
@@ -311,7 +311,7 @@ pub fn equivalent_reorder(seq : &QuadSeq, seqtype : SequenceType, symmetry_group
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_reorder function produced invalid {}", seqtype.to_string());
+            debug_assert!(new_seq.verify(seqtype), "equivalent_reorder function produced invalid {}", seqtype.to_string());
         }
         
         res.insert(new_seq);
@@ -341,7 +341,7 @@ pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType, symmetr
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+            debug_assert!(new_seq.verify(seqtype), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
         }
         
 
@@ -373,7 +373,7 @@ pub fn equivalent_uniform_half_shift(seq : &QuadSeq, seqtype : SequenceType, sym
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_half_shift function produced invalid {}", seqtype.to_string());
+            debug_assert!(s.verify(seqtype), "equivalent_uniform_half_shift function produced invalid {}", seqtype.to_string());
         }
         
         res.insert(s);
@@ -398,7 +398,7 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(s.verify(seqtype.clone()), "equivalent_uniform_shift function produced invalid {}", seqtype.to_string());
+            debug_assert!(s.verify(seqtype), "equivalent_uniform_shift function produced invalid {}", seqtype.to_string());
         }
         
         res.insert(s);
@@ -420,7 +420,7 @@ pub fn equivalent_reverse(seq : &QuadSeq, seqtype : SequenceType, symmetry_group
 
     // Don't want to verify sequence properties of symmetry groups, as they will not meet them
     if !symmetry_group {
-        debug_assert!(s.verify(seqtype.clone()), "equivalent_reverse function produced invalid {}", seqtype.to_string());
+        debug_assert!(s.verify(seqtype), "equivalent_reverse function produced invalid {}", seqtype.to_string());
     }
     
     res.insert(s);
@@ -474,7 +474,7 @@ pub fn equivalent_negate(seq : &QuadSeq, seqtype : SequenceType, symmetry_group 
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_negate function produced invalid {}", seqtype.to_string());
+            debug_assert!(new_seq.verify(seqtype), "equivalent_negate function produced invalid {}", seqtype.to_string());
         }
         
         res.insert(new_seq);
@@ -509,7 +509,7 @@ pub fn equivalent_double_negate(seq : &QuadSeq, seqtype : SequenceType, symmetry
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(s.verify(seqtype.clone()), "equivalent_double_negate function produced invalid {}. Original: {}\nNew: {}", seqtype.to_string(), seq.to_string(), s.to_string());
+            debug_assert!(s.verify(seqtype), "equivalent_double_negate function produced invalid {}. Original: {}\nNew: {}", seqtype.to_string(), seq.to_string(), s.to_string());
         }
         
         res.insert(s);
@@ -534,7 +534,7 @@ pub fn equivalent_alternated_negation(seq : &QuadSeq, seqtype : SequenceType, sy
 
     // Don't want to verify sequence properties of symmetry groups, as they will not meet them
     if !symmetry_group {
-        debug_assert!(s.verify(seqtype.clone()), "equivalent_alternated_negation function produced invalid {}", seqtype.to_string());
+        debug_assert!(s.verify(seqtype), "equivalent_alternated_negation function produced invalid {}", seqtype.to_string());
     }
     
     res.insert(seq.clone());
@@ -563,7 +563,7 @@ pub fn equivalent_even_alternated_negation(seq : &QuadSeq, seqtype : SequenceTyp
 
     // Don't want to verify sequence properties of symmetry groups, as they will not meet them
     if !symmetry_group {
-        debug_assert!(s.verify(seqtype.clone()), "equivalent_even_alternated_negation function produced invalid {}", seqtype.to_string());
+        debug_assert!(s.verify(seqtype), "equivalent_even_alternated_negation function produced invalid {}", seqtype.to_string());
     }
     
     res.insert(seq.clone());
@@ -613,7 +613,7 @@ pub fn equivalent_automorphism(seq : &QuadSeq, seqtype : SequenceType, symmetry_
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(will.verify(seqtype.clone()), "equivalent_automorphism function produced invalid {}", seqtype.to_string());
+            debug_assert!(will.verify(seqtype), "equivalent_automorphism function produced invalid {}", seqtype.to_string());
         }
         
         res.insert(will);
@@ -649,7 +649,7 @@ pub fn equivalent_disjoint_swaps(seq : &QuadSeq, seqtype : SequenceType, symmetr
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(new_seq.verify(seqtype.clone()), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+            debug_assert!(new_seq.verify(seqtype), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
         }
 
         res.insert(new_seq);

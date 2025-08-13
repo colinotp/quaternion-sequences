@@ -75,10 +75,10 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
     let quad_seq_list : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
 
     for quad_seq in &quad_seq_list {
-        quad_seq.verify(seqtype.clone());
+        quad_seq.verify(seqtype);
     }
 
-    let all = generate_equivalent_quad_seqs(&quad_seq_list, seqtype.clone());
+    let all = generate_equivalent_quad_seqs(&quad_seq_list, seqtype);
     let all_size = all.len();
 
     for elm in &all {

@@ -378,16 +378,16 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     // Uses sequences to generate .pair files based on chosen pairing (default pairing is XW)
     match pairing {
         Some(RowsumPairing::WX) => {
-            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype.clone(), rs, p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype.clone(), rs, p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype, rs, p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT);
         },
         Some(RowsumPairing::WY) => {
-            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype.clone(), rs, p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype.clone(), rs, p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT);
         },
         Some(RowsumPairing::WZ) | None => {
-            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype.clone(), rs, p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype.clone(), rs, p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::LEFT);
+            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::RIGHT);
         }
     };
     
@@ -431,7 +431,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
             let (pathnames, order) = get_order_from_dir(&directory);
     
             println!("Matching files in {:?}", directory.file_name());
-            result.append(&mut join_pairs_files(&pathnames, seqtype.clone(), &order, &sequences));
+            result.append(&mut join_pairs_files(&pathnames, seqtype, &order, &sequences));
         }
     }
 

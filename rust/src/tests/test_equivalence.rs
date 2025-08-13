@@ -27,7 +27,7 @@ mod tests {
         let quad_seqs : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
 
         for quad_seq in &quad_seqs {
-            quad_seq.verify(seqtype.clone());
+            quad_seq.verify(seqtype);
         }
 
         let mut set1in = HashSet::new();

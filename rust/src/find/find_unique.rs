@@ -122,7 +122,7 @@ pub fn reduce_to_equivalence_set_dif(sequences : &Vec<QuadSeq>, seqtype : Sequen
     let mut res = HashSet::new();
     res.extend(sequences.clone().into_iter());
 
-    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype.clone());
+    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype);
     
     for seq in sequences {
         let mut new_class = generate_equivalence_class_fast(seq, &symmetry_group);
@@ -139,7 +139,7 @@ pub fn reduce_to_equivalence_set_dif(sequences : &Vec<QuadSeq>, seqtype : Sequen
 // Algorithm 7
 pub fn reduce_to_equivalence_par(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
     let mut res = HashSet::new();
-    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype.clone());
+    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype);
     let mut count = 0;
 
     for seq in sequences {
@@ -159,7 +159,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
     // This function reduces a set of QTS up to the Sequence equivalence defined in our paper
     
     let mut classes : Vec<HashSet<QuadSeq>> = vec![];
-    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype.clone());
+    let symmetry_group = generate_symmetry_group(sequences[0].size(), seqtype);
 
     for seq in sequences {
         let mut new_seq = true;
@@ -171,7 +171,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
         }
         if new_seq {
             let new_class = generate_equivalence_class_fast(seq, &symmetry_group);
-            debug_assert_eq!(new_class, generate_equivalence_class(seq, seqtype.clone(), false));
+            debug_assert_eq!(new_class, generate_equivalence_class(seq, seqtype, false));
             classes.push(new_class);
         }
     }

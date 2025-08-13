@@ -12,7 +12,7 @@ pub enum RowsumPairing{
     WX, WY, WZ
 }
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub enum SequenceType{ // enum for the different types of Quadruplets of sequences
     Williamson, WilliamsonType, QuaternionType, ItoType, ExtraTypeI, ExtraTypeII, ExtraTypeIII, Hadamard
 }

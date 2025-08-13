@@ -89,7 +89,7 @@ fn find_unique_williamson_type_of_size(i : usize){
 
 fn find_write_quad_seq(i : usize, seqtype : SequenceType){
 
-    let result = find_write::join_pairs(i, seqtype.clone());
+    let result = find_write::join_pairs(i, seqtype);
 
     if matches!(seqtype, SequenceType::QuaternionType) {
         // Check to see if also valid WTS
