@@ -1,4 +1,4 @@
-use std::{time::Instant, fs::{self, File, DirEntry}, io::Write, io::Error};
+use std::{f64, fs::{self, DirEntry, File}, io::{Error, Write}, time::Instant};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
@@ -128,7 +128,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     let path = folder_path.clone() + &"/pair_" + &tags.0.to_string() + &tags.1.to_string() + ".pair";
     let mut f = File::create(path).expect("Invalid file ?");
 
-    let f32_tolerance : f32 = f32::EPSILON.sqrt();
+    let f64_tolerance : f64 = f64::EPSILON.sqrt();
 
     let op = match side {
         EquationSide::LEFT => {|x : isize| x}
@@ -158,7 +158,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
             SequenceType::QuaternionType => {
                 for c in crossc_values {
                     let difference = (c.norm().fract() - 0.5).abs();
-                    if difference < f32_tolerance.into() && difference < min_half_int_difference {
+                    if difference < f64_tolerance.into() && difference < min_half_int_difference {
                         min_half_int_difference = difference;
                     }
 
