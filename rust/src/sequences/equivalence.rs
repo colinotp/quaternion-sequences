@@ -199,7 +199,7 @@ pub fn generate_equivalence_class_fast(seq : &QuadSeq, symmetries : &HashSet<Qua
             };
 
             // Index within the subsequence
-            let seq_ind = elm.abs() as usize % n;
+            let seq_ind = (elm.abs() - 1) as usize % n;
 
 
             if elm < 0 {

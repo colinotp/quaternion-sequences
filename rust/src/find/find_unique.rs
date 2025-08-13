@@ -171,6 +171,7 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType) 
         }
         if new_seq {
             let new_class = generate_equivalence_class_fast(seq, &symmetry_group);
+            debug_assert_eq!(new_class, generate_equivalence_class(seq, seqtype.clone(), false));
             classes.push(new_class);
         }
     }
