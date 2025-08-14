@@ -173,7 +173,6 @@ impl QuadSeq{
             SequenceType::QuaternionType => {self.verify_qts()},
             SequenceType::WilliamsonType => {self.verify_wts()},
             SequenceType::Williamson => {self.verify_ws()},
-            SequenceType::Hadamard => {self.verify_qts()},
             _ => {false}
         }
     }
@@ -252,7 +251,7 @@ impl QuadSeq{
 
     // Checks if self is equivalent to another sequence
     pub fn equivalent_to(&self, quad_seq : QuadSeq, seqtype : SequenceType) -> bool {
-        generate_equivalence_class(&self, seqtype, false).contains(&quad_seq)
+        generate_equivalence_class(&self, seqtype, &seqtype.equivalences(), false).contains(&quad_seq)
     }
 
     pub fn to_qs(&self) -> QS {

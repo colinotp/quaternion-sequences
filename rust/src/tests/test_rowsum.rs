@@ -50,7 +50,7 @@ mod tests {
         // Verify that a list filtered by Proposition 5 filters no sequences that are not filtered by NS
         let mut seqs = vec![];
         let pathname = "results/pairs/qts/find_9/result.seq";
-        let seqtype = SequenceType::Hadamard;
+        let seqtype = SequenceType::QuaternionType;
 
         println!("{:?}",env::current_dir());
         println!("{pathname}");
@@ -69,9 +69,9 @@ mod tests {
         // List to be filtered
         let all = generate_equivalent_quad_seqs(&quad_seqs, seqtype);
 
-        let reduced = reduce_to_equivalence(&all, seqtype); // Sequences reduced by NS
+        let reduced = reduce_to_equivalence(&all, seqtype, &seqtype.equivalences()); // Sequences reduced by NS
         let prop5 = filter_by_rowsums(&all); // Sequences filtered by prop 5
-        let prop5_reduced = reduce_to_equivalence(&prop5, seqtype); // Reducing the list filtered by prop 5
+        let prop5_reduced = reduce_to_equivalence(&prop5, seqtype, &seqtype.equivalences()); // Reducing the list filtered by prop 5
 
         // Turn both into sets for comparison
         let mut reduced_set = HashSet::new();

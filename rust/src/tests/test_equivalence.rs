@@ -14,7 +14,7 @@ mod tests {
     fn reduce_equiv() {
         let mut seqs = vec![];
         let pathname = "results/pairs/qts/find_9/result.seq";
-        let seqtype = SequenceType::Hadamard;
+        let seqtype = SequenceType::QuaternionType;
 
         println!("{:?}",env::current_dir());
         println!("{pathname}");
@@ -39,8 +39,8 @@ mod tests {
 
         assert_ne!(vec1in, vec2in, "sets arranged the same way");
 
-        let vec1out = reduce_to_equivalence(&vec1in, SequenceType::Hadamard);
-        let vec2out = reduce_to_equivalence(&vec2in, SequenceType::Hadamard);
+        let vec1out = reduce_to_equivalence(&vec1in, seqtype, &vec![equivalent_negate_swap]);
+        let vec2out = reduce_to_equivalence(&vec2in, seqtype, &vec![equivalent_negate_swap]);
         let mut set1out = HashSet::new();
         let mut set2out = HashSet::new();
         set1out.extend(vec1out.into_iter());
@@ -167,9 +167,9 @@ mod tests {
         let mut qs = QuadSeq::new(3);
         qs.set_all_values((&a, &b, &c, &d));
 
-        let symmetries = generate_symmetry_group(3, SequenceType::QuaternionType);
+        let symmetries = generate_symmetry_group(3, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences());
         let equiv = generate_equivalence_class_fast(&qs, &symmetries);
-        let equiv_old = generate_equivalence_class(&qs, SequenceType::QuaternionType, false);
+        let equiv_old = generate_equivalence_class(&qs, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences(), false);
 
         for elm in equiv.clone() {
             assert!(equiv_old.contains(&elm), "New fn returns seq not found in unoptimized build: {}", elm.to_string());
@@ -189,7 +189,7 @@ mod tests {
         let mut qs = QuadSeq::new(3);
         qs.set_all_values((&a, &b, &c, &d));
 
-        let h_equ = equivalent_disjoint_swaps(&qs, SequenceType::Hadamard, false);
+        let h_equ = equivalent_disjoint_swaps(&qs, SequenceType::QuaternionType, false);
         println!("Orig seq:\n{}\nEquivalence class:", qs.to_string());
         for seq in h_equ.clone() {
             println!("{}", seq.to_string());
@@ -292,7 +292,7 @@ mod tests {
         let mut qts = QuadSeq::new(size);
         qts.set_all_values((&w,&x,&y,&z));
 
-        let class = generate_equivalence_class(&qts, SequenceType::Hadamard, false);
+        let class = generate_equivalence_class(&qts, SequenceType::QuaternionType, &vec![equivalent_negate_swap], false);
         println!("orig seq: {}\nequivalence class:", qts.to_string());
 
         for seq in class.iter() {
@@ -338,7 +338,7 @@ mod tests {
     
         if index >= will.search_size(){
             if will.to_qs().is_perfect() {
-                let equivalent = generate_equivalence_class(&will, SequenceType::QuaternionType, false);
+                let equivalent = generate_equivalence_class(&will, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences(), false);
                 for seq in equivalent {
                     assert!(seq.to_qs().is_perfect());
                 }
@@ -398,7 +398,7 @@ mod tests {
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
 
-        for elm in generate_equivalence_class(&will, SequenceType::QuaternionType, false) {
+        for elm in generate_equivalence_class(&will, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences(), false) {
             println!("{}", elm.to_qs().to_string_raw());
             assert!(elm.to_qs().is_perfect());
         }
@@ -421,7 +421,7 @@ mod tests {
                 }
             }
 
-            let reducted_sequences = reduce_to_equivalence(&sequences, crate::sequences::symmetries::SequenceType::QuaternionType);
+            let reducted_sequences = reduce_to_equivalence(&sequences, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences());
 
             println!("{}", sequences.len());
             println!("{}", reducted_sequences.len());
@@ -446,7 +446,7 @@ mod tests {
             let mut total = vec![];
 
             for seq in sequences {
-                let mut v = generate_equivalence_class(&seq, SequenceType::QuaternionType, false).into_iter().collect();
+                let mut v = generate_equivalence_class(&seq, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences(), false).into_iter().collect();
                 total.append(&mut v);
             }
 

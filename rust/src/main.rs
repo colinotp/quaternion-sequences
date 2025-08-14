@@ -160,7 +160,8 @@ fn find_matching_algorithm(p : usize) {
     let now = Instant::now();
     let sequences = find_with_rowsum::find_matching(p);
     eprintln!("The function found {} sequences before equivalences in {} seconds", sequences.len(), now.elapsed().as_seconds_f32());
-    let result = reduce_to_equivalence(&sequences, crate::sequences::symmetries::SequenceType::QuaternionType);
+
+    let result = reduce_to_equivalence(&sequences, SequenceType::QuaternionType, &SequenceType::QuaternionType.equivalences());
     let count = result.len();
     let elapsed_time = now.elapsed().as_seconds_f32();
     eprintln!("For n = {p}, the function took: {elapsed_time} seconds and found {count} sequences");

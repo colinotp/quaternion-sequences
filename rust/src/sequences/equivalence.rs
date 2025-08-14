@@ -120,7 +120,7 @@ pub fn will_less_than(will1 : &QuadSeq, will2 : &QuadSeq) -> bool {
 // * Functions to treat the equivalences
 
 pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType) -> QuadSeq{
-    let set = generate_equivalence_class(seq, seqtype, false);
+    let set = generate_equivalence_class(seq, seqtype, &seqtype.equivalences(), false);
     let mut mini = seq.clone();
     for elm in set {
         if will_less_than(&elm, &mini) {
@@ -133,7 +133,7 @@ pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType)
 
 
 
-pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
+pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType, equivalences : &Vec<fn(&QuadSeq, SequenceType, bool) -> HashSet<QuadSeq>>, symmetry_group : bool) -> HashSet<QuadSeq> {
     // This function generates the equivalence class that seq belongs to
     
     let mut class = HashSet::new();
@@ -143,7 +143,7 @@ pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType, symmet
         let mut new = HashSet::new();
 
         for seq in &class {
-            for equivalence in seqtype.equivalences() {
+            for equivalence in equivalences {
                 for equ in equivalence(&seq, seqtype, symmetry_group).into_iter() {
                     if !class.contains(&equ) {
                         new.insert(equ);
@@ -165,7 +165,7 @@ pub fn generate_equivalence_class(seq : &QuadSeq, seqtype : SequenceType, symmet
 }
 
 // Generates symbolic symmetry group for sequences of a given length and type
-pub fn generate_symmetry_group(len : usize, seqtype : SequenceType) -> HashSet<QuadSeq> {
+pub fn generate_symmetry_group(len : usize, seqtype : SequenceType, equivalences : &Vec<fn(&QuadSeq, SequenceType, bool) -> HashSet<QuadSeq>>) -> HashSet<QuadSeq> {
     let w1 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + 1) as i8).collect();
     let w2 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + len + 1) as i8).collect();
     let w3 : Vec<i8> = vec![0; len].into_iter().enumerate().map(|(ind, _)| (ind + (2 * len) + 1) as i8).collect();
@@ -174,7 +174,7 @@ pub fn generate_symmetry_group(len : usize, seqtype : SequenceType) -> HashSet<Q
     let mut w = QuadSeq::new(len);
     w.set_all_values((&w1, &w2, &w3, &w4));
     
-    generate_equivalence_class(&w, seqtype, true)
+    generate_equivalence_class(&w, seqtype, equivalences, true)
 }
 
 // Generates equivalence class for a sequence using its symmetry group
@@ -231,7 +231,7 @@ pub fn generate_equivalent_quad_seqs(quad_seq_list : &Vec<QuadSeq>, seqtype : Se
             continue;
         }
 
-        let class = generate_equivalence_class(quad_seq, seqtype, false);
+        let class = generate_equivalence_class(quad_seq, seqtype, &seqtype.equivalences(), false);
         for elm in class {
             result.insert(elm);
         }
