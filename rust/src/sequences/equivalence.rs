@@ -262,6 +262,82 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
     will.set_sequence(&seq1, &seqtag2);
 }
 
+pub fn ns_canonical(seq : &QuadSeq) -> QuadSeq {
+    let mut canonical = seq.clone();
+
+    // Negate first entry of each sequence via NS
+    'outer: loop {
+        for tag in [SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
+            let s = canonical.sequence(tag);
+            if s[0] != -1 {
+                canonical.set_sequence(&negated(&s), &tag);
+                swap(&mut canonical, SequenceTag::W, SequenceTag::X);
+                continue 'outer;
+            }
+        }
+        break;
+    }
+    
+    // Find lexicographically least two sequences
+/*
+    let mut min_tag = SequenceTag::W;
+    let mut second_min_tag = SequenceTag::X;
+
+    if seq_less_than(&canonical.sequence(second_min_tag), &canonical.sequence(min_tag)) {
+        min_tag = SequenceTag::X;
+        second_min_tag = SequenceTag::W;
+    }
+
+    for tag in [SequenceTag::Y, SequenceTag::Z] {
+        if seq_less_than(&canonical.sequence(tag), &canonical.sequence(min_tag)) {
+            second_min_tag = min_tag;
+            min_tag = tag;
+        }
+        else if seq_less_than(&canonical.sequence(tag), &canonical.sequence(second_min_tag)) {
+            second_min_tag = tag;
+        }
+    }
+
+    println!("DEBUG: Min = {}, second min = {}", min_tag.to_string(), second_min_tag.to_string());
+
+*/
+
+
+
+    // Sort smallest
+    let mut min_tag = SequenceTag::W;
+    for tag in [SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
+        if seq_less_than(&canonical.sequence(tag), &canonical.sequence(min_tag)) {
+            min_tag = tag;
+        }
+    }
+    if min_tag != SequenceTag::W {
+        swap(&mut canonical, SequenceTag::W, min_tag);
+        swap(&mut canonical, SequenceTag::Y, SequenceTag::Z);
+    }
+
+    // Sort second smallest
+    min_tag = SequenceTag::X;
+    for tag in [SequenceTag::Y, SequenceTag::Z] {
+        if seq_less_than(&canonical.sequence(tag), &canonical.sequence(min_tag)) {
+            min_tag = tag;
+        }
+    }
+    if min_tag != SequenceTag::X {
+        swap(&mut canonical, SequenceTag::X, min_tag);
+        swap(&mut canonical, SequenceTag::Y, SequenceTag::Z);
+    }
+
+    // Sort last two
+    // If this condition is not met, sequence is already in canonical form
+    if seq_less_than(&canonical.sequence(SequenceTag::Z), &canonical.sequence(SequenceTag::Y)) {
+        canonical.set_sequence(&negated(&canonical.sequence(SequenceTag::Y)), &SequenceTag::Y);
+        swap(&mut canonical, SequenceTag::Y, SequenceTag::Z);
+    }
+
+    canonical
+}
+
 // Applies a single swap and a single negation
 pub fn equivalent_negate_swap(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     let mut res : HashSet<QuadSeq> = HashSet::new();
