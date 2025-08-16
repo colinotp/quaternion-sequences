@@ -3,7 +3,7 @@ use std::{collections::HashMap, env, fs::File, io::Write, path::Path, time::Inst
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
-use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{equivalence::{equivalent_negate_swap, filter_by_rowsums, generate_equivalent_quad_seqs}, symmetries::SequenceType, williamson::QuadSeq}};
+use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{equivalence::equivalent_negate_swap, rowsum::has_sorted_rowsums, symmetries::SequenceType, williamson::QuadSeq}};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -69,7 +69,11 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
     for line_res in read_lines(&pathname).expect("error reading the file") {
         let line = line_res.expect("Error reading line");
         println!("{}", &line);
-        seqs.push(QS::from_str(&line.to_string()));
+
+        let qs = QS::from_str(&line.to_string());
+        assert!(has_sorted_rowsums(&QuadSeq::from_pqs(&qs)));
+        
+        seqs.push(qs);
     }
 
     let quad_seq_list : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
@@ -78,25 +82,10 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         quad_seq.verify(seqtype);
     }
 
-    let all = generate_equivalent_quad_seqs(&quad_seq_list, seqtype);
-    let all_size = all.len();
-
-    for elm in &all {
-        assert!(elm.to_qs().is_perfect());
-    }
-
-    println!("Generated all {} {} including equivalent sequences via {} equivalence operations\n", all_size, seqtype.to_string(), seqtype.to_string());
-
-    println!("Filtering sequences by rowsums...");
-    let time = Instant::now();
-    let filtered_rowsum = filter_by_rowsums(&all);
-    let elapsed = time.elapsed().as_secs();
-    println!("Filtering sequences by rowsums took {} seconds. Reduced to {} sequences.\n", elapsed, filtered_rowsum.len());
-
     // Filter via equivalence operations
-    println!("Filtering sequences via Hadamard equivalence operations...");
+    println!("Filtering {} sequences via Hadamard equivalence operations...", quad_seq_list.len());
     let time = Instant::now();
-    let reduced = reduce_to_equivalence(&all, seqtype, &vec![equivalent_negate_swap]);
+    let reduced = reduce_to_equivalence(&quad_seq_list, seqtype, &vec![equivalent_negate_swap]);
     let elapsed = time.elapsed().as_secs();
     println!("Filtering sequences via equivalence operations took {} seconds. Reduced to {} sequences.\n", elapsed, reduced.len());
 

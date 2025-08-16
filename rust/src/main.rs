@@ -283,7 +283,7 @@ fn main() {
             match args[1].as_str() {
                 "join" => {find_write_quad_seq(p, seqtype);},
                 "rowsums" => {find_write::write_rowsums(p, seqtype);},
-                "convert" => {hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string(), seqtype);}
+                "convert" => {hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string(), seqtype);}
                 _ => {}
             }
         }

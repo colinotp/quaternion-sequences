@@ -2,7 +2,7 @@ use std::{f64, fs::{self, DirEntry, File}, io::{Error, Write}, time::Instant};
 use itertools::iproduct;
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::{reduce_to_equivalence_par}, read_lines, sequences::{equivalence::{equivalent_automorphism, equivalent_even_alternated_negation, equivalent_reverse, equivalent_uniform_shift}, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_equivalence_par, read_lines, sequences::{equivalence::{equivalent_automorphism, equivalent_even_alternated_negation, equivalent_reverse, equivalent_uniform_shift}, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -438,6 +438,15 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     let elapsed = time.elapsed().as_secs_f32().round() as isize;
     println!("Matching took: {} seconds.", elapsed);
     eprintln!("Matching took: {} seconds.", elapsed);
+
+    // Record result of joined pairs for easier filtering in Hadamard reduction
+    let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string();
+    let mut f_joined = File::create(result_joined).expect("File creation unsuccessful");
+    let joined_string = result.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+    f_joined.write(joined_string.as_bytes()).expect("File write error");
+
+    debug_assert!(result.iter().all(|seq| has_sorted_rowsums(&seq)));
+
 
     println!("\ncount before equivalences {}", result.len());
     let time = Instant::now();
