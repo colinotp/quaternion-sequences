@@ -11,6 +11,21 @@ mod tests {
     use crate::read_lines;
 
     #[test]
+    fn test_qt_canon() {
+        let a = vec![-1,-1,-1,-1,-1,1,-1,1];
+        let b = vec![-1,-1,-1,-1,-1,1,-1,1];
+        let c = vec![-1,-1,1,-1,-1,1,1,1];
+        let d = vec![-1,1,1,1,-1,-1,1,-1];
+
+        let mut qs = QuadSeq::new(8);
+        qs.set_all_values((&a, &b, &c, &d));
+
+        let sym = generate_symmetry_group(8, SequenceType::QuaternionType, &vec![equivalent_alternated_negation, equivalent_automorphism, equivalent_uniform_shift]);
+
+        println!("Canonical form:\n{}", qt_canonical(&qs, &sym).to_string());
+    }
+
+    #[test]
     fn reduce_equiv() {
         let mut seqs = vec![];
         let pathname = "results/pairs/qts/find_9/result.seq";

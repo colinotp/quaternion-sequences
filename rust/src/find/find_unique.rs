@@ -3,7 +3,9 @@
 use std::collections::HashSet;
 
 
-use crate::sequences::{equivalence::{generate_equivalence_class, generate_equivalence_class_fast, generate_symmetry_group, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
+use itertools::Itertools;
+
+use crate::sequences::{equivalence::{equivalent_alternated_negation, equivalent_automorphism, equivalent_uniform_shift, generate_equivalence_class, generate_equivalence_class_fast, generate_symmetry_group, qt_canonical, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
 
 
 
@@ -183,3 +185,10 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType, 
         .map(|c| find_minimum(c))
         .collect()
 }
+
+pub fn reduce_to_canonical_reps(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
+    let symmetries = generate_symmetry_group(sequences[0].size(), seqtype, &vec![equivalent_automorphism, equivalent_alternated_negation, equivalent_uniform_shift]);
+
+    sequences.iter().map(|seq| qt_canonical(seq, &symmetries)).unique().collect()
+}
+

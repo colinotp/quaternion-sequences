@@ -1,8 +1,8 @@
 use std::{f64, fs::{self, DirEntry, File}, io::{Error, Write}, time::Instant};
-use itertools::iproduct;
+use itertools::{iproduct, Itertools};
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_equivalence_par, read_lines, sequences::{equivalence::{equivalent_automorphism, equivalent_even_alternated_negation, equivalent_reverse, equivalent_uniform_shift}, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_canonical_reps, read_lines, sequences::{equivalence::ns_canonical, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -450,11 +450,8 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
 
     println!("\ncount before equivalences {}", result.len());
     let time = Instant::now();
-    let filtered = match seqtype {
-        SequenceType::QuaternionType => {reduce_to_equivalence_par(&result, seqtype, &vec![equivalent_even_alternated_negation, equivalent_reverse, equivalent_uniform_shift, equivalent_automorphism])},
-        _ => {result}
-    };
-    let reduced = reduce_to_equivalence_par(&filtered, seqtype, &seqtype.equivalences());
+    let filtered = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
+    let reduced = reduce_to_canonical_reps(&filtered, seqtype);
     let elapsed = time.elapsed().as_secs();
 
     println!("count after equivalences {}", reduced.len());
