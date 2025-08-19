@@ -277,32 +277,6 @@ pub fn ns_canonical(seq : &QuadSeq) -> QuadSeq {
         }
         break;
     }
-    
-    // Find lexicographically least two sequences
-/*
-    let mut min_tag = SequenceTag::W;
-    let mut second_min_tag = SequenceTag::X;
-
-    if seq_less_than(&canonical.sequence(second_min_tag), &canonical.sequence(min_tag)) {
-        min_tag = SequenceTag::X;
-        second_min_tag = SequenceTag::W;
-    }
-
-    for tag in [SequenceTag::Y, SequenceTag::Z] {
-        if seq_less_than(&canonical.sequence(tag), &canonical.sequence(min_tag)) {
-            second_min_tag = min_tag;
-            min_tag = tag;
-        }
-        else if seq_less_than(&canonical.sequence(tag), &canonical.sequence(second_min_tag)) {
-            second_min_tag = tag;
-        }
-    }
-
-    println!("DEBUG: Min = {}, second min = {}", min_tag.to_string(), second_min_tag.to_string());
-
-*/
-
-
 
     // Sort smallest
     let mut min_tag = SequenceTag::W;
