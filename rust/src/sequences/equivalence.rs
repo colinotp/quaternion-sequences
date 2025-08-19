@@ -266,11 +266,6 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
 pub fn qt_canonical(seq : &QuadSeq, symmetries : &HashSet<QuadSeq>) -> QuadSeq {
     let ns_canonical_forms : HashSet<QuadSeq> = generate_equivalence_class_fast(seq, symmetries).into_iter().map(|s| ns_canonical(&s)).collect();
 
-    println!("{} unique canonical forms:", ns_canonical_forms.len());
-    for seq in ns_canonical_forms.iter() {
-        println!("{}",seq.to_string());
-    }
-
     if let Some(min) = ns_canonical_forms.iter().min_by(|a,b| {
         if will_less_than(&a, &b) {std::cmp::Ordering::Less}
         else if will_less_than(&b, &a) {std::cmp::Ordering::Greater}
