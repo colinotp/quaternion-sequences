@@ -275,7 +275,7 @@ fn main() {
         }
         // Matches data from sorted .pair files to generate sequences
         "join" => {
-            assert_eq!(args.len(), 3, "Invalid args passed");
+            assert_eq!(args.len(), 4, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
             find_write_quad_seq(p, seqtype);
