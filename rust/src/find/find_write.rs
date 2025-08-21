@@ -30,7 +30,7 @@ pub fn write_rowsums(p : usize, seqtype : SequenceType) {
 
 
 
-
+#[derive(Clone, Copy)]
 pub enum EquationSide {
     LEFT, RIGHT
 }
