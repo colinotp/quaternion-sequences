@@ -12,6 +12,7 @@ use time::*;
 mod sequences;
 mod tests;
 mod find;
+use crate::find::find_write::{create_rowsum_dirs, write_pair_single_rowsum, write_pairs, write_pairs_rowsum, write_rowsums};
 use crate::find::*;
 use crate::find::find_unique::reduce_to_equivalence;
 use crate::sequences::{williamson::*, sequence::*, symmetries::*};
@@ -244,61 +245,58 @@ fn str_to_isize(source : &str) -> isize {
 fn main() {
     let args : Vec<String> = std::env::args().collect();
 
-    match args.len() {
+    if args.len() == 1 {
         // For running individual functions
-        1 => {
-            //find_pqs(None);
-            //find_williamson();
-            //find_pqs(Some(Symmetry::I));
-            convert_qs_to_matrices();
-            //find_unique_williamson_type_of_size(9);
-            //find_q24(8, None);
-            //find_write::write_pairs(7);
-        },
-        // General operations on sequences (mostly deprecated)
-        2 => match args[1].as_str() {
-            "pqs" => {find_pqs(None);},
-            "ws" => {find_williamson();},
-            "wts" => {find_williamson_type();},
-            _ => {panic!("Invalid argument");}
-        },
-        // Operations on sequences of a given length p
-        3 => {
+
+        //find_pqs(None);
+        //find_williamson();
+        //find_pqs(Some(Symmetry::I));
+        convert_qs_to_matrices();
+        //find_unique_williamson_type_of_size(9);
+        //find_q24(8, None);
+        //find_write::write_pairs(7);
+
+        return;
+    }
+
+    match args[1].as_str() {
+        // Verifying QTS of a given length satisfy amicability condition (e.g., verifies all QTS are WTS)
+        "amicable" => {
+            assert_eq!(args.len(), 3, "Invalid args passed");
             let p = str_to_usize(&args[2]);
-            match args[1].as_str() {
-                "pqs" => {find_pqs_of_type(p, &None);}
-                "ws" => {find_williamson_of_size(p);}
-                "wts" => {find_williamson_type_of_size(p);}
-                "unique" => {find_unique_williamson_type_of_size(p);}
-                "equation" => {find_with_rowsum::find(p, SequenceType::QuaternionType);}
-                "matching" => {find_matching_algorithm(p);}
-                "amicable" => {verify_qts_eq_wts(p);}
-                _ => {}
-            };
+            verify_qts_eq_wts(p);
         },
-        // Matching step/rowsum generation/Hadamard equivalence reduction
-        4 => {
+        // Generates possible rowsums for length p, writes to .quad file
+        "rowsums" => {
+            assert_eq!(args.len(), 3, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
-            match args[1].as_str() {
-                "join" => {find_write_quad_seq(p, seqtype);},
-                "rowsums" => {find_write::write_rowsums(p, seqtype);},
-                "convert" => {hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string(), seqtype);}
-                _ => {}
-            }
+            write_rowsums(p, seqtype);
         }
-        // Pair generation
-        5 => {
+        // Matches data from sorted .pair files to generate sequences
+        "join" => {
+            assert_eq!(args.len(), 3, "Invalid args passed");
+            let seqtype = str_to_seqtype(&args[2]);
+            let p = str_to_usize(&args[3]);
+            find_write_quad_seq(p, seqtype);
+        }
+        // Converts sequences to Hadamard matrices up to Hadamard equivalence
+        "convert" => {
+            assert_eq!(args.len(), 3, "Invalid args passed");
+            let seqtype = str_to_seqtype(&args[2]);
+            let p = str_to_usize(&args[3]);
+            hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string(), seqtype);
+        },
+        // Generates .pair files used in algorithm 
+        "pairs" => {
+            assert_eq!(args.len(), 5, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
             let pairing = str_to_rowsum_pairing(&args[4]);
-            match args[1].as_str() {
-                "pairs" => {find_write::write_pairs(p, seqtype, pairing);}
-                _ => {}
-            }
+            write_pairs(p, seqtype, pairing);
         },
-        // Pair generation for a single set of rowsums (or file generation)
-        9 => {
+        // Generates .pair files corresponding to a single set of rowsums
+        "pairs_rowsum" => {
             let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
             let p = str_to_usize(&args[3]);     // length
             let a = str_to_isize(&args[4]);     // rowsum 1
@@ -308,14 +306,22 @@ fn main() {
 
             let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
 
-            match args[1].as_str() {
-                "pairs_rowsum" => {find_write::write_pairs_rowsum(&folder, (a,b,c,d), p, pairing)}
-                "create" => {find_write::create_rowsum_dirs(folder, p, (a,b,c,d), pairing);}
-                _ => {}
-            }
+            write_pairs_rowsum(&folder, (a,b,c,d), p, pairing);
         },
-        // Pair generation for a single pair from a single set of rowsums
-        10 => {
+        "create" => {
+            let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
+            let p = str_to_usize(&args[3]);     // length
+            let a = str_to_isize(&args[4]);     // rowsum 1
+            let b = str_to_isize(&args[5]);     // rowsum 2
+            let c = str_to_isize(&args[6]);     // rowsum 3
+            let d = str_to_isize(&args[7]);     // rowsum 4
+
+            let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
+
+            create_rowsum_dirs(folder, p, (a,b,c,d), pairing);
+        },
+        // Generates .pair file for one pair, corresponding to one set of rowsums
+        "pair_single" => {
             let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
             let p = str_to_usize(&args[3]);     // length
             let a = str_to_isize(&args[4]);     // rowsum 1
@@ -330,12 +336,11 @@ fn main() {
                 Ok(a) => {a},
                 Err(_) => {panic!("argument isn't an integer !")}
             };
+            
+            write_pair_single_rowsum(folder, (a,b,c,d), p, pairing, pair);
+        }
 
-            match args[1].as_str() {
-                "pair_single" => {find_write::write_pair_single_rowsum(folder, (a,b,c,d), p, pairing, pair);},
-                _ => {}
-            }
-        },
-        _ => {}
-    };
+
+        _ => {println!("Unrecognized arg '{}'", args[1])}
+    }
 }
