@@ -14,6 +14,7 @@ then
 	echo "./driver.sh <sequencetype> <n>"
 	echo "Optional flags:"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -c: Use auto/cross correlation for matching instead of PSD/CPSD"
 	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
 fi
@@ -24,15 +25,19 @@ shift
 shift
 foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
+match_option="psd"
 
 # Empty out existing .pair files to avoid conflicts
-while getopts "dp:" flag; do
+while getopts "cdp:" flag; do
 	case $flag in
 		d)
 		./pair_file_cleanup.sh $type $n
 		;;
 		p)
 		rowsum_pairing=$OPTARG
+		;;
+		c)
+		match_option="correlation"
 		;;
 		/?)
 		echo "Invalid argument(s) passed. Exiting."
@@ -60,7 +65,7 @@ start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-cargo run pairs $type $n $rowsum_pairing &> $filename
+cargo run pairs $type $n $match_option $rowsum_pairing &> $filename
 if [ $? -ne 0 ]
 then
 	echo 'ERROR: pairs exited unsuccessfully. See log for details'

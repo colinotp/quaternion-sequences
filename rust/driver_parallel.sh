@@ -6,6 +6,7 @@ then
 	echo "Example usage: ./driver_parallel.sh <sequencetype> <n>"
 	echo "Optional flags:"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -c: Use auto/cross correlation for matching instead of PSD/CPSD"
 	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include XY, XZ, XW. Default is XW"
 	exit 0
 fi
@@ -16,14 +17,18 @@ shift
 shift
 foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
+match_option="psd"
 
-while getopts "dp:" flag; do
+while getopts "cdp:" flag; do
 	case $flag in
 		d)
 		./pair_file_cleanup.sh $n
 		;;
 		p)
 		rowsum_pairing=$OPTARG
+		;;
+		c)
+		match_option="correlation"
 		;;
 		\?)
 		echo "Invalid argument(s) passed. Exiting."
@@ -52,7 +57,7 @@ while IFS= read -r rowsum
 do
 	./target/release/rust create $type $n $rowsum $rowsum_pairing
     # Submit job for first pair, capturing job ID
-	jobid=$(sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 1 | awk '{print $4}')
+	jobid=$(sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $match_option $rowsum_pairing 1 | awk '{print $4}')
 	# Check for successful job submission
 	if [[ -z "$jobid" ]]; then
 		echo "Failed to submit job for rowsum $rowsum"
@@ -62,7 +67,7 @@ do
 	echo "Submitted job $jobid for rowsum $rowsum"
 
 	# Submit job for second pair, capturing job ID
-	jobid=$(sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 2 | awk '{print $4}')
+	jobid=$(sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $match_option $rowsum_pairing 2 | awk '{print $4}')
 	# Check for successful job submission
 	if [[ -z "$jobid" ]]; then
 		echo "Failed to submit job for rowsum $rowsum"

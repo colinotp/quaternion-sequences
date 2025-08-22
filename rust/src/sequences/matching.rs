@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use num_complex::Complex;
 
-use crate::sequences::{fourier::{inverse_dft, iter_over_filtered_couples}, sequence::seq_multiply_pointwise_complex};
+use crate::{find::find_write::EquationSide, sequences::{fourier::{inverse_dft, iter_over_filtered_couples}, sequence::seq_multiply_pointwise_complex}};
 
 use super::williamson::{SequenceTag, periodic_autocorrelation, cross_correlation};
 
@@ -72,6 +72,13 @@ pub fn compute_auto_correlation_pair_dft(psd_vec1 : &Vec<f64>, len1 : usize, psd
         res.push(auto1[offset] + auto2[offset]);
     }
     res
+}
+
+pub fn compute_psd_pair(psd_vec1 : &Vec<f64>, psd_vec2 : &Vec<f64>, len : usize, side : EquationSide) -> Vec<f64> {
+    match side {
+        EquationSide::LEFT => psd_vec1.iter().zip(psd_vec2.iter()).map(|(a,b)| (a + b)).collect(),
+        EquationSide::RIGHT => psd_vec1.iter().zip(psd_vec2.iter()).map(|(a,b)| (4 * len) as f64 - (a + b)).collect()
+    }
 }
 
 pub fn compute_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>, tags : &(SequenceTag, SequenceTag)) -> Vec<isize> {

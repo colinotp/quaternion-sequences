@@ -2,7 +2,7 @@ use std::{f64, fs::{self, DirEntry, File}, io::{Error, Write}, time::Instant};
 use itertools::{iproduct, Itertools};
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_canonical_reps, read_lines, sequences::{equivalence::ns_canonical, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_canonical_reps, read_lines, sequences::{equivalence::ns_canonical, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_correlations_dft, compute_cross_psd_pair, compute_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -33,6 +33,11 @@ pub fn write_rowsums(p : usize, seqtype : SequenceType) {
 #[derive(Clone, Copy)]
 pub enum EquationSide {
     LEFT, RIGHT
+}
+
+#[derive(Clone, Copy)]
+pub enum MatchOption {
+    CORRELATION, PSD
 }
 
 
@@ -120,7 +125,7 @@ pub fn verify_rowsums(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Seque
     true
 }
 
-pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), seqtype : SequenceType, rs : (isize, isize, isize, isize), p : usize, folder_path : &String, side : EquationSide) {
+pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), seqtype : SequenceType, rs : (isize, isize, isize, isize), p : usize, folder_path : &String, side : EquationSide, match_option : MatchOption) {
     // This function generates the files that end in .pair used for the algorithm
 
     assert!(verify_rowsums(sequences, tags, rs));
@@ -138,43 +143,82 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     // Instead of writing each line one by one n the file, we use a buffer to write them by chunks of 1000 lines
     let mut buffer = "".to_string();
     let mut buffer_counter = 0;
-    let mut min_half_int_difference = 1.0;
+    
+    let mut min_half_int_difference_psd = 1.0;
+    let mut min_half_int_difference_cpsd = 1.0;
 
     // We iterate over the couples of sequences, but we filter out some with the dft checks
     for pair in iter_over_enumerate_filtered_couples_psds(sequences.0, sequences.1, 4.*p as f64){
         let mut result = "".to_string();
 
         // We compute the auto and cross correlation values when considered on the other side of the equation
-        let autoc_values = compute_auto_correlation_pair_dft(&pair.norm1, pair.seq_enum1.1.len(), &pair.norm2, pair.seq_enum2.1.len());
-        let crossc_values = compute_cross_psd_pair(pair.dft1, pair.dft2, &(tags.0.clone(), tags.1.clone()), pair.seq_enum1.1.len());
+        match match_option {
+            // For matching via auto/cross correlation
+            MatchOption::CORRELATION => {
+                let autoc_values = compute_auto_correlation_pair_dft(&pair.norm1, pair.seq_enum1.1.len(), &pair.norm2, pair.seq_enum2.1.len());
+                let crossc_values = compute_cross_correlations_dft(&pair.dft1, &pair.dft2, &(tags.0.clone(), tags.1.clone()), pair.seq_enum1.1.len());
+                
+                // Add autocorrelation values to vector
+                for a in autoc_values {
+                    result += &(op(a).to_string() + &"_");
+                }
 
-        // We add these values to the current line
-        for a in autoc_values {
-            result += &(op(a).to_string() + &"_");
-        }
-        
-        // Depending on the sequence type, crosscorrelation values might not need to be stored, or even computed
-        match seqtype {
-            SequenceType::QuaternionType => {
-                for c in crossc_values {
-                    let difference = (c.norm().fract() - 0.5).abs();
-                    if difference < f64_tolerance.into() && difference < min_half_int_difference {
-                        min_half_int_difference = difference;
+                // Add crosscorrelation values to vector
+                match seqtype {
+                    SequenceType::QuaternionType => {
+                        for c in crossc_values {
+                            result += &(op(c).to_string() + &"_");
+                        }
+                    },
+                    SequenceType::WilliamsonType => {
+                        if crossc_values.into_iter().any(|val| val == 0) {
+                            continue;
+                        }
+                    },
+                    // Williamson sequences only require symmetry, and the PAF conditions
+                    SequenceType::Williamson => {}
+                    _ => {panic!("Not implemented yet");}
+                }
+            },
+            // For matching via PSD/CPSD
+            MatchOption::PSD => {
+                let psd_values = compute_psd_pair(&pair.norm1, &pair.norm2, p, side);
+                let cpsd_values = compute_cross_psd_pair(pair.dft1, pair.dft2, &(tags.0.clone(), tags.1.clone()), pair.seq_enum1.1.len());
+
+                // We add these values to the current line
+                for a in psd_values {
+                    let difference = (a.fract() - 0.5).abs();
+                    if difference < f64_tolerance.into() && difference < min_half_int_difference_psd {
+                        min_half_int_difference_psd = difference;
                     }
 
-                    result += &(op(c.norm().round() as isize).to_string() + &"_");
+                    result += &((a.round() as isize).to_string() + &"_");
                 }
-            },
-            SequenceType::WilliamsonType => {
-                if crossc_values.into_iter().any(|val| val.re > 0.0001 || val.im > 0.0001) {
-                    continue;
-                }
-            },
-            // Williamson sequences only require symmetry, and the PAF conditions
-            SequenceType::Williamson => {}
-            _ => {panic!("Not implemented yet");}
-        }
+                
+                // Depending on the sequence type, crosscorrelation values might not need to be stored, or even computed
+                match seqtype {
+                    SequenceType::QuaternionType => {
+                        for c in cpsd_values {
+                            let difference = (c.norm().fract() - 0.5).abs();
+                            if difference < f64_tolerance.into() && difference < min_half_int_difference_cpsd {
+                                min_half_int_difference_cpsd = difference;
+                            }
 
+                            result += &(op(c.norm().round() as isize).to_string() + &"_");
+                        }
+                    },
+                    SequenceType::WilliamsonType => {
+                        if cpsd_values.into_iter().any(|val| val.re > 0.0001 || val.im > 0.0001) {
+                            continue;
+                        }
+                    },
+                    // Williamson sequences only require symmetry, and the PAF conditions
+                    SequenceType::Williamson => {}
+                    _ => {panic!("Not implemented yet");}
+                }
+            }
+        }
+        
         if result.len() == 0 {
             result += &"_";
         }
@@ -192,8 +236,11 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
     }
 
-    if min_half_int_difference < 0.9 {
-        println!("WARNING (pair {}{}): Cross correlation values approximate half-integer with error as small as {}", tags.0.to_string(), tags.1.to_string(), min_half_int_difference);
+    if min_half_int_difference_psd < 0.9 {
+        println!("WARNING (pair {}{}): PSD values approximate half-integer with error as small as {}", tags.0.to_string(), tags.1.to_string(), min_half_int_difference_psd);
+    }
+    if min_half_int_difference_cpsd < 0.9 {
+        println!("WARNING (pair {}{}): CPSD values approximate half-integer with error as small as {}", tags.0.to_string(), tags.1.to_string(), min_half_int_difference_cpsd);
     }
     
     f.write(buffer.as_bytes()).expect("Error when writing in the file");
@@ -212,7 +259,7 @@ pub fn get_indices(pairing: Option<RowsumPairing>, pair: u8) -> Option<(usize, u
     }
 }
 
-pub fn write_pair_single(seqtype : SequenceType, p: usize, pairing: Option<RowsumPairing>, pair: u8) {
+pub fn write_pair_single(seqtype : SequenceType, p: usize, match_option : MatchOption, pairing: Option<RowsumPairing>, pair: u8) {
     // This function is identical to write_pairs(), except for the purpose of running pairs individually on separate processors
     // `pair` should be either a 1 or a 2, which decides whether to look at the first or second pair given by the chosen pairing
 
@@ -226,12 +273,12 @@ pub fn write_pair_single(seqtype : SequenceType, p: usize, pairing: Option<Rowsu
     let folder = seqtype.to_string();
 
     for rs in rowsums {
-        write_pair_single_rowsum(folder.clone(), rs, p, pairing.clone(), pair);
+        write_pair_single_rowsum(folder.clone(), rs, p, match_option, pairing.clone(), pair);
     }
 
 }
 
-pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize, pairing: Option<RowsumPairing>, pair: u8) {
+pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>, pair: u8) {
     let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
     let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
 
@@ -272,7 +319,7 @@ pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isiz
     };
 
     let now = Instant::now();
-    write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), str_to_seqtype(&folder), rs, p, &folder_path, side);
+    write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), str_to_seqtype(&folder), rs, p, &folder_path, side, match_option);
     let elapsed_time = now.elapsed().as_secs_f32();
     eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
     
@@ -313,7 +360,7 @@ pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize,
     File::create(path2).expect("Invalid file ?");    
 }
 
-pub fn write_pairs(p : usize, seqtype : SequenceType, pairing: Option<RowsumPairing>) {
+pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
     // all the possible rowsums of p
@@ -325,11 +372,11 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, pairing: Option<RowsumPair
 
     let folder = seqtype.to_string();
     for rs in rowsums {
-        write_pairs_rowsum(&folder, rs, p, pairing.clone());
+        write_pairs_rowsum(&folder, rs, p, match_option, pairing.clone());
     }
 }
 
-pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, pairing: Option<RowsumPairing>) {
+pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>) {
     // This function generates the sequences possible for specific rowsums and stores them
     
     let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
@@ -378,16 +425,16 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     // Uses sequences to generate .pair files based on chosen pairing (default pairing is XW)
     match pairing {
         Some(RowsumPairing::WX) => {
-            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype, rs, p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
+            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
         },
         Some(RowsumPairing::WY) => {
-            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
+            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
         },
         Some(RowsumPairing::WZ) | None => {
-            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::LEFT);
-            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::RIGHT);
+            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
+            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
         }
     };
     

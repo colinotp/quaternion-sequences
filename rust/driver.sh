@@ -16,6 +16,7 @@ then
 	echo "  * -s: Use this flag for SLURM jobs"
 	echo "  * -h: Convert sequences to Hadamard matrices when finished"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
+	echo "  * -c: Use auto/cross correlation for matching instead of PSD/CPSD"
 	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include WX, WY and WZ (e.g., WX means that the sequences of rowsum W are paired with the sequences of rowsum X). Note that the code follows the convention W <= X <= Y <= Z. Default is WZ"
 	exit 0
 fi
@@ -34,9 +35,10 @@ foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="WZ"
 use_slurm=false
 hadamard=false
+match_option="psd"
 
 # Empty out existing .pair files to avoid conflicts
-while getopts "hsdp:" flag; do
+while getopts "chsdp:" flag; do
 	case $flag in
 		s)
 		use_slurm=true
@@ -49,6 +51,9 @@ while getopts "hsdp:" flag; do
 		;;
 		p)
 		rowsum_pairing=$OPTARG
+		;;
+		c)
+		match_option="correlation"
 		;;
 		/?)
 		echo "Invalid argument(s) passed. Exiting."
@@ -84,7 +89,7 @@ start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pairs $type $n $rowsum_pairing &> $filename
+./target/release/rust pairs $type $n $match_option $rowsum_pairing &> $filename
 if [ $? -ne 0 ]
 then
 	echo 'ERROR: pairs exited unsuccessfully. See log for details'

@@ -12,7 +12,7 @@ use time::*;
 mod sequences;
 mod tests;
 mod find;
-use crate::find::find_write::{create_rowsum_dirs, write_pair_single_rowsum, write_pairs, write_pairs_rowsum, write_rowsums};
+use crate::find::find_write::{create_rowsum_dirs, write_pair_single_rowsum, write_pairs, write_pairs_rowsum, write_rowsums, MatchOption};
 use crate::find::*;
 use crate::find::find_unique::reduce_to_equivalence;
 use crate::sequences::{williamson::*, sequence::*, symmetries::*};
@@ -215,6 +215,14 @@ fn str_to_rowsum_pairing(n : &String) -> Option<RowsumPairing> {
     }
 }
 
+fn str_to_match_option(n : &str) -> MatchOption {
+    match n {
+        "correlation" => MatchOption::CORRELATION,
+        "psd" => MatchOption::PSD,
+        _ => {panic!("Invalid MatchOption passed")}
+    }
+}
+
 fn str_to_seqtype(n : &str) -> SequenceType {
     match n {
         "qts" => SequenceType::QuaternionType,
@@ -268,7 +276,7 @@ fn main() {
         },
         // Generates possible rowsums for length p, writes to .quad file
         "rowsums" => {
-            assert_eq!(args.len(), 3, "Invalid args passed");
+            assert_eq!(args.len(), 4, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
             write_rowsums(p, seqtype);
@@ -282,21 +290,23 @@ fn main() {
         }
         // Converts sequences to Hadamard matrices up to Hadamard equivalence
         "convert" => {
-            assert_eq!(args.len(), 3, "Invalid args passed");
+            assert_eq!(args.len(), 4, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
             hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string(), seqtype);
         },
         // Generates .pair files used in algorithm 
         "pairs" => {
-            assert_eq!(args.len(), 5, "Invalid args passed");
+            assert_eq!(args.len(), 6, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
-            let pairing = str_to_rowsum_pairing(&args[4]);
-            write_pairs(p, seqtype, pairing);
+            let match_option = str_to_match_option(&args[4]);
+            let pairing = str_to_rowsum_pairing(&args[5]);
+            write_pairs(p, seqtype, match_option, pairing);
         },
         // Generates .pair files corresponding to a single set of rowsums
         "pairs_rowsum" => {
+            assert_eq!(args.len(), 10, "Invalid args passed");
             let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
             let p = str_to_usize(&args[3]);     // length
             let a = str_to_isize(&args[4]);     // rowsum 1
@@ -304,9 +314,10 @@ fn main() {
             let c = str_to_isize(&args[6]);     // rowsum 3
             let d = str_to_isize(&args[7]);     // rowsum 4
 
+            let match_option = str_to_match_option(&args[8]);   // Correlation or PSD matching
             let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
 
-            write_pairs_rowsum(&folder, (a,b,c,d), p, pairing);
+            write_pairs_rowsum(&folder, (a,b,c,d), p, match_option, pairing);
         },
         "create" => {
             let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
@@ -322,6 +333,7 @@ fn main() {
         },
         // Generates .pair file for one pair, corresponding to one set of rowsums
         "pair_single" => {
+            assert_eq!(args.len(), 11, "Invalid args passed");
             let folder = str_to_seqtype(&args[2]).to_string();  // verifies seqtype input is correct
             let p = str_to_usize(&args[3]);     // length
             let a = str_to_isize(&args[4]);     // rowsum 1
@@ -329,6 +341,7 @@ fn main() {
             let c = str_to_isize(&args[6]);     // rowsum 3
             let d = str_to_isize(&args[7]);     // rowsum 4
 
+            let match_option = str_to_match_option(&args[8]);   // Correlation or PSD matching
             let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
             
             // First or second pair (1 or 2)?
@@ -337,7 +350,7 @@ fn main() {
                 Err(_) => {panic!("argument isn't an integer !")}
             };
             
-            write_pair_single_rowsum(folder, (a,b,c,d), p, pairing, pair);
+            write_pair_single_rowsum(folder, (a,b,c,d), p, match_option, pairing, pair);
         }
 
 
