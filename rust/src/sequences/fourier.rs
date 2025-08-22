@@ -93,7 +93,6 @@ pub struct SequencePairData<'a> {
     pub norm2: Vec<f64>,
 }
 
-// TODO: Make struct to encapsulate return type
 pub fn iter_over_enumerate_filtered_couples_psds<'a>(sequences1: &'a Vec<Vec<i8>>, sequences2: &'a Vec<Vec<i8>>, bound: f64,) -> impl Iterator<Item = SequencePairData<'a>> {
     let couples = iproduct!(sequences1.iter().enumerate(), sequences2.iter().enumerate());
 
