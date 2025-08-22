@@ -58,7 +58,11 @@ pub fn reduce_to_hadamard_equivalence( mats : &Vec<HM>) -> Vec<&HM> {
     mats.iter().unique_by(|mat|{canon_hm(mat)}).collect_vec()
 }
 
+pub fn reduce_to_ns_equivalence(sequences : &Vec<QuadSeq>) -> Vec<QuadSeq> {
+    let set : HashSet<QuadSeq> = sequences.iter().map(|seq| ns_canonical(seq)).collect();
 
+    set.into_iter().collect()
+}
 
 pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType) {
 
@@ -85,7 +89,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
     // Filter via equivalence operations
     println!("Filtering {} sequences via Hadamard equivalence operations...", quad_seq_list.len());
     let time = Instant::now();
-    let reduced = reduce_to_equivalence(&quad_seq_list, seqtype, &vec![equivalent_negate_swap]);
+    let reduced = reduce_to_ns_equivalence(&quad_seq_list);
     let elapsed = time.elapsed().as_secs();
     println!("Filtering sequences via equivalence operations took {} seconds. Reduced to {} sequences.\n", elapsed, reduced.len());
 
