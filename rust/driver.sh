@@ -10,7 +10,7 @@
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
 then
-	echo "This driver computes sequences for the given length n:"
+	echo "This driver computes sequences for the given length n. It does not convert the sequences to Hadamard matrices unless the -h flag is passed. Usage:"
 	echo "./driver.sh <sequencetype> <n> [flags]"
 	echo "Optional flags:"
 	echo "  * -s: Use this flag for SLURM jobs"

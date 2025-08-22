@@ -254,16 +254,12 @@ fn main() {
     let args : Vec<String> = std::env::args().collect();
 
     if args.len() == 1 {
-        // For running individual functions
-
-        //find_pqs(None);
-        //find_williamson();
-        //find_pqs(Some(Symmetry::I));
-        convert_qs_to_matrices();
-        //find_unique_williamson_type_of_size(9);
-        //find_q24(8, None);
-        //find_write::write_pairs(7);
-
+        println!("This program is accompanied by several driver scripts:");
+        println!("  * driver.sh is used to run the main algorithm as described in our paper");
+        println!("  * convert.sh is used to convert generated sequences to Hadamard matrices up to Hadamard equivalence");
+        println!("  * collect_results.py is used to generate a table with data from computations");
+        println!("  * pair_file_cleanup.sh is used to remove all .pair files, which can have very large sizes");
+        println!("See the README for more information");
         return;
     }
 
