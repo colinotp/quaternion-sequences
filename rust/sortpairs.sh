@@ -41,7 +41,7 @@ do
 	then
 		for filename in $dirname/*.pair;
 		do
-			echo $filename
+			echo "Sorting file $filename ..."
 			if [ "$use_slurm" = true ]; then
 				sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
 				status=$?

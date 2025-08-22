@@ -1,9 +1,9 @@
-use std::{collections::HashMap, env, fs::File, io::Write, path::Path, time::Instant};
+use std::{collections::{HashMap, HashSet}, fs::File, io::Write, path::Path, time::Instant};
 
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
-use crate::{find::find_unique::reduce_to_equivalence, read_lines, sequences::{equivalence::equivalent_negate_swap, rowsum::has_sorted_rowsums, symmetries::SequenceType, williamson::QuadSeq}};
+use crate::{read_lines, sequences::{equivalence::ns_canonical, rowsum::has_sorted_rowsums, symmetries::SequenceType, williamson::QuadSeq}};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -68,11 +68,9 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     let mut seqs = vec![];
 
-    println!("{:?}",env::current_dir());
-    println!("{pathname}");
-    for line_res in read_lines(&pathname).expect("error reading the file") {
+    println!("Converting sequences found in {pathname} to Hadamard matrices up to Hadamard equivalence ...");
+    for line_res in read_lines(&pathname).expect(&format!("Error reading file. Make sure sequences have already been generated for this length (e.g., {} should exist and not be empty)", pathname)) {
         let line = line_res.expect("Error reading line");
-        println!("{}", &line);
 
         let qs = QS::from_str(&line.to_string());
         assert!(has_sorted_rowsums(&QuadSeq::from_pqs(&qs)));
@@ -106,11 +104,9 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     println!("Number of matrices up to equivalence : {}", /*equ.len()*/ count);
 
-    let result_name = pathname.split(".").next().expect("No first element").to_string() + &".mat";
-
-    println!("{result_name}");
-    let path = Path::new(&result_name);
-    let mut result_file = File::create(path).expect("Invalid file ?");
+    let input_file = Path::new(&pathname);
+    let result_path = input_file.parent().expect("Invalid file").join("result.mat");
+    let mut result_file = File::create(result_path).expect("Invalid file ?");
 
     let mut result_string = "".to_string();
     for mat in equ {

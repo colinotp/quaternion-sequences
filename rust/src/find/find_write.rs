@@ -305,8 +305,8 @@ pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isiz
     write_sequences(&sequences_0, &tags[pair_indices.0], &folder_path);
     write_sequences(&sequences_1, &tags[pair_indices.1], &folder_path);
 
-    let elapsed_time = now.elapsed().as_secs_f32();
-    eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+    let elapsed_time = now.elapsed().as_secs();
+    eprintln!("Generating all sequences with rowsums {}, {}, {}, {} took {elapsed_time} seconds", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
 
     let side;
     match pair {
@@ -364,6 +364,7 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
     // all the possible rowsums of p
+    println!("Generating rowsum decompositions");
     let rowsums = generate_rowsums(p);
     for rs in &rowsums {
         eprintln!("{:?}", rs);
@@ -383,7 +384,6 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
     
     let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
-    println!("{}",folder_path);
     fs::create_dir_all(&folder_path).expect("Error when creating the dir");
 
     let seqtype = str_to_seqtype(folder);
@@ -416,8 +416,8 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     write_sequences(&sequences_2, &tags[2], &folder_path);
     write_sequences(&sequences_3, &tags[3], &folder_path);
     
-    let elapsed_time = now.elapsed().as_secs_f32();
-    eprintln!("The function took: {elapsed_time} seconds to generate sequences with rowsums: {}, {}, {}, {}", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+    let elapsed_time = now.elapsed().as_secs();
+    eprintln!("Generating all sequences with rowsums {}, {}, {}, {} took {elapsed_time} seconds", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
 
 
     let now = Instant::now();
@@ -438,8 +438,8 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
         }
     };
     
-    let elapsed_time = now.elapsed().as_secs_f32();
-    eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
+    let elapsed_time = now.elapsed().as_secs();
+    eprintln!("Generating .pair files for both pairs took {elapsed_time} seconds\n");
 }
 
 pub fn symmetric(seq : &Vec<i8>) -> bool {
@@ -466,7 +466,6 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     let folder = seqtype.to_string();
 
     let find_i = fs::read_dir("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string()).unwrap();
-    println!("{}", "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string());
 
     for rowsum_x_y in find_i {
         let directory = rowsum_x_y.unwrap();
@@ -477,7 +476,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     
             let (pathnames, order) = get_order_from_dir(&directory);
     
-            println!("Matching files in {:?}", directory.file_name());
+            println!("Matching files in /{} ...", directory.file_name().into_string().expect("File error"));
             result.append(&mut join_pairs_files(&pathnames, seqtype, &order, &sequences));
         }
     }
@@ -488,20 +487,20 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
 
     // Record result of joined pairs for easier filtering in Hadamard reduction
     let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string();
-    let mut f_joined = File::create(result_joined).expect("File creation unsuccessful");
+    let mut f_joined = File::create(&result_joined).expect("File creation unsuccessful");
     let joined_string = result.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
     f_joined.write(joined_string.as_bytes()).expect("File write error");
 
     debug_assert!(result.iter().all(|seq| has_sorted_rowsums(&seq)));
 
 
-    println!("\ncount before equivalences {}", result.len());
+    println!("\nFound {} {} after matching. Results stored in {}\nReducing sequences up to equivalence ...", result.len(), seqtype.to_string(), result_joined);
     let time = Instant::now();
     let filtered = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
     let reduced = reduce_to_canonical_reps(&filtered, seqtype);
     let elapsed = time.elapsed().as_secs();
 
-    println!("count after equivalences {}", reduced.len());
+    println!("Found {} {} after reducing to equivalence", reduced.len(), seqtype.to_string());
     println!("Reducing to equivalence took: {} seconds.", elapsed);
     eprintln!("Reducing to equivalence took: {} seconds.", elapsed);
     
