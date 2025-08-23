@@ -1,25 +1,32 @@
 # Description
 
+**NOTE:** This README is a work in progress.
+
 This repository will contain various approaches and algorithms to find specific quaternion sequences
 The python folder contains python code, and the rust folder contains rust code.
 The cpp folder contains Curtis Bright's implementation of a Williamson sequences search.
 
-## The current state of the code
+The algorithm to find Perfect Quaternion Sequences is written in rust, and is accessible through shell scripts.
 
-The algorithm to find Perfect Quaternion Sequences is written in rust.
-
-### How to run
+## How to run
 
 In order to run it, one must first compile the code once using the command:
 `cargo build --release`
 
-This will create an exectuable in the target folder, which the driver script uses.
+This will create an exectuable in the target folder, which the driver scripts use.
 
-To compute for Quaternion-type sequences of length n, the you can run the script:
-`./driver.sh n`
+### Driver scripts
 
-This will generate multiple files in the folder:
-results/pairs/wts/find_n
+* `driver.sh` runs the main algorithm as described in our paper to exhaustively generate sequences of the desired length. Results wlil be stored in /rust/results/pairs/`<sequencetype>`/find_`<length>`/  
+Usage: `./driver.sh <sequencetype> <length> [flags]`
+    * `sequencetype` is the type of sequence to be searched for. Options are either qts, wts, or ws
+    * `length` is the length 
+    * Flags:
+        * `-d`: Delete existing .seq, .pair and .sorted files before running
+        * `-h`: Convert sequences to Hadamard matrices when finished
+        * `-c`: Use auto/cross correlation for matching instead of PSD/CPSD
+        * `-s`: Use this flag for SLURM jobs
+        * `-p <pairing>`: Specify rowsum pairing to be used. Options include WX, WY and WZ (e.g., WX means that the sequences of rowsum W are paired with the sequences of rowsum X). Note that the code follows the convention W <= X <= Y <= Z. Default is WZ
 
 ### The generated files
 
