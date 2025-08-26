@@ -100,8 +100,8 @@ pub fn iter_over_enumerate_filtered_couples_psds<'a>(sequences1: &'a Vec<Vec<i8>
         let dft1 = dft_sequence(seq_enum1.1);
         let dft2 = dft_sequence(seq_enum2.1);
 
-        let norm1: Vec<f64> = dft1.iter().map(|elm| elm.norm_sqr().round()).collect();
-        let norm2: Vec<f64> = dft2.iter().map(|elm| elm.norm_sqr().round()).collect();
+        let norm1: Vec<f64> = dft1.iter().map(|elm| elm.norm_sqr()).collect();
+        let norm2: Vec<f64> = dft2.iter().map(|elm| elm.norm_sqr()).collect();
         
         let bound_exceeded = norm1.iter().enumerate().zip(norm2.iter().enumerate()).any(|((i1, n1), (i2, n2))| i1 != 0 && i2 != 0 && n1 + n2 > bound);
 

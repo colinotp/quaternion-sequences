@@ -76,8 +76,8 @@ pub fn compute_auto_correlation_pair_dft(psd_vec1 : &Vec<f64>, len1 : usize, psd
 
 pub fn compute_psd_pair(psd_vec1 : &Vec<f64>, psd_vec2 : &Vec<f64>, len : usize, side : EquationSide) -> Vec<f64> {
     match side {
-        EquationSide::LEFT => psd_vec1.iter().zip(psd_vec2.iter()).map(|(a,b)| (a + b)).collect(),
-        EquationSide::RIGHT => psd_vec1.iter().zip(psd_vec2.iter()).map(|(a,b)| (4 * len) as f64 - (a + b)).collect()
+        EquationSide::LEFT => psd_vec1.iter().skip(1).zip(psd_vec2.iter().skip(1)).map(|(a,b)| (a + b)).collect(),
+        EquationSide::RIGHT => psd_vec1.iter().skip(1).zip(psd_vec2.iter().skip(1)).map(|(a,b)| (4 * len) as f64 - (a + b)).collect()
     }
 }
 
