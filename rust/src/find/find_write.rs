@@ -364,15 +364,16 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
     // all the possible rowsums of p
-    println!("Generating rowsum decompositions");
+    println!("Generating rowsum decompositions ...");
     let rowsums = generate_rowsums(p);
     for rs in &rowsums {
-        eprintln!("{:?}", rs);
+        println!("{:?}", rs);
     }
-    eprintln!("generated {} different rowsums", rowsums.len());
+    println!("Generated {} different rowsums\n", rowsums.len());
 
     let folder = seqtype.to_string();
     for rs in rowsums {
+        println!("Generating .pair files for rowsums {:?} ...", rs);
         write_pairs_rowsum(&folder, rs, p, match_option, pairing.clone());
     }
 }
@@ -417,7 +418,7 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     write_sequences(&sequences_3, &tags[3], &folder_path);
     
     let elapsed_time = now.elapsed().as_secs();
-    eprintln!("Generating all sequences with rowsums {}, {}, {}, {} took {elapsed_time} seconds", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+    println!("Generating all sequences with rowsums {:?} took {elapsed_time} seconds", rs);
 
 
     let now = Instant::now();
@@ -439,7 +440,7 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     };
     
     let elapsed_time = now.elapsed().as_secs();
-    eprintln!("Generating .pair files for both pairs took {elapsed_time} seconds\n");
+    println!("Generating .pair files for both pairs took {elapsed_time} seconds\n");
 }
 
 pub fn symmetric(seq : &Vec<i8>) -> bool {
@@ -483,7 +484,6 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
 
     let elapsed = time.elapsed().as_secs_f32().round() as isize;
     println!("Matching took: {} seconds.", elapsed);
-    eprintln!("Matching took: {} seconds.", elapsed);
 
     debug_assert!(result.iter().all(|seq| has_sorted_rowsums(&seq)));
 
@@ -502,9 +502,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     let elapsed = time.elapsed().as_secs();
 
     println!("Found {} {} after reducing to equivalence", reduced.len(), seqtype.to_string());
-    println!("Reducing to equivalence took: {} seconds.", elapsed);
-    eprintln!("Reducing to equivalence took: {} seconds.", elapsed);
-    
+    println!("Reducing to equivalence took: {} seconds.\n", elapsed);
 
     reduced
 

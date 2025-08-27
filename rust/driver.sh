@@ -89,10 +89,10 @@ start=`date +%s`
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pairs $type $n $match_option $rowsum_pairing &> $filename
+./target/release/rust pairs $type $n $match_option $rowsum_pairing | tee $filename
 if [ $? -ne 0 ]
 then
-	echo 'ERROR: pairs exited unsuccessfully. See log for details'
+	echo 'ERROR: pairs exited unsuccessfully. See log for additional details'
 	exit 1
 fi
 end2=`date +%s`
@@ -102,39 +102,40 @@ echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $
 # sorting the files
 start2=`date +%s`
 if [ "$use_slurm" = true ]; then
-	./sortpairs.sh $type $n -s &>> $filename
+	./sortpairs.sh $type $n -s | tee $filename -a
 else
-	./sortpairs.sh $type $n &>> $filename
+	./sortpairs.sh $type $n | tee $filename -a
 fi
 
 if [ $? -ne 0 ]
 then
-	echo 'ERROR: sort exited unsuccessfully. See log for details'
+	echo 'ERROR: sort exited unsuccessfully. See log for additional details'
 	exit 1
 fi
 end2=`date +%s`
-echo Sorting the files took `expr $end2 - $start2` seconds.
+echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n"
 echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
-./target/release/rust join $type $n >> $filename
+./target/release/rust join $type $n | tee $filename -a
 if [ $? -ne 0 ]
 then
-	echo 'ERROR: join exited unsuccessfully. See log for details'
+	echo 'ERROR: join exited unsuccessfully. See log for additional details'
 	exit 1
 fi
 end2=`date +%s`
-echo -e Join function took: `expr $end2 - $start2` seconds. "\n\n" >> $filename
 
 
 if [ $hadamard = true ]; then
-	./convert.sh $type $n >> $filename
+	./convert.sh $type $n | tee $filename -a
 	filename2="$foldername/result.mat"
 	matcount=$(wc -l < $filename2)
-	echo "$matcount matrices were found after converting up to Hadamard equivalence." >> $filename
+	echo "$matcount matrices were found after converting up to Hadamard equivalence." | tee $filename -a
 fi
 
 end=`date +%s`
 echo Total execution time was `expr $end - $start` seconds.
 echo -e Total execution time was `expr $end - $start` seconds. >> $filename
+
+echo "This output can also be found in $filename"
