@@ -1,4 +1,4 @@
-use std::{collections::{HashMap, HashSet}, fs::File, io::Write, path::Path, time::Instant};
+use std::{collections::{HashMap, HashSet}, fs::File, io::Write, path::Path};
 
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
