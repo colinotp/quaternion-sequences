@@ -96,8 +96,8 @@ then
 	exit 1
 fi
 end2=`date +%s`
-echo Creating the sequences took `expr $end2 - $start2` seconds. 
-echo -e Creating the sequences took `expr $end2 - $start2` seconds. "\n \n" >> $filename
+echo Generating the .pair files took `expr $end2 - $start2` seconds. 
+echo -e Generating the .pair files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # sorting the files
 start2=`date +%s`
