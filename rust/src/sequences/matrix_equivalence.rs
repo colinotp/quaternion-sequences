@@ -72,6 +72,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     let mut seqs = vec![];
 
+    // Taking input from ns_canonical.seq means the sequences have already been partially reduced via Hadamard equivalence operations
     println!("Converting sequences found in {pathname} to Hadamard matrices up to Hadamard equivalence ...");
     for line_res in read_lines(&pathname).expect(&format!("Error reading file. Make sure sequences have already been generated for this length (e.g., {} should exist and not be empty)", pathname)) {
         let line = line_res.expect("Error reading line");
@@ -88,16 +89,9 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         quad_seq.verify(seqtype);
     }
 
-    // Filter via equivalence operations
-    println!("Filtering {} sequences via Hadamard equivalence operations...", quad_seq_list.len());
-    let time = Instant::now();
-    let reduced = reduce_to_ns_equivalence(&quad_seq_list);
-    let elapsed = time.elapsed().as_secs();
-    println!("Filtering sequences via equivalence operations took {} seconds. Reduced to {} sequences.\n", elapsed, reduced.len());
-
-    // Fully reduce via graph isomorphism checking
+    // Reduce via graph isomorphism checking
     println!("Reducing matrices to equivalence via graph isomorphism...");
-    let canon_reps : HashMap<CanonLabeling, HM> = reduced.par_iter().map(|seq| {
+    let canon_reps : HashMap<CanonLabeling, HM> = quad_seq_list.par_iter().map(|seq| {
         let hmat = HM::from_williamson(seq, SequenceType::QuaternionType);
         (canon_hm(&hmat), hmat)
     }).collect();
