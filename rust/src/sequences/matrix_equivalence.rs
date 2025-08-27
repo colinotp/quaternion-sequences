@@ -64,6 +64,10 @@ pub fn reduce_to_ns_equivalence(sequences : &Vec<QuadSeq>) -> Vec<QuadSeq> {
     set.into_iter().collect()
 }
 
+fn is_ns_canonical(seq : &QuadSeq) -> bool {
+    ns_canonical(seq) == *seq
+}
+
 pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType) {
 
     let mut seqs = vec![];
@@ -73,7 +77,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         let line = line_res.expect("Error reading line");
 
         let qs = QS::from_str(&line.to_string());
-        assert!(has_sorted_rowsums(&QuadSeq::from_pqs(&qs)));
+        debug_assert!(is_ns_canonical(&QuadSeq::from_pqs(&qs)));
         
         seqs.push(qs);
     }

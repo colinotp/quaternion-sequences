@@ -485,18 +485,19 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     println!("Matching took: {} seconds.", elapsed);
     eprintln!("Matching took: {} seconds.", elapsed);
 
-    // Record result of joined pairs for easier filtering in Hadamard reduction
-    let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string();
-    let mut f_joined = File::create(&result_joined).expect("File creation unsuccessful");
-    let joined_string = result.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
-    f_joined.write(joined_string.as_bytes()).expect("File write error");
-
     debug_assert!(result.iter().all(|seq| has_sorted_rowsums(&seq)));
 
+    println!("\nFound {} {} after matching\nReducing sequences up to equivalence ...", result.len(), seqtype.to_string());
 
-    println!("\nFound {} {} after matching. Results stored in {}\nReducing sequences up to equivalence ...", result.len(), seqtype.to_string(), result_joined);
     let time = Instant::now();
-    let filtered = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
+    let filtered : Vec<QuadSeq> = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
+
+    // Record result of filtered sequencews for faster filtering in Hadamard reduction
+    let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string();
+    let mut f_joined = File::create(&result_joined).expect("File creation unsuccessful");
+    let joined_string = filtered.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+    f_joined.write(joined_string.as_bytes()).expect("File write error");
+
     let reduced = reduce_to_canonical_reps(&filtered, seqtype);
     let elapsed = time.elapsed().as_secs();
 

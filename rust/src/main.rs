@@ -289,7 +289,7 @@ fn main() {
             assert_eq!(args.len(), 4, "Invalid args passed");
             let seqtype = str_to_seqtype(&args[2]);
             let p = str_to_usize(&args[3]);
-            hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/joined.qseq".to_string(), seqtype);
+            hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string(), seqtype);
         },
         // Generates .pair files used in algorithm 
         "pairs" => {
