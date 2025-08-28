@@ -363,6 +363,8 @@ pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize,
 pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
+    let time = Instant::now();
+
     // all the possible rowsums of p
     println!("Generating rowsum decompositions ...");
     let rowsums = generate_rowsums(p);
@@ -376,6 +378,9 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
         println!("Generating .pair files for rowsums {:?} ...", rs);
         write_pairs_rowsum(&folder, rs, p, match_option, pairing.clone());
     }
+
+    let elapsed = time.elapsed().as_secs_f32();
+    println!("Total time to generate .pair files: {:.2} seconds\n", elapsed);
 }
 
 pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>) {
@@ -399,15 +404,23 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     match seqtype {
         SequenceType::Williamson => {
             sequences_0 = generate_sequences_with_rowsum(rowsums[0], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_0.len(), rowsums[0]);
             sequences_1 = generate_sequences_with_rowsum(rowsums[1], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_1.len(), rowsums[1]);
             sequences_2 = generate_sequences_with_rowsum(rowsums[2], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_2.len(), rowsums[2]);
             sequences_3 = generate_sequences_with_rowsum(rowsums[3], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_3.len(), rowsums[3]);
         },
         _ => {
             sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
+            println!("Found {} sequences with rowsum {}", sequences_0.len(), rowsums[0]);
             sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
+            println!("Found {} sequences with rowsum {}", sequences_1.len(), rowsums[1]);
             sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
+            println!("Found {} sequences with rowsum {}", sequences_2.len(), rowsums[2]);
             sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
+            println!("Found {} sequences with rowsum {}", sequences_3.len(), rowsums[3]);
         }
     }
     
@@ -417,8 +430,8 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     write_sequences(&sequences_2, &tags[2], &folder_path);
     write_sequences(&sequences_3, &tags[3], &folder_path);
     
-    let elapsed_time = now.elapsed().as_secs();
-    println!("Generating all sequences with rowsums {:?} took {elapsed_time} seconds", rs);
+    let elapsed_time = now.elapsed().as_secs_f32();
+    println!("Generating all sequences with rowsums {:?} took {:.2} seconds", rs, elapsed_time);
 
 
     let now = Instant::now();
@@ -439,8 +452,8 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
         }
     };
     
-    let elapsed_time = now.elapsed().as_secs();
-    println!("Generating .pair files for both pairs took {elapsed_time} seconds\n");
+    let elapsed_time = now.elapsed().as_secs_f32();
+    println!("Generating .pair files for both pairs took {:.2} seconds\n", elapsed_time);
 }
 
 pub fn symmetric(seq : &Vec<i8>) -> bool {
@@ -482,8 +495,8 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
         }
     }
 
-    let elapsed = time.elapsed().as_secs_f32().round() as isize;
-    println!("Matching took: {} seconds.", elapsed);
+    let elapsed = time.elapsed().as_secs_f32();
+    println!("Matching took: {:.2} seconds.", elapsed);
 
     debug_assert!(result.iter().all(|seq| has_sorted_rowsums(&seq)));
 
@@ -499,10 +512,10 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     f_joined.write(joined_string.as_bytes()).expect("File write error");
 
     let reduced = reduce_to_canonical_reps(&filtered, seqtype);
-    let elapsed = time.elapsed().as_secs();
+    let elapsed = time.elapsed().as_secs_f32();
 
     println!("Found {} {} after reducing to equivalence", reduced.len(), seqtype.to_string());
-    println!("Reducing to equivalence took: {} seconds.\n", elapsed);
+    println!("Reducing to equivalence took: {:.2} seconds.\n", elapsed);
 
     reduced
 

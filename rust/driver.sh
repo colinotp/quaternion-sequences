@@ -85,22 +85,18 @@ then
 	mkdir -p $foldername
 fi
 
-start=`date +%s`
+start=`date +%s.%N`
 
 # Creating every necessary file
-start2=`date +%s`
 ./target/release/rust pairs $type $n $match_option $rowsum_pairing | tee $filename
 if [ $? -ne 0 ]
 then
 	echo 'ERROR: pairs exited unsuccessfully. See log for additional details'
 	exit 1
 fi
-end2=`date +%s`
-echo Generating the .pair files took `expr $end2 - $start2` seconds. 
-echo -e Generating the .pair files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
 
 # sorting the files
-start2=`date +%s`
+start2=`date +%s.%N`
 if [ "$use_slurm" = true ]; then
 	./sortpairs.sh $type $n -s | tee $filename -a
 else
@@ -112,9 +108,10 @@ then
 	echo 'ERROR: sort exited unsuccessfully. See log for additional details'
 	exit 1
 fi
-end2=`date +%s`
-echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n"
-echo -e Sorting the files took `expr $end2 - $start2` seconds. "\n \n" >> $filename
+end2=`date +%s.%N`
+elapsed=$(echo "$end2 - $start2" | bc)
+printf "Sorting the files took: %.2f seconds\n\n" $elapsed
+printf "Sorting the files took: %.2f seconds\n\n" $elapsed >> $filename
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
@@ -128,14 +125,21 @@ end2=`date +%s`
 
 
 if [ $hadamard = true ]; then
-	./convert.sh $type $n | tee $filename -a
+	start2=`date +%s.%N`
+	./target/release/rust convert $type $n | tee $filename -a
+	end2=`date +%s.%N`start2=`date +%s.%N`
+	elapsed=$(echo "$end2 - $start2" | bc)
+	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed
+	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed >> $filename
+	
 	filename2="$foldername/result.mat"
 	matcount=$(wc -l < $filename2)
 	echo "$matcount matrices were found after converting up to Hadamard equivalence." | tee $filename -a
 fi
 
-end=`date +%s`
-echo Total execution time was `expr $end - $start` seconds.
-echo -e Total execution time was `expr $end - $start` seconds. >> $filename
+end=`date +%s.%N`
+elapsed=$(echo "$end - $start" | bc)
+printf "Total execution time was %.2f seconds.\n" $elapsed
+printf "Total execution time was %.2f seconds.\n" $elapsed >> $filename
 
 echo "This output can also be found in $filename"

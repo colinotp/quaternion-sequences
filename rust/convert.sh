@@ -10,10 +10,12 @@ fi
 
 type=$1
 n=$2
-
+filename="./results/pairs/$type/find_$n/result.log"
 
 # sorting the files
-start2=`date +%s`
-./target/release/rust convert $type $n
-end2=`date +%s`
-echo Converting to matrices up to Hadamard equivalence took `expr $end2 - $start2` seconds.
+start2=`date +%s.%N`
+./target/release/rust convert $type $n | tee -a $filename
+end2=`date +%s.%N`start2=`date +%s.%N`
+elapsed=$(echo "$end2 - $start2" | bc)
+printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed
+printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed >> $filename
