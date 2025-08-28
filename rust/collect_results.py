@@ -5,15 +5,14 @@ from pathlib import Path
 
 # Calculate runtime
 def read_runtimes(result_dir):
-    runtimes = []
-
-    pattern = r'took (\d+) seconds'
+    pattern = r'Total execution time was (\d+\.\d\d) seconds'
     with open(result_dir, "r") as file:
         for line in file:
             match = re.search(pattern, line)
             if match:
-                runtimes.append(int(match.group(1)))
-    return sum(runtimes)
+                return round(float(match.group(1)))
+        print("ERROR: Total runtime not found")
+        exit()
 
 # Get time taken to reduce to equivalence
 def get_equivalence_time(result_dir):
@@ -35,20 +34,20 @@ def get_disk_usage(path):
             total += size_MB
     return total
 
-# Total QTS count without equivalences
+# Total QTS count after matching
 def total_QTS_count(result_dir):
-    pattern = r'The function found a total of (\d+) sequences'
+    pattern = r'Found (\d+) (\w+) after matching'
     with open(result_dir, 'r') as file:
         for line in file:
             match = re.search(pattern, line)
             if match:
                 return int(match.group(1))
-    print('ERROR: Total QTS before equivalence not found')
+    print('ERROR: Total QTS after matching not found')
     exit()
     
 # Total QTS count after equivalences
 def reduced_QTS_count(result_dir):
-    pattern = r'count after equivalences (\d+)'
+    pattern = r'Found (\d+) (\w+) after reducing to equivalence'
     with open(result_dir, 'r') as file:
         for line in file:
             match = re.search(pattern, line)
