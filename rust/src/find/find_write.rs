@@ -386,8 +386,7 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
 pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>) {
     // This function generates the sequences possible for specific rowsums and stores them
     
-    let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
-    let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
+    let tags : Vec<SequenceTag> = vec![SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z];
     
     let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
     fs::create_dir_all(&folder_path).expect("Error when creating the dir");
@@ -403,24 +402,24 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     
     match seqtype {
         SequenceType::Williamson => {
-            sequences_0 = generate_sequences_with_rowsum(rowsums[0], p).into_iter().filter(|seq| symmetric(seq)).collect();
-            println!("Found {} sequences with rowsum {}", sequences_0.len(), rowsums[0]);
-            sequences_1 = generate_sequences_with_rowsum(rowsums[1], p).into_iter().filter(|seq| symmetric(seq)).collect();
-            println!("Found {} sequences with rowsum {}", sequences_1.len(), rowsums[1]);
-            sequences_2 = generate_sequences_with_rowsum(rowsums[2], p).into_iter().filter(|seq| symmetric(seq)).collect();
-            println!("Found {} sequences with rowsum {}", sequences_2.len(), rowsums[2]);
-            sequences_3 = generate_sequences_with_rowsum(rowsums[3], p).into_iter().filter(|seq| symmetric(seq)).collect();
-            println!("Found {} sequences with rowsum {}", sequences_3.len(), rowsums[3]);
+            sequences_0 = generate_sequences_with_rowsum(rs.0, p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_0.len(), rs.0);
+            sequences_1 = generate_sequences_with_rowsum(rs.1, p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_1.len(), rs.1);
+            sequences_2 = generate_sequences_with_rowsum(rs.2, p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_2.len(), rs.2);
+            sequences_3 = generate_sequences_with_rowsum(rs.3, p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_3.len(), rs.3);
         },
         _ => {
-            sequences_0 = generate_sequences_with_rowsum(rowsums[0], p);
-            println!("Found {} sequences with rowsum {}", sequences_0.len(), rowsums[0]);
-            sequences_1 = generate_sequences_with_rowsum(rowsums[1], p);
-            println!("Found {} sequences with rowsum {}", sequences_1.len(), rowsums[1]);
-            sequences_2 = generate_sequences_with_rowsum(rowsums[2], p);
-            println!("Found {} sequences with rowsum {}", sequences_2.len(), rowsums[2]);
-            sequences_3 = generate_sequences_with_rowsum(rowsums[3], p);
-            println!("Found {} sequences with rowsum {}", sequences_3.len(), rowsums[3]);
+            sequences_0 = generate_sequences_with_rowsum(rs.0, p);
+            println!("Found {} sequences with rowsum {}", sequences_0.len(), rs.0);
+            sequences_1 = generate_sequences_with_rowsum(rs.1, p);
+            println!("Found {} sequences with rowsum {}", sequences_1.len(), rs.1);
+            sequences_2 = generate_sequences_with_rowsum(rs.2, p);
+            println!("Found {} sequences with rowsum {}", sequences_2.len(), rs.2);
+            sequences_3 = generate_sequences_with_rowsum(rs.3, p);
+            println!("Found {} sequences with rowsum {}", sequences_3.len(), rs.3);
         }
     }
     
