@@ -95,6 +95,26 @@ then
 	exit 1
 fi
 
+
+# Report number of pairs generated
+count=$((0))
+
+for dirname in results/pairs/$type/find_$n/*;
+do
+	if [ -d $dirname ]
+	then
+		for pairfile in $dirname/*.pair;
+		do
+			str=$(wc -l $pairfile)
+			arr=($str)
+			nb=${arr[0]}
+			count=$(($count + $nb))
+		done
+	fi
+done
+
+echo -e "Generated $count pairs\n"
+
 # sorting the files
 start2=`date +%s.%N`
 if [ "$use_slurm" = true ]; then
