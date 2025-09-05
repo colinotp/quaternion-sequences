@@ -324,6 +324,11 @@ pub fn ns_canonical(seq : &QuadSeq) -> QuadSeq {
         canonical.set_sequence(&negated(&canonical.sequence(SequenceTag::Y)), &SequenceTag::Y);
         swap(&mut canonical, SequenceTag::Y, SequenceTag::Z);
     }
+    // If we have duplicate sequences, we may swap them (do nothing) to negate one sequence
+    // We use this if the last sequence has a positive first term, to get a smaller QTS lexicographically
+    if canonical.sequence(SequenceTag::Z)[0] == 1 && canonical.has_duplicate_seq() {
+        canonical.set_sequence(&negated(&canonical.sequence(SequenceTag::Z)), &SequenceTag::Z);
+    }
 
     canonical
 }

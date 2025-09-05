@@ -249,6 +249,15 @@ impl QuadSeq{
         true
     }
 
+    pub fn has_duplicate_seq(&self) -> bool {
+        self.sequence(SequenceTag::W) == self.sequence(SequenceTag::X) ||
+        self.sequence(SequenceTag::W) == self.sequence(SequenceTag::Y) ||
+        self.sequence(SequenceTag::W) == self.sequence(SequenceTag::Z) ||
+        self.sequence(SequenceTag::X) == self.sequence(SequenceTag::Y) ||
+        self.sequence(SequenceTag::X) == self.sequence(SequenceTag::Z) ||
+        self.sequence(SequenceTag::Y) == self.sequence(SequenceTag::Z)
+    }
+
     // Checks if self is equivalent to another sequence
     pub fn equivalent_to(&self, quad_seq : QuadSeq, seqtype : SequenceType) -> bool {
         generate_equivalence_class(&self, seqtype, &seqtype.equivalences(), false).contains(&quad_seq)
