@@ -6,13 +6,31 @@ from pathlib import Path
 # Calculate runtime
 def read_runtimes(result_dir):
     pattern = r'Total execution time was (\d+\.\d\d) seconds'
+    hadamard_pattern = r'Hadamard equivalence took (\d+\.\d\d) seconds'
     with open(result_dir, "r") as file:
+        hadamard_computed = False
         for line in file:
             match = re.search(pattern, line)
-            if match:
+
+            if re.search(hadamard_pattern, line):
+                hadamard_computed = True
+
+            if match and hadamard_computed:
                 return round(float(match.group(1)))
-        print("ERROR: Total runtime not found")
-        exit()
+            elif match:
+                break
+        else:
+            print("ERROR: Total runtime not found")
+            exit()
+
+        for line in file:
+            hadamard_match = re.search(hadamard_pattern, line)
+            if hadamard_match:
+                return round(float(hadamard_match.group(1)) + float(match.group(1)))
+        else:
+            print("ERROR: Total runtime not found")
+            exit()
+    
 
 # Get time taken to reduce to equivalence
 def get_equivalence_time(result_dir):
