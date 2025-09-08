@@ -514,7 +514,7 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     let elapsed = time.elapsed().as_secs_f32();
 
     println!("Found {} {} after reducing to equivalence", reduced.len(), seqtype.to_string());
-    println!("Reducing to equivalence took: {:.2} seconds.\n", elapsed);
+    println!("Reducing to equivalence took {:.2} seconds.\n", elapsed);
 
     reduced
 

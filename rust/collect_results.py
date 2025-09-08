@@ -5,41 +5,25 @@ from pathlib import Path
 
 # Calculate runtime
 def read_runtimes(result_dir):
-    pattern = r'Total execution time was (\d+\.\d\d) seconds'
-    hadamard_pattern = r'Hadamard equivalence took (\d+\.\d\d) seconds'
-    with open(result_dir, "r") as file:
-        hadamard_computed = False
-        for line in file:
-            match = re.search(pattern, line)
+    runtimes = []
 
-            if re.search(hadamard_pattern, line):
-                hadamard_computed = True
-
-            if match and hadamard_computed:
-                return round(float(match.group(1)))
-            elif match:
-                break
-        else:
-            print("ERROR: Total runtime not found")
-            exit()
-
-        for line in file:
-            hadamard_match = re.search(hadamard_pattern, line)
-            if hadamard_match:
-                return round(float(hadamard_match.group(1)) + float(match.group(1)))
-        else:
-            print("ERROR: Total runtime not found")
-            exit()
-    
-
-# Get time taken to reduce to equivalence
-def get_equivalence_time(result_dir):
-    pattern = r'Reducing to equivalence took: (\d+(?:\.\d+)?) seconds'
+    pattern = r': (\d+\.\d\d) seconds'
     with open(result_dir, "r") as file:
         for line in file:
             match = re.search(pattern, line)
             if match:
-                return round(float(match.group(1)))
+                runtimes.append(float(match.group(1)))
+    return sum(runtimes)
+    
+
+# Get time taken to reduce to equivalence
+def get_equivalence_time(result_dir):
+    pattern = r'Reducing to equivalence took (\d+(?:\.\d+)?) seconds'
+    with open(result_dir, "r") as file:
+        for line in file:
+            match = re.search(pattern, line)
+            if match:
+                return float(match.group(1))
         return -1
 
 # Disk usage used
@@ -52,17 +36,6 @@ def get_disk_usage(path):
             total += size_MB
     return total
 
-# Total QTS count after matching
-def total_QTS_count(result_dir):
-    pattern = r'Found (\d+) (\w+) after matching'
-    with open(result_dir, 'r') as file:
-        for line in file:
-            match = re.search(pattern, line)
-            if match:
-                return int(match.group(1))
-    print('ERROR: Total QTS after matching not found')
-    exit()
-    
 # Total QTS count after equivalences
 def reduced_QTS_count(result_dir):
     pattern = r'Found (\d+) (\w+) after reducing to equivalence'
@@ -89,12 +62,11 @@ def count_pairs(seqtype, n):
     return int(os.popen('./countpairs.sh ' + seqtype + ' ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
-def create_table(start, end, total, S_equ, M_equ, time, equiv_time, pairs, disk, latex):
+def create_table(start, end, S_equ, M_equ, time, equiv_time, pairs, disk, latex):
     if latex is False:
         width = 13
     
         print('n'.ljust(width, ' '), end='')
-        print('Total'.ljust(width, ' '), end='')
         print('S_{equ}'.ljust(width, ' '), end='')
         print('M_{equ}'.ljust(width, ' '), end='')
         print('Time (s)'.ljust(width, ' '), end='')
@@ -104,11 +76,10 @@ def create_table(start, end, total, S_equ, M_equ, time, equiv_time, pairs, disk,
         
         for i, n in enumerate(range(start, end+1)):
             print(str(n).ljust(width, ' '), end='')
-            print(str(total[i]).ljust(width, ' '), end='')
             print(str(S_equ[i]).ljust(width, ' '), end='')
             print(str(M_equ[i]).ljust(width, ' '), end='')
-            print(str(time[i]).ljust(width, ' '), end='')
-            print(str(equiv_time[i]).ljust(width, ' '), end='')
+            print(str(round(time[i], 2)).ljust(width, ' '), end='')
+            print(str(round(equiv_time[i], 2)).ljust(width, ' '), end='')
             print(str(pairs[i]).ljust(width, ' '), end='')
             if disk[i] < 10:
                 print(str(round(disk[i], 1)).ljust(width, ' '))
@@ -116,12 +87,12 @@ def create_table(start, end, total, S_equ, M_equ, time, equiv_time, pairs, disk,
                 print(str(round(disk[i])).ljust(width, ' '))
     else:
         with open('results.tab', 'w') as file:
-            print(f'$n$ & Total & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Equ Time (s) & Pairs & Disk space (MB)\\\\')
+            print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Equ Time (s) & Pairs & Disk space (MB)\\\\')
             for i, n in enumerate(range(start, end+1)):
                 if disk[i] < 10:
-                    print(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i], 1)}\\\\')
+                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(equiv_time[i], 2)} & {pairs[i]} & {round(disk[i], 1)}\\\\')
                 else: 
-                    print(f'{n} & {total[i]} & {S_equ[i]} & {M_equ[i]} & {time[i]} & {equiv_time[i]} & {pairs[i]} & {round(disk[i])}\\\\')
+                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(equiv_time[i], 2)} & {pairs[i]} & {round(disk[i])}\\\\')
 
 
 
@@ -141,7 +112,6 @@ latex = True if sys.argv[4] == 'l' else False
 runtime=[]
 equivalence_time=[]
 disk_usage=[]
-QTS_total=[]
 QTS_reduced=[]
 QTS_hadamard_reduced=[]
 pairs=[]
@@ -153,7 +123,6 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     runtime.append(read_runtimes(result_dir))
     equivalence_time.append(get_equivalence_time(result_dir))
     disk_usage.append(get_disk_usage(filePath))
-    QTS_total.append(total_QTS_count(result_dir))
     QTS_reduced.append(reduced_QTS_count(result_dir))
     QTS_hadamard_reduced.append(hadamard_reduced_QTS_count(filePath))
     pairs.append(count_pairs(seqtype, n))
@@ -163,10 +132,9 @@ for i, n in enumerate(range(int(start), int(end)+1)):
         print(f'Runtime: {runtime[i]} seconds')
         print(f'Time to reduce to equivalence: {round(equivalence_time[i])} seconds')
         print(f'Disk usage: {disk_usage[i]} MB')
-        print(f'QTS without equivalence: {QTS_total[i]}')
         print(f'QTS after sequence equivalence: {QTS_reduced[i]}')
         print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
         print(f'Total pairs generated: {pairs[i]}\n')
 
 
-create_table(int(start), int(end), QTS_total, QTS_reduced, QTS_hadamard_reduced, runtime, equivalence_time, pairs, disk_usage, latex)
+create_table(int(start), int(end), QTS_reduced, QTS_hadamard_reduced, runtime, equivalence_time, pairs, disk_usage, latex)

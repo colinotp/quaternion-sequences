@@ -116,11 +116,10 @@ done
 echo -e "Generated $count pairs\n"
 
 # sorting the files
-start2=`date +%s.%N`
 if [ "$use_slurm" = true ]; then
-	./sortpairs.sh $type $n -s | tee $filename -a
+	./sortpairs.sh $type $n -s
 else
-	./sortpairs.sh $type $n | tee $filename -a
+	./sortpairs.sh $type $n
 fi
 
 if [ $? -ne 0 ]
@@ -128,10 +127,6 @@ then
 	echo 'ERROR: sort exited unsuccessfully. See log for additional details'
 	exit 1
 fi
-end2=`date +%s.%N`
-elapsed=$(echo "$end2 - $start2" | bc)
-printf "Sorting the files took: %.2f seconds\n\n" $elapsed
-printf "Sorting the files took: %.2f seconds\n\n" $elapsed >> $filename
 
 # Matching the file AND reducing to equivalence
 start2=`date +%s`
@@ -152,8 +147,8 @@ if [ $hadamard = true ]; then
 	./target/release/rust convert $type $n | tee $filename -a
 	end2=`date +%s.%N`
 	elapsed=$(echo "$end2 - $start2" | bc)
-	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed
-	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed >> $filename
+	printf "Converting to matrices up to Hadamard equivalence took: %.2f seconds\n" $elapsed
+	printf "Converting to matrices up to Hadamard equivalence took: %.2f seconds\n" $elapsed >> $filename
 	
 	filename2="$foldername/result.mat"
 	matcount=$(wc -l < $filename2)

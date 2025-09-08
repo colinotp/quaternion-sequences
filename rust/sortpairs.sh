@@ -19,6 +19,7 @@ n=$2
 shift
 shift
 
+results="./results/pairs/$type/find_$n/result.log"
 use_slurm=false
 # Empty out existing .pair files to avoid conflicts
 while getopts "s" flag; do
@@ -35,13 +36,14 @@ done
 
 export LC_ALL=C
 
+start=`date +%s.%N`
 for dirname in results/pairs/$type/find_$n/*;
 do
 	if [ -d $dirname ]
 	then
 		for filename in $dirname/*.pair;
 		do
-			echo "Sorting file $filename ..."
+			echo "Sorting file $filename ..." | tee $results -a
 			if [ "$use_slurm" = true ]; then
 				sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
 				status=$?
@@ -57,3 +59,7 @@ do
 		done
 	fi
 done
+
+end=`date +%s.%N`
+elapsed=$(echo "$end - $start" | bc)
+printf "Total time to sort: %.2f seconds.\n\n" $elapsed | tee $results -a
