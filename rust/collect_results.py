@@ -16,9 +16,19 @@ def read_runtimes(result_dir):
     return sum(runtimes)
     
 
-# Get time taken to reduce to equivalence
-def get_equivalence_time(result_dir):
+# Get time taken to reduce to QT equivalence
+def get_qt_equivalence_time(result_dir):
     pattern = r'Reducing to equivalence took (\d+(?:\.\d+)?) seconds'
+    with open(result_dir, "r") as file:
+        for line in file:
+            match = re.search(pattern, line)
+            if match:
+                return float(match.group(1))
+        return -1
+    
+# Get time taken to reduce to Hadamard equivalence
+def get_hm_equivalence_time(result_dir):
+    pattern = r'Converting to matrices up to Hadamard equivalence took (\d+(?:\.\d+)?) seconds'
     with open(result_dir, "r") as file:
         for line in file:
             match = re.search(pattern, line)
@@ -62,15 +72,16 @@ def count_pairs(seqtype, n):
     return int(os.popen('./countpairs.sh ' + seqtype + ' ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
-def create_table(start, end, S_equ, M_equ, time, equiv_time, pairs, disk, latex):
+def create_table(start, end, S_equ, M_equ, time, qt_equiv_time, hm_equiv_time, pairs, disk, latex):
     if latex is False:
-        width = 13
+        width = 16
     
         print('n'.ljust(width, ' '), end='')
         print('S_{equ}'.ljust(width, ' '), end='')
         print('M_{equ}'.ljust(width, ' '), end='')
         print('Time (s)'.ljust(width, ' '), end='')
-        print('Equ Time (s)'.ljust(width, ' '), end='')
+        print('QT Equ Time (s)'.ljust(width, ' '), end='')
+        print('HM Equ Time (s)'.ljust(width, ' '), end='')
         print('Pairs'.ljust(width, ' '), end='')
         print('Disk usage (MB)'.ljust(width, ' '))
         
@@ -79,7 +90,8 @@ def create_table(start, end, S_equ, M_equ, time, equiv_time, pairs, disk, latex)
             print(str(S_equ[i]).ljust(width, ' '), end='')
             print(str(M_equ[i]).ljust(width, ' '), end='')
             print(str(round(time[i], 2)).ljust(width, ' '), end='')
-            print(str(round(equiv_time[i], 2)).ljust(width, ' '), end='')
+            print(str(round(qt_equiv_time[i], 2)).ljust(width, ' '), end='')
+            print(str(round(hm_equiv_time[i], 2)).ljust(width, ' '), end='')
             print(str(pairs[i]).ljust(width, ' '), end='')
             if disk[i] < 10:
                 print(str(round(disk[i], 1)).ljust(width, ' '))
@@ -87,12 +99,12 @@ def create_table(start, end, S_equ, M_equ, time, equiv_time, pairs, disk, latex)
                 print(str(round(disk[i])).ljust(width, ' '))
     else:
         with open('results.tab', 'w') as file:
-            print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Equ Time (s) & Pairs & Disk space (MB)\\\\')
+            print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
             for i, n in enumerate(range(start, end+1)):
                 if disk[i] < 10:
-                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(equiv_time[i], 2)} & {pairs[i]} & {round(disk[i], 1)}\\\\')
+                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i], 1)}\\\\')
                 else: 
-                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(equiv_time[i], 2)} & {pairs[i]} & {round(disk[i])}\\\\')
+                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i])}\\\\')
 
 
 
@@ -110,7 +122,8 @@ start, end, seqtype = int(sys.argv[1]), int(sys.argv[2]), sys.argv[3]
 latex = True if sys.argv[4] == 'l' else False
 
 runtime=[]
-equivalence_time=[]
+qt_equivalence_time=[]
+hm_equivalence_time=[]
 disk_usage=[]
 QTS_reduced=[]
 QTS_hadamard_reduced=[]
@@ -121,7 +134,8 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     result_dir = filePath + "/result.log"
 
     runtime.append(read_runtimes(result_dir))
-    equivalence_time.append(get_equivalence_time(result_dir))
+    qt_equivalence_time.append(get_qt_equivalence_time(result_dir))
+    hm_equivalence_time.append(get_hm_equivalence_time(result_dir))
     disk_usage.append(get_disk_usage(filePath))
     QTS_reduced.append(reduced_QTS_count(result_dir))
     QTS_hadamard_reduced.append(hadamard_reduced_QTS_count(filePath))
@@ -130,11 +144,11 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     if verbose:
         print(f'=========================== Length {n} ===========================')
         print(f'Runtime: {runtime[i]} seconds')
-        print(f'Time to reduce to equivalence: {round(equivalence_time[i])} seconds')
+        print(f'Time to reduce to equivalence: {round(qt_equivalence_time[i])} seconds')
         print(f'Disk usage: {disk_usage[i]} MB')
         print(f'QTS after sequence equivalence: {QTS_reduced[i]}')
         print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
         print(f'Total pairs generated: {pairs[i]}\n')
 
 
-create_table(int(start), int(end), QTS_reduced, QTS_hadamard_reduced, runtime, equivalence_time, pairs, disk_usage, latex)
+create_table(int(start), int(end), QTS_reduced, QTS_hadamard_reduced, runtime, qt_equivalence_time, hm_equivalence_time, pairs, disk_usage, latex)
