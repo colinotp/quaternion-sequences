@@ -1,40 +1,48 @@
+Generating rowsum decompositions ...
 (0, 0, 2, 6)
 (2, 2, 4, 4)
-(-2, 2, 4, 4)
-generated 3 different rowsums
-results/pairs/qts/find_10/rowsum_0_0_2_6
-The function took: 0.0035646 seconds to generate sequences with rowsums: 6, 2, 0, 0
-The function took: 0.5009699 seconds to go through the two sets of pairs
+Generated 2 different rowsums
 
-results/pairs/qts/find_10/rowsum_2_2_4_4
-The function took: 0.0026414 seconds to generate sequences with rowsums: 4, 4, 2, 2
-The function took: 0.46788222 seconds to go through the two sets of pairs
+Generating .pair files for rowsums (0, 0, 2, 6) ...
+Found 252 sequences with rowsum 0
+Found 252 sequences with rowsum 0
+Found 210 sequences with rowsum 2
+Found 45 sequences with rowsum 6
+Generating all sequences with rowsums (0, 0, 2, 6) took 0.07 seconds
+Generating .pair files for both pairs took 0.09 seconds
 
-results/pairs/qts/find_10/rowsum_-2_2_4_4
-The function took: 0.0071096 seconds to generate sequences with rowsums: 4, 4, 2, -2
-The function took: 0.46250758 seconds to go through the two sets of pairs
+Generating .pair files for rowsums (2, 2, 4, 4) ...
+Found 210 sequences with rowsum 2
+Found 210 sequences with rowsum 2
+Found 120 sequences with rowsum 4
+Found 120 sequences with rowsum 4
+Generating all sequences with rowsums (2, 2, 4, 4) took 0.05 seconds
+Generating .pair files for both pairs took 0.07 seconds
 
-Creating the sequences took 2 seconds. 
- 
+Total time to generate .pair files: 0.28 seconds
 
-results/pairs/qts/find_10/rowsum_-2_2_4_4/pair_WY.pair
-results/pairs/qts/find_10/rowsum_-2_2_4_4/pair_ZX.pair
-results/pairs/qts/find_10/rowsum_0_0_2_6/pair_WX.pair
-results/pairs/qts/find_10/rowsum_0_0_2_6/pair_ZY.pair
-results/pairs/qts/find_10/rowsum_2_2_4_4/pair_WX.pair
-results/pairs/qts/find_10/rowsum_2_2_4_4/pair_ZY.pair
-Sorting the files took 0 seconds. 
- 
+Sorting file results/pairs/qts/find_10/rowsum_0_0_2_6/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_10/rowsum_0_0_2_6/pair_XY.pair ...
+Sorting file results/pairs/qts/find_10/rowsum_2_2_4_4/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_10/rowsum_2_2_4_4/pair_XY.pair ...
+Total time to sort: 0.24 seconds.
 
-./results/pairs/qts/find_10
-Folder rowsum_0_0_2_6 : sequences have order (Z, Y, W, X)
-Folder rowsum_2_2_4_4 : sequences have order (Z, Y, W, X)
-Folder rowsum_-2_2_4_4 : sequences have order (Z, X, W, Y)
+Matching files in /rowsum_0_0_2_6 ...
+Matches found in "pair_XY.pair.sorted" and "pair_WZ.pair.sorted": 2532
 
-count before equivalences 856
-The function found a total of 38400 sequences without any equivalences
-count after equivalences 28
-Matching the sequences took 3 seconds. 
- 
+Matching files in /rowsum_2_2_4_4 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 8488
 
-Total execution time was 5 seconds.
+Matching took: 0.04 seconds.
+
+Found 522 qts after matching
+Reducing sequences up to equivalence ...
+Found 14 qts after reducing to equivalence
+Reducing to equivalence took 0.11 seconds.
+
+Converting sequences found in results/pairs/qts/find_10/ns_canonical.seq to Hadamard matrices up to Hadamard equivalence ...
+Reducing matrices to equivalence via graph isomorphism...
+Number of matrices up to equivalence : 2
+Converting to matrices up to Hadamard equivalence took 2.93 seconds
+2 matrices were found after converting up to Hadamard equivalence.
+Total execution time was 3.65 seconds.

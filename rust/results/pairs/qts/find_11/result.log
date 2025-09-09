@@ -1,32 +1,34 @@
+Generating rowsum decompositions ...
 (1, 3, 3, 5)
-(-1, 3, 3, 5)
-generated 2 different rowsums
-results/pairs/qts/find_11/rowsum_1_3_3_5
-The function took: 0.0044365 seconds to generate sequences with rowsums: 5, 3, 3, 1
-The function took: 1.7233142 seconds to go through the two sets of pairs
+Generated 1 different rowsums
 
-results/pairs/qts/find_11/rowsum_-1_3_3_5
-The function took: 0.004238599 seconds to generate sequences with rowsums: 5, 3, 3, -1
-The function took: 1.5491152 seconds to go through the two sets of pairs
+Generating .pair files for rowsums (1, 3, 3, 5) ...
+Found 462 sequences with rowsum 1
+Found 330 sequences with rowsum 3
+Found 330 sequences with rowsum 3
+Found 165 sequences with rowsum 5
+Generating all sequences with rowsums (1, 3, 3, 5) took 0.02 seconds
+Generating .pair files for both pairs took 0.23 seconds
 
-Creating the sequences took 3 seconds. 
- 
+Total time to generate .pair files: 0.25 seconds
 
-results/pairs/qts/find_11/rowsum_-1_3_3_5/pair_WX.pair
-results/pairs/qts/find_11/rowsum_-1_3_3_5/pair_YZ.pair
-results/pairs/qts/find_11/rowsum_1_3_3_5/pair_WX.pair
-results/pairs/qts/find_11/rowsum_1_3_3_5/pair_YZ.pair
-Sorting the files took 0 seconds. 
- 
+Sorting file results/pairs/qts/find_11/rowsum_1_3_3_5/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_11/rowsum_1_3_3_5/pair_XY.pair ...
+Total time to sort: 0.20 seconds.
 
-./results/pairs/qts/find_11
-Folder rowsum_-1_3_3_5 : sequences have order (W, X, Y, Z)
-Folder rowsum_1_3_3_5 : sequences have order (W, X, Y, Z)
+Matching files in /rowsum_1_3_3_5 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 4025
 
-count before equivalences 250
-The function found a total of 21120 sequences without any equivalences
-count after equivalences 4
-Matching the sequences took 2 seconds. 
- 
+Matching took: 0.06 seconds.
 
-Total execution time was 6 seconds.
+Found 125 qts after matching
+Reducing sequences up to equivalence ...
+Found 2 qts after reducing to equivalence
+Reducing to equivalence took 0.04 seconds.
+
+Converting sequences found in results/pairs/qts/find_11/ns_canonical.seq to Hadamard matrices up to Hadamard equivalence ...
+Reducing matrices to equivalence via graph isomorphism...
+Number of matrices up to equivalence : 2
+Converting to matrices up to Hadamard equivalence took 2.75 seconds
+2 matrices were found after converting up to Hadamard equivalence.
+Total execution time was 3.35 seconds.

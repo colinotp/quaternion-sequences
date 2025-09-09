@@ -1,54 +1,62 @@
-results/pairs/wts/find_18/rowsum_0_2_2_8
-results/pairs/wts/find_18/rowsum_2_4_4_6
-results/pairs/wts/find_18/rowsum_-2_4_4_6
-results/pairs/wts/find_18/rowsum_0_0_6_6
-Creating the sequences took 33840 seconds.
-Creating the sequences took 33872 seconds.
-Creating the sequences took 36016 seconds.
-Creating the sequences took 42433 seconds.
+Generating rowsum decompositions ...
+(0, 0, 6, 6)
+(0, 2, 2, 8)
+(2, 4, 4, 6)
+Generated 3 different rowsums
 
+Generating .pair files for rowsums (0, 0, 6, 6) ...
+Found 48620 sequences with rowsum 0
+Found 48620 sequences with rowsum 0
+Found 18564 sequences with rowsum 6
+Found 18564 sequences with rowsum 6
+Generating all sequences with rowsums (0, 0, 6, 6) took 0.95 seconds
+Generating .pair files for both pairs took 1192.07 seconds
 
-Sorting the file "pair_WX.pair" took 262 seconds. 
+Generating .pair files for rowsums (0, 2, 2, 8) ...
+Found 48620 sequences with rowsum 0
+Found 43758 sequences with rowsum 2
+Found 43758 sequences with rowsum 2
+Found 8568 sequences with rowsum 8
+Generating all sequences with rowsums (0, 2, 2, 8) took 0.66 seconds
+Generating .pair files for both pairs took 1315.58 seconds
 
+Generating .pair files for rowsums (2, 4, 4, 6) ...
+Found 43758 sequences with rowsum 2
+Found 31824 sequences with rowsum 4
+Found 31824 sequences with rowsum 4
+Found 18564 sequences with rowsum 6
+Generating all sequences with rowsums (2, 4, 4, 6) took 0.26 seconds
+Generating .pair files for both pairs took 1139.65 seconds
 
-Sorting the file "pair_WX.pair" took 514 seconds. 
+Total time to generate .pair files: 3649.25 seconds
 
+Sorting file results/pairs/qts/find_18/rowsum_0_0_6_6/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_18/rowsum_0_0_6_6/pair_XY.pair ...
+Sorting file results/pairs/qts/find_18/rowsum_0_2_2_8/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_18/rowsum_0_2_2_8/pair_XY.pair ...
+Sorting file results/pairs/qts/find_18/rowsum_2_4_4_6/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_18/rowsum_2_4_4_6/pair_XY.pair ...
+Total time to sort: 2547.73 seconds.
 
-Sorting the file "pair_WX.pair" took 547 seconds. 
+Matching files in /rowsum_2_4_4_6 ...
+Matches found in "pair_XY.pair.sorted" and "pair_WZ.pair.sorted": 431736
 
+Matching files in /rowsum_0_0_6_6 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 1262802
 
-Sorting the file "pair_WX.pair" took 616 seconds. 
+Matching files in /rowsum_0_2_2_8 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 423834
 
+Matching took: 566.91 seconds.
 
-Sorting the file "pair_ZY.pair" took 616 seconds. 
+Found 147581 qts after matching
+Reducing sequences up to equivalence ...
+Found 352 qts after reducing to equivalence
+Reducing to equivalence took 62.86 seconds.
 
-
-Sorting the file "pair_YZ.pair" took 657 seconds. 
-
-
-Sorting the file "pair_YZ.pair" took 659 seconds. 
-
-
-Sorting the file "pair_YZ.pair" took 720 seconds. 
-
-
-./results/pairs/wts/find_18
-Folder rowsum_2_4_4_6 : sequences have order (W, X, Y, Z)
-Folder rowsum_0_0_6_6 : sequences have order (W, X, Z, Y)
-Folder rowsum_0_2_2_8 : sequences have order (Y, Z, W, X)
-Folder rowsum_-2_4_4_6 : sequences have order (W, X, Y, Z)
-
-count before equivalences 169061
-The function found a total of 7921152 sequences without any equivalences
-count after equivalences 704
-Joining the files together took 2075 seconds. 
-
-
-results/pairs/wts/find_18/rowsum_0_2_2_8
-results/pairs/wts/find_18/rowsum_-2_4_4_6
-results/pairs/wts/find_18/rowsum_0_0_6_6
-results/pairs/wts/find_18/rowsum_2_4_4_6
-Creating the sequences took 33490 seconds.
-Creating the sequences took 33644 seconds.
-Creating the sequences took 36871 seconds.
-Creating the sequences took 41562 seconds.
+Converting sequences found in results/pairs/qts/find_18/ns_canonical.seq to Hadamard matrices up to Hadamard equivalence ...
+Reducing matrices to equivalence via graph isomorphism...
+Number of matrices up to equivalence : 82
+Converting to matrices up to Hadamard equivalence took 32563.19 seconds
+82 matrices were found after converting up to Hadamard equivalence.
+Total execution time was 39450.11 seconds.

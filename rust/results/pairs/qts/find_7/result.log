@@ -1,44 +1,48 @@
+Generating rowsum decompositions ...
 (1, 1, 1, 5)
-(-1, 1, 1, 5)
 (1, 3, 3, 3)
-(-1, 3, 3, 3)
-generated 4 different rowsums
-results/pairs/wts/find_7/rowsum_1_1_1_5
-The function took: 0.022705575 seconds to generate sequences with rowsums: 5, 1, 1, 1
-The function took: 0.023657236 seconds to go through the two sets of pairs
+Generated 2 different rowsums
 
-results/pairs/wts/find_7/rowsum_-1_1_1_5
-The function took: 0.039214283 seconds to generate sequences with rowsums: 5, 1, 1, -1
-The function took: 0.028215408 seconds to go through the two sets of pairs
+Generating .pair files for rowsums (1, 1, 1, 5) ...
+Found 35 sequences with rowsum 1
+Found 35 sequences with rowsum 1
+Found 35 sequences with rowsum 1
+Found 7 sequences with rowsum 5
+Generating all sequences with rowsums (1, 1, 1, 5) took 0.06 seconds
+Generating .pair files for both pairs took 0.02 seconds
 
-results/pairs/wts/find_7/rowsum_1_3_3_3
-The function took: 0.083300255 seconds to generate sequences with rowsums: 3, 3, 3, 1
-The function took: 0.016872471 seconds to go through the two sets of pairs
+Generating .pair files for rowsums (1, 3, 3, 3) ...
+Found 35 sequences with rowsum 1
+Found 21 sequences with rowsum 3
+Found 21 sequences with rowsum 3
+Found 21 sequences with rowsum 3
+Generating all sequences with rowsums (1, 3, 3, 3) took 0.06 seconds
+Generating .pair files for both pairs took 0.00 seconds
 
-results/pairs/wts/find_7/rowsum_-1_3_3_3
-The function took: 0.045526154 seconds to generate sequences with rowsums: 3, 3, 3, -1
-The function took: 0.024808614 seconds to go through the two sets of pairs
+Total time to generate .pair files: 0.15 seconds
 
-Creating the sequences took 0 seconds. 
- 
+Sorting file results/pairs/qts/find_7/rowsum_1_1_1_5/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_7/rowsum_1_1_1_5/pair_XY.pair ...
+Sorting file results/pairs/qts/find_7/rowsum_1_3_3_3/pair_WZ.pair ...
+Sorting file results/pairs/qts/find_7/rowsum_1_3_3_3/pair_XY.pair ...
+Total time to sort: 0.23 seconds.
 
-results/pairs/wts/find_7/rowsum_-1_1_1_5/pair_WY.pair
-results/pairs/wts/find_7/rowsum_-1_1_1_5/pair_ZX.pair
-results/pairs/wts/find_7/rowsum_-1_3_3_3/pair_WX.pair
-results/pairs/wts/find_7/rowsum_-1_3_3_3/pair_YZ.pair
-results/pairs/wts/find_7/rowsum_1_1_1_5/pair_WY.pair
-results/pairs/wts/find_7/rowsum_1_1_1_5/pair_ZX.pair
-results/pairs/wts/find_7/rowsum_1_3_3_3/pair_WX.pair
-results/pairs/wts/find_7/rowsum_1_3_3_3/pair_YZ.pair
-Sorting the files took 0 seconds. 
- 
+Matching files in /rowsum_1_1_1_5 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 352
 
-./results/pairs/wts/find_7
-Folder rowsum_-1_3_3_3 : sequences have order (W, X, Y, Z)
-thread 'main' panicked at src/find/find_write.rs:469:40:
-index out of bounds: the len is 21 but the index is 30
-note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
-Matching the sequences took 0 seconds. 
- 
+Matching files in /rowsum_1_3_3_3 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 544
 
-Total execution time was 0 seconds.
+Matching took: 0.01 seconds.
+
+Found 127 qts after matching
+Reducing sequences up to equivalence ...
+Found 3 qts after reducing to equivalence
+Reducing to equivalence took 0.03 seconds.
+
+Converting sequences found in results/pairs/qts/find_7/ns_canonical.seq to Hadamard matrices up to Hadamard equivalence ...
+Reducing matrices to equivalence via graph isomorphism...
+Number of matrices up to equivalence : 3
+Converting to matrices up to Hadamard equivalence took 0.05 seconds
+3 matrices were found after converting up to Hadamard equivalence.
+Total execution time was 0.52 seconds.
