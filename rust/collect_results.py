@@ -98,13 +98,12 @@ def create_table(start, end, S_equ, M_equ, time, qt_equiv_time, hm_equiv_time, p
             else:
                 print(str(round(disk[i])).ljust(width, ' '))
     else:
-        with open('results.tab', 'w') as file:
-            print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
-            for i, n in enumerate(range(start, end+1)):
-                if disk[i] < 10:
-                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i], 1)}\\\\')
-                else: 
-                    print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i])}\\\\')
+        print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
+        for i, n in enumerate(range(start, end+1)):
+            if disk[i] < 10:
+                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i], 1)}\\\\')
+            else: 
+                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i])}\\\\')
 
 
 
