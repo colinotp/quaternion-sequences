@@ -11,6 +11,24 @@ mod tests {
     use crate::read_lines;
 
     #[test]
+    fn test_dual_half_shift() {
+        let mut q = QuadSeq::new(4);
+
+        let a = vec![1,1,-1,-1];
+        let b = vec![1,1,-1,-1];
+        let c = vec![1,1,-1,-1];
+        let d = vec![1,1,-1,-1];
+
+        q.set_all_values((&a,&b,&c,&d));
+
+        let shifted = equivalent_dual_half_shift(&q, SequenceType::QuaternionType, true);
+
+        for seq in shifted {
+            println!("{}\n", seq.to_string());
+        }
+    }
+
+    #[test]
     fn test_qt_canon() {
         let a = vec![-1,-1,-1,-1,-1,1,-1,1];
         let b = vec![-1,-1,-1,-1,-1,1,-1,1];

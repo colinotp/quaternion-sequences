@@ -266,15 +266,23 @@ fn swap(will : &mut QuadSeq, seqtag1 : SequenceTag, seqtag2 : SequenceTag) {
 pub fn qt_canonical(seq : &QuadSeq, symmetries : &HashSet<QuadSeq>) -> QuadSeq {
     let ns_canonical_forms : HashSet<QuadSeq> = generate_equivalence_class_fast(seq, symmetries).into_iter().map(|s| ns_canonical(&s)).collect();
 
-    if let Some(min) = ns_canonical_forms.iter().min_by(|a,b| {
+    let min = ns_canonical_forms.iter().min_by(|a,b| {
+        if will_less_than(&a, &b) {std::cmp::Ordering::Less}
+        else if will_less_than(&b, &a) {std::cmp::Ordering::Greater}
+        else {std::cmp::Ordering::Equal}
+    }).expect("No minimum NS canonical form!");
+
+    let shifts = equivalent_dual_half_shift(min, SequenceType::QuaternionType, false);
+
+    if let Some(canonical) = shifts.iter().min_by(|a,b| {
         if will_less_than(&a, &b) {std::cmp::Ordering::Less}
         else if will_less_than(&b, &a) {std::cmp::Ordering::Greater}
         else {std::cmp::Ordering::Equal}
     }) {
-        min.clone()
+        canonical.clone()
     }
     else {
-        panic!("No minimum sequence! Input list:\n{:?}", ns_canonical_forms);
+        panic!("No minimum QT canonical sequence! Input list:\n{:?}", shifts);
     }
 }
 
@@ -474,6 +482,57 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry
         
         res.insert(s);
     }
+
+    res
+}
+
+// If n is even, apply a cyclic shift of n/2 to 2 sequences
+pub fn equivalent_dual_half_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
+    let mut res : HashSet<QuadSeq> = HashSet::new();
+    res.insert(seq.clone());
+
+    if seq.size() % 2 == 1 {
+        return res;
+    }
+
+    let offset = seq.size() / 2;
+
+    // Apply half shift to each pair of two sequences
+    for couple in [(SequenceTag::W, SequenceTag::X), (SequenceTag::W, SequenceTag::Y), (SequenceTag::W, SequenceTag::Z), (SequenceTag::X, SequenceTag::Y), (SequenceTag::X, SequenceTag::Z), (SequenceTag::Y, SequenceTag::Z)] {
+        let mut s = seq.clone();
+        let tag_seq0 = seq.sequence(couple.0);
+        let tag_seq1 = seq.sequence(couple.1);
+
+
+        for index in 0..seq.size() {
+            s.set_single_value(tag_seq0[(index + offset) % seq.size()], &couple.0, index);
+            s.set_single_value(tag_seq1[(index + offset) % seq.size()], &couple.1, index);
+        }
+
+        if !symmetry_group {
+            debug_assert!(seq.verify(seqtype), "equivalent_dual_half_shift function produced invalid {}", seqtype.to_string());
+        }
+
+        res.insert(s);
+    }
+
+    let mut s = seq.clone();
+    // Apply half shift to all sequences
+    for tag in [SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
+        let tag_seq = seq.sequence(tag);
+
+        for index in 0..seq.size() {
+            s.set_single_value(tag_seq[(index + offset) % seq.size()], &tag, index);
+        }
+
+        if !symmetry_group {
+            debug_assert!(seq.verify(seqtype), "equivalent_dual_half_shift function produced invalid {}", seqtype.to_string());
+        }
+    }
+
+    res.insert(s);
+
+    assert_eq!(res.len(), 8, "Bad result length for equivalent_dual_half_shift. Result: {:?}", res);
 
     res
 }
