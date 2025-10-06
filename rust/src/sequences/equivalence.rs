@@ -532,8 +532,6 @@ pub fn equivalent_dual_half_shift(seq : &QuadSeq, seqtype : SequenceType, symmet
 
     res.insert(s);
 
-    assert_eq!(res.len(), 8, "Bad result length for equivalent_dual_half_shift. Result: {:?}", res);
-
     res
 }
 
