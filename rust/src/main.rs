@@ -127,31 +127,27 @@ where P: AsRef<Path>, { // compact code to read a file
     Ok(io::BufReader::new(file).lines())
 }
 
-fn convert_qs_to_matrices() {
-    for i in 1.. {
-        println!("{}", &("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.seq"));
-        if let Ok(lines) = read_lines(&("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.seq")) {
-            // Consumes the iterator, returns an (Optional) String
-            let s = &("./results/pairs/qts/find_".to_string() + &i.to_string() + &"/result.qhm");
-            let path = Path::new(s);
-            let mut f = File::create(path).expect("Invalid file ?");
+fn convert_qs_to_matrices(seqtype : SequenceType, len : usize) {
+    
+    println!("{}", &("./results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + &"/result.seq"));
+    if let Ok(lines) = read_lines(&("./results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + &"/result.seq")) {
+        // Consumes the iterator, returns an (Optional) String
+        let s = &("./results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + &"/result.qhm");
+        let path = Path::new(s);
+        let mut f = File::create(path).expect("Invalid file ?");
 
-            let mut result = "".to_string();
-            for line in lines {
-                if let Ok(pqs) = line {
-                    let mut qhm = QHM::from_pqs(QS::from_str(&pqs));
-                    qhm.dephase();
-                    result += &qhm.to_string();
-                    result += &"\n";
-                }
+        let mut result = "".to_string();
+        for line in lines {
+            if let Ok(pqs) = line {
+                let mut qhm = QHM::from_pqs(QS::from_str(&pqs));
+                qhm.dephase();
+                result += &qhm.to_string();
+                result += &"\n";
             }
-            f.write(result.as_bytes()).expect("Error when writing in the file");
+        }
+        f.write(result.as_bytes()).expect("Error when writing in the file");
 
-            println!("converted sequences of size {i}");
-        }
-        else {
-            break;
-        }
+        println!("converted sequences of size {len}");
     }
 }
 
@@ -286,10 +282,19 @@ fn main() {
         }
         // Converts sequences to Hadamard matrices up to Hadamard equivalence
         "convert" => {
-            assert_eq!(args.len(), 4, "Invalid args passed");
-            let seqtype = str_to_seqtype(&args[2]);
-            let p = str_to_usize(&args[3]);
-            hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string(), seqtype);
+            assert_eq!(args.len(), 5, "Invalid args passed");
+            let seqtype = str_to_seqtype(&args[3]);
+            let p = str_to_usize(&args[4]);
+            match args[2].as_str() {
+                "hm" => {        
+                    hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string(), seqtype);
+                }
+                "qhm" => {
+                    convert_qs_to_matrices(seqtype, p);
+                }
+                _ => {panic!("Invalid arguments passed!");}
+            }
+            
         },
         // Generates .pair files used in algorithm 
         "pairs" => {

@@ -144,7 +144,7 @@ if [ $hadamard = true ]; then
 	echo "Converting $seq_count sequences to Hadamard matrices up to equivalence ..."
 
 	start2=`date +%s.%N`
-	./target/release/rust convert $type $n | tee $filename -a
+	./target/release/rust convert hm $type $n | tee $filename -a
 	end2=`date +%s.%N`
 	elapsed=$(echo "$end2 - $start2" | bc)
 	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed
@@ -154,6 +154,10 @@ if [ $hadamard = true ]; then
 	matcount=$(wc -l < $filename2)
 	echo "$matcount matrices were found after converting up to Hadamard equivalence." | tee $filename -a
 fi
+
+echo "Converting PQS to QHM ..."
+./convert_qhm.sh $type $n
+echo
 
 end=`date +%s.%N`
 elapsed=$(echo "$end - $start" | bc)

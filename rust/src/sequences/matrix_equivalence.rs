@@ -102,6 +102,11 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     println!("Number of matrices up to equivalence : {}", /*equ.len()*/ count);
 
+    println!("From sequences :\n");
+    for mat in &equ {
+        println!("{}", mat.get_qts().to_string());
+    }
+
     let input_file = Path::new(&pathname);
     let result_path = input_file.parent().expect("Invalid file").join("result.mat");
     let mut result_file = File::create(result_path).expect("Invalid file ?");
