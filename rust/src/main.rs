@@ -128,7 +128,9 @@ where P: AsRef<Path>, { // compact code to read a file
 }
 
 fn convert_qs_to_matrices(seqtype : SequenceType, len : usize) {
-    
+    let mut num_seq = 0;
+    let mut num_non_commutative = 0;
+
     println!("{}", &("./results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + &"/result.seq"));
     if let Ok(lines) = read_lines(&("./results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + &"/result.seq")) {
         // Consumes the iterator, returns an (Optional) String
@@ -139,15 +141,22 @@ fn convert_qs_to_matrices(seqtype : SequenceType, len : usize) {
         let mut result = "".to_string();
         for line in lines {
             if let Ok(pqs) = line {
+                num_seq += 1;
+
                 let mut qhm = QHM::from_pqs(QS::from_str(&pqs));
                 qhm.dephase();
+
+                if qhm.contains_non_commuting_elements() {
+                    num_non_commutative += 1;
+                }
+
                 result += &qhm.to_string();
                 result += &"\n";
             }
         }
         f.write(result.as_bytes()).expect("Error when writing in the file");
 
-        println!("converted sequences of size {len}");
+        println!("converted {num_seq} sequences of size {len}. {num_non_commutative} contained non-commuting elements.");
     }
 }
 

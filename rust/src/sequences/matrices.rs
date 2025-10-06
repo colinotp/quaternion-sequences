@@ -90,7 +90,34 @@ impl QHM {
     }
 
 
+    pub fn contains_non_commuting_elements(&self) -> bool {
+        let mut unique_elements : Vec<Quaternion<f32>> = Vec::new();
+        
+        // Iterate over elements in matrix
+        for i in 1..self.size() {
+            for j in 1..self.size() {
+                let new = self.get(i,j);
+                // Check if we have encountered this element before
+                if !unique_elements.contains(&new) {
+                    // If this is a new element, check if it commutes with all of the previous elements we have found
+                    for elm in &unique_elements {
+                        let left = new * elm;
+                        let right = elm * new;
 
+                        if left != right {
+                            return true;
+                        }
+                    }
+                    
+                    // It has been shown to commute with all other elements so far, add it to unique elements list
+                    unique_elements.push(new);
+                }
+            }
+        }
+        
+        // All elements found commute
+        false
+    }
 
 
 
