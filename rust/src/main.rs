@@ -296,7 +296,7 @@ fn main() {
             let p = str_to_usize(&args[4]);
             match args[2].as_str() {
                 "hm" => {        
-                    hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string(), seqtype);
+                    hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string(), seqtype);
                 }
                 "qhm" => {
                     convert_qs_to_matrices(seqtype, p);
