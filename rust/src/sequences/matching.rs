@@ -51,8 +51,7 @@ pub fn compute_auto_correlation_pair(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<is
 
 pub fn compute_auto_correlation_dft(psd_vec : &Vec<f64>, len : usize) -> Vec<isize> {
     let complex_psd : Vec<Complex<f64>> = psd_vec.iter().map(|&elm| Complex::new(elm as f64, 0.0)).collect();
-    let mut res : Vec<isize> = inverse_dft(&complex_psd, len).into_iter().map(|elm| elm.round() as isize).collect();
-    res.remove(0);
+    let res : Vec<isize> = inverse_dft(&complex_psd, len).into_iter().map(|elm| elm.round() as isize).collect();
 
     res
 }
@@ -61,14 +60,9 @@ pub fn compute_auto_correlation_pair_dft(psd_vec1 : &Vec<f64>, len1 : usize, psd
     let auto1 = compute_auto_correlation_dft(&psd_vec1, len1);
     let auto2 = compute_auto_correlation_dft(&psd_vec2, len2);
 
-    // Happens with sequences of length 1
-    if auto1.len() == 0 {
-        return vec![];
-    }
-
     let mut res = vec![];
 
-    for offset in 0..=(auto1.len() / 2) {
+    for offset in 1..=(auto1.len() / 2) {
         res.push(auto1[offset] + auto2[offset]);
     }
     res
