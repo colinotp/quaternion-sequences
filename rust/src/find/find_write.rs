@@ -654,6 +654,8 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
     // Count the number of matches made (including extraneous matches)
     let mut matches = 0;
 
+    let mut f = File::create("results/pairs/qts/find_4/matches.qseq").expect("Error creating file");
+
     while line12.is_some() && line34.is_some() {
         // We loop until there's no more lines to read
 
@@ -664,19 +666,33 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
         if seq12 == seq34 {
             // Store every sequence with the same values of auto/cross correlation
             let mut possible_matching_12 = vec![];
-            while line12.is_some() && current_seq == seq12 {
+            while current_seq == seq12 {
                 possible_matching_12.push(indices12);
-                (seq12, indices12) = get_line_from(&line12);
                 line12 = lines12.next();
+
+                if line12.is_some() {
+                    (seq12, indices12) = get_line_from(&line12);
+                }
+                else {
+                    break;
+                }
             }
 
             // Store every sequence here as well
             let mut possible_matching_34 = vec![];
-            while line34.is_some() && current_seq == seq34 {
+            while current_seq == seq34 {
                 possible_matching_34.push(indices34);
-                (seq34, indices34) = get_line_from(&line34);
                 line34 = lines34.next();
+                
+                if line34.is_some() {
+                    (seq34, indices34) = get_line_from(&line34);
+                }
+                else {
+                    break;
+                }
             }
+
+            
 
             // Loop through the possible matches
             for ((i1, i2),(i3, i4)) in iproduct!(possible_matching_12, possible_matching_34) {
@@ -686,6 +702,8 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
                 let sequences = get_sequences(sequences, order, &indices);
                 let mut quad_seq = QuadSeq::new(sequences.0.len());
                 quad_seq.set_all_values(sequences);
+
+                f.write((quad_seq.to_string() + &"\n\n".to_string()).as_bytes()).expect("Error writing to file");
                 
                 let condition: Box<dyn Fn(&QuadSeq) -> bool> = match seqtype {
                     SequenceType::QuaternionType => Box::new(|quad| quad.to_qs().is_perfect()),
