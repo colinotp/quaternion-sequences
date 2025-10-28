@@ -654,8 +654,6 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
     // Count the number of matches made (including extraneous matches)
     let mut matches = 0;
 
-    let mut f = File::create("results/pairs/qts/find_4/matches.qseq").expect("Error creating file");
-
     while line12.is_some() && line34.is_some() {
         // We loop until there's no more lines to read
 
@@ -702,8 +700,6 @@ pub fn join_pairs_files(filenames : &(String, String), seqtype : SequenceType, o
                 let sequences = get_sequences(sequences, order, &indices);
                 let mut quad_seq = QuadSeq::new(sequences.0.len());
                 quad_seq.set_all_values(sequences);
-
-                f.write((quad_seq.to_string() + &"\n\n".to_string()).as_bytes()).expect("Error writing to file");
                 
                 let condition: Box<dyn Fn(&QuadSeq) -> bool> = match seqtype {
                     SequenceType::QuaternionType => Box::new(|quad| quad.to_qs().is_perfect()),
