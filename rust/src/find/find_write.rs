@@ -204,7 +204,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
                                 min_half_int_difference_cpsd = difference;
                             }
 
-                            result += &(op(c.norm().round() as isize).to_string() + &"_");
+                            result += &((c.norm().round() as isize).to_string() + &"_");
                         }
                     },
                     SequenceType::WilliamsonType => {
