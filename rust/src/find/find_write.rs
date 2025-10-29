@@ -199,12 +199,12 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
                 match seqtype {
                     SequenceType::QuaternionType => {
                         for c in cpsd_values {
-                            let difference = (c.norm().fract() - 0.5).abs();
+                            let difference = (c.im.fract() - 0.5).abs();
                             if difference < min_half_int_difference_cpsd {
                                 min_half_int_difference_cpsd = difference;
                             }
 
-                            result += &((c.norm().round() as isize).to_string() + &"_");
+                            result += &(op(c.im.round() as isize).to_string() + &"_");
                         }
                     },
                     SequenceType::WilliamsonType => {
