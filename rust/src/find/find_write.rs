@@ -188,7 +188,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
                 // We add these values to the current line
                 for a in psd_values {
                     let difference = (a.fract() - 0.5).abs();
-                    if difference < f64_tolerance.into() && difference < min_half_int_difference_psd {
+                    if difference < min_half_int_difference_psd {
                         min_half_int_difference_psd = difference;
                     }
 
@@ -200,7 +200,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
                     SequenceType::QuaternionType => {
                         for c in cpsd_values {
                             let difference = (c.norm().fract() - 0.5).abs();
-                            if difference < f64_tolerance.into() && difference < min_half_int_difference_cpsd {
+                            if difference < min_half_int_difference_cpsd {
                                 min_half_int_difference_cpsd = difference;
                             }
 
@@ -236,10 +236,11 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
     }
 
-    if min_half_int_difference_psd < 0.9 {
+    // If PSD/CPSD values are very close to a half-integer then print a warning
+    if min_half_int_difference_psd < f64_tolerance {
         println!("WARNING (pair {}{}): PSD values approximate half-integer with error as small as {}", tags.0.to_string(), tags.1.to_string(), min_half_int_difference_psd);
     }
-    if min_half_int_difference_cpsd < 0.9 {
+    if min_half_int_difference_cpsd < f64_tolerance {
         println!("WARNING (pair {}{}): CPSD values approximate half-integer with error as small as {}", tags.0.to_string(), tags.1.to_string(), min_half_int_difference_cpsd);
     }
     
