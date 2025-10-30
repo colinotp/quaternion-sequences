@@ -325,7 +325,7 @@ fn main() {
             let d = str_to_isize(&args[7]);     // rowsum 4
 
             let match_option = str_to_match_option(&args[8]);   // Correlation or PSD matching
-            let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
+            let pairing = str_to_rowsum_pairing(&args[9]);      // Rowsum pairing
 
             write_pairs_rowsum(&folder, (a,b,c,d), p, match_option, pairing);
         },
@@ -352,10 +352,10 @@ fn main() {
             let d = str_to_isize(&args[7]);     // rowsum 4
 
             let match_option = str_to_match_option(&args[8]);   // Correlation or PSD matching
-            let pairing = str_to_rowsum_pairing(&args[8]);      // Rowsum pairing
+            let pairing = str_to_rowsum_pairing(&args[9]);      // Rowsum pairing
             
             // First or second pair (1 or 2)?
-            let pair = match str::parse::<u8>(&args[9]) {
+            let pair = match str::parse::<u8>(&args[10]) {
                 Ok(a) => {a},
                 Err(_) => {panic!("argument isn't an integer !")}
             };
