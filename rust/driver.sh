@@ -5,7 +5,7 @@
 #
 # Optional flags:
 # -d: delete existing .seq, .pair and .sorted files
-# -p <pairing>: run code with chosen pairing of sequences. Options include XY, XW, XZ
+# -p <pairing>: run code with chosen pairing of sequences. Options include WX, WY and WZ
 
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
