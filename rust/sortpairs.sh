@@ -43,12 +43,13 @@ do
 	then
 		for filename in $dirname/*.pair;
 		do
+			# For consistency use a single core to sort, even when more cores are available
 			echo "Sorting file $filename ..." | tee $results -a
 			if [ "$use_slurm" = true ]; then
-				sort -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
+				sort --parallel=1 -S 1G -T $SLURM_TMPDIR $filename > $filename.sorted
 				status=$?
 			else
-				sort -S 1G -T tmp/ $filename > $filename.sorted
+				sort --parallel=1 -S 1G -T tmp/ $filename > $filename.sorted
 				status=$?
 			fi
 
