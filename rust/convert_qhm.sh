@@ -17,5 +17,4 @@ start2=`date +%s.%N`
 ./target/release/rust convert qhm $type $n | tee -a $filename
 end2=`date +%s.%N`
 elapsed=$(echo "$end2 - $start2" | bc)
-printf "Converting to PQS to QHM took %.2f seconds\n" $elapsed
-printf "Converting to PQS to QHM took %.2f seconds\n" $elapsed >> $filename
+printf "Converting to PQS to QHM took %.2f seconds\n" $elapsed | tee -a $filename

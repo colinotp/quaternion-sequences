@@ -112,7 +112,7 @@ do
 	fi
 done
 
-echo -e "Generated $count pairs\n"
+echo -e "Generated $count pairs\n" | tee $filename -a
 
 # sorting the files
 if [ "$use_slurm" = true ]; then
@@ -143,21 +143,18 @@ if [ $hadamard = true ]; then
 	./target/release/rust convert hm $type $n | tee $filename -a
 	end2=`date +%s.%N`
 	elapsed=$(echo "$end2 - $start2" | bc)
-	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed
-	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed >> $filename
+	printf "Converting to matrices up to Hadamard equivalence took %.2f seconds\n" $elapsed | tee $filename -a
 	
 	filename2="$foldername/result.mat"
 	matcount=$(wc -l < $filename2)
 	echo "$matcount matrices were found after converting up to Hadamard equivalence." | tee $filename -a
 fi
 
-echo "Converting PQS to QHM ..."
+echo "Converting PQS to QHM ..." | tee $filename -a
 ./convert_qhm.sh $type $n
-echo
 
 end=`date +%s.%N`
 elapsed=$(echo "$end - $start" | bc)
-printf "Total execution time was %.2f seconds.\n" $elapsed
-printf "Total execution time was %.2f seconds.\n" $elapsed >> $filename
+printf "\nTotal execution time was %.2f seconds.\n" $elapsed | tee $filename -a
 
 echo "This output can also be found in $filename"
