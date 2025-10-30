@@ -95,7 +95,6 @@ then
 	exit 1
 fi
 
-
 # Report number of pairs generated
 count=$((0))
 
@@ -129,15 +128,12 @@ then
 fi
 
 # Matching the file AND reducing to equivalence
-start2=`date +%s`
 ./target/release/rust join $type $n | tee $filename -a
 if [ $? -ne 0 ]
 then
 	echo 'ERROR: join exited unsuccessfully. See log for additional details'
 	exit 1
 fi
-end2=`date +%s`
-
 
 if [ $hadamard = true ]; then
 	seq_count=$(wc -l < "$foldername/ns_canonical.seq")
