@@ -125,7 +125,7 @@ pub fn verify_rowsums(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Seque
     true
 }
 
-pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), seqtype : SequenceType, rs : (isize, isize, isize, isize), p : usize, folder_path : &String, side : EquationSide, match_option : MatchOption) {
+pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&SequenceTag, &SequenceTag), seqtype : SequenceType, rs : (isize, isize, isize, isize), p : usize, folder_path : &String, side : EquationSide, match_option : MatchOption) -> u64 {
     // This function generates the files that end in .pair used for the algorithm
 
     assert!(verify_rowsums(sequences, tags, rs));
@@ -142,7 +142,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
 
     // Instead of writing each line one by one n the file, we use a buffer to write them by chunks of 1000 lines
     let mut buffer = "".to_string();
-    let mut buffer_counter = 0;
+    let mut counter : u64 = 0;
     
     let mut min_half_int_difference_psd = 1.0;
     let mut min_half_int_difference_cpsd = 1.0;
@@ -226,15 +226,16 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
         result += &(":_".to_string() + &pair.seq_enum1.0.to_string() + "_" + &pair.seq_enum2.0.to_string() + &"\n");
 
         buffer += &result;
-        buffer_counter += 1;
+        counter += 1;
 
-        if buffer_counter > 1000 {
+        if counter % 1000 == 0 {
             f.write(buffer.as_bytes()).expect("Error when writing in the file");
             buffer = "".to_string();
-            buffer_counter = 0;
         }
 
     }
+
+    println!("Generated {} pairs for pairing {}{}", counter, &tags.0.to_string(), &tags.1.to_string());
 
     // If PSD/CPSD values are very close to a half-integer then print a warning
     if min_half_int_difference_psd < f64_tolerance {
@@ -246,6 +247,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
     
     f.write(buffer.as_bytes()).expect("Error when writing in the file");
 
+    counter
 }
 
 pub fn get_indices(pairing: Option<RowsumPairing>, pair: u8) -> Option<(usize, usize)> {
@@ -364,6 +366,7 @@ pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize,
 pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption, pairing: Option<RowsumPairing>) {
     // This is the starting point of the part of the algorithm that generates the possible sequences
 
+    let mut counter : u64 = 0;
     let time = Instant::now();
 
     // all the possible rowsums of p
@@ -377,14 +380,15 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
     let folder = seqtype.to_string();
     for rs in rowsums {
         println!("Generating .pair files for rowsums {:?} ...", rs);
-        write_pairs_rowsum(&folder, rs, p, match_option, pairing.clone());
+        counter += write_pairs_rowsum(&folder, rs, p, match_option, pairing.clone());
     }
 
     let elapsed = time.elapsed().as_secs_f32();
+    println!("Generated {} total pairs", counter);
     println!("Total time to generate .pair files: {:.2} seconds\n", elapsed);
 }
 
-pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>) {
+pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>) -> u64 {
     // This function generates the sequences possible for specific rowsums and stores them
     
     let tags : Vec<SequenceTag> = vec![SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z];
@@ -433,27 +437,28 @@ pub fn write_pairs_rowsum(folder : &str, rs : (isize, isize, isize, isize), p : 
     let elapsed_time = now.elapsed().as_secs_f32();
     println!("Generating all sequences with rowsums {:?} took {:.2} seconds", rs, elapsed_time);
 
-
+    let mut counter : u64 = 0;
     let now = Instant::now();
 
     // Uses sequences to generate .pair files based on chosen pairing (default pairing is XW)
     match pairing {
         Some(RowsumPairing::WX) => {
-            write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
-            write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
+            counter += write_seq_pairs((&sequences_0, &sequences_1), (&tags[0], &tags[1]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
+            counter += write_seq_pairs((&sequences_2, &sequences_3), (&tags[2], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
         },
         Some(RowsumPairing::WY) => {
-            write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
-            write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
+            counter += write_seq_pairs((&sequences_0, &sequences_2), (&tags[0], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
+            counter += write_seq_pairs((&sequences_1, &sequences_3), (&tags[1], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
         },
         Some(RowsumPairing::WZ) | None => {
-            write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
-            write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
+            counter += write_seq_pairs((&sequences_0, &sequences_3), (&tags[0], &tags[3]), seqtype, rs, p, &folder_path, EquationSide::LEFT, match_option);
+            counter += write_seq_pairs((&sequences_1, &sequences_2), (&tags[1], &tags[2]), seqtype, rs, p, &folder_path, EquationSide::RIGHT, match_option);
         }
     };
     
     let elapsed_time = now.elapsed().as_secs_f32();
     println!("Generating .pair files for both pairs took {:.2} seconds\n", elapsed_time);
+    counter
 }
 
 pub fn symmetric(seq : &Vec<i8>) -> bool {
