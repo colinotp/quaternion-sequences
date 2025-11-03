@@ -141,6 +141,18 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     filePath = "./results/pairs/" + seqtype + "/find_" + str(n)
     result_dir = filePath + "/result.log"
 
+    if not os.path.isfile(result_dir):
+        if verbose:
+            print(f"File {result_dir} doesn't exist")
+        runtime.append(-1)
+        qt_equivalence_time.append(-1)
+        hm_equivalence_time.append(-1)
+        disk_usage.append(-1)
+        QTS_reduced.append(-1)
+        QTS_hadamard_reduced.append(-1)
+        pairs.append(-1)
+        continue
+
     runtime.append(read_runtimes(result_dir))
     qt_equivalence_time.append(get_qt_equivalence_time(result_dir))
     hm_equivalence_time.append(get_hm_equivalence_time(result_dir))
