@@ -369,8 +369,8 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
     let mut counter : u64 = 0;
     let time = Instant::now();
 
-    // all the possible rowsums of p
-    println!("Generating rowsum decompositions ...");
+    // all the possible rowsums for length p
+    println!("Generating rowsum decompositions for length {} ...", p);
     let rowsums = generate_rowsums(p);
     for rs in &rowsums {
         println!("{:?}", rs);
