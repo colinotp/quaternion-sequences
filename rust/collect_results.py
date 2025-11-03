@@ -56,8 +56,7 @@ def reduced_QTS_count(result_dir):
             match = re.search(pattern, line)
             if match:
                 return int(match.group(1))
-    print('ERROR: QTS after equivalence not found')
-    exit()
+    return -1
     
 # Total Hadamard matrix count up to hadamard equivalence
 def hadamard_reduced_QTS_count(path):
