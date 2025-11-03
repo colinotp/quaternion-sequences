@@ -85,34 +85,34 @@ def create_table(start, end, S_equ, M_equ, time, qt_equiv_time, hm_equiv_time, p
     if latex is False:
         width = 16
     
-        print('n'.ljust(width, ' '), end='')
-        print('S_{equ}'.ljust(width, ' '), end='')
-        print('M_{equ}'.ljust(width, ' '), end='')
-        print('Time (s)'.ljust(width, ' '), end='')
-        print('QT Equ Time (s)'.ljust(width, ' '), end='')
-        print('HM Equ Time (s)'.ljust(width, ' '), end='')
-        print('Pairs'.ljust(width, ' '), end='')
-        print('Disk usage (MB)'.ljust(width, ' '))
+        print('n'.rjust(2, ' '), end='')
+        print('S_{equ}'.rjust(width, ' '), end='')
+        print('M_{equ}'.rjust(width, ' '), end='')
+        print('Time (s)'.rjust(width, ' '), end='')
+        print('QT Equ Time (s)'.rjust(width, ' '), end='')
+        print('HM Equ Time (s)'.rjust(width, ' '), end='')
+        print('Pairs'.rjust(width, ' '), end='')
+        print('Disk usage (MB)'.rjust(width, ' '))
         
         for i, n in enumerate(range(start, end+1)):
-            print(str(n).ljust(width, ' '), end='')
-            print(str(S_equ[i]).ljust(width, ' '), end='')
-            print(str(M_equ[i]).ljust(width, ' '), end='')
-            print(str(round(time[i], 2)).ljust(width, ' '), end='')
-            print(str(round(qt_equiv_time[i], 2)).ljust(width, ' '), end='')
-            print(str(round(hm_equiv_time[i], 2)).ljust(width, ' '), end='')
-            print(str(pairs[i]).ljust(width, ' '), end='')
+            print(str(n).rjust(2, ' '), end='')
+            print(str(S_equ[i]).rjust(width, ' '), end='')
+            print(str(M_equ[i]).rjust(width, ' '), end='')
+            print(str(f"{time[i]:.2f}").rjust(width, ' '), end='')
+            print(str(f"{qt_equiv_time[i]:.2f}").rjust(width, ' '), end='')
+            print(str(f"{hm_equiv_time[i]:.2f}").rjust(width, ' '), end='')
+            print(str(pairs[i]).rjust(width, ' '), end='')
             if disk[i] < 10:
-                print(str(round(disk[i], 1)).ljust(width, ' '))
+                print(str(round(disk[i], 1)).rjust(width, ' '))
             else:
-                print(str(round(disk[i])).ljust(width, ' '))
+                print(str(round(disk[i])).rjust(width, ' '))
     else:
         print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
         for i, n in enumerate(range(start, end+1)):
             if disk[i] < 10:
-                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i], 1)}\\\\')
+                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {round(disk[i], 1)}\\\\')
             else: 
-                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {round(time[i], 2)} & {round(qt_equiv_time[i], 2)} & {round(hm_equiv_time[i], 2)} & {pairs[i]} & {round(disk[i])}\\\\')
+                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {round(disk[i])}\\\\')
 
 
 
