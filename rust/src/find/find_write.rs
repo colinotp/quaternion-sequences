@@ -208,7 +208,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
                         }
                     },
                     SequenceType::WilliamsonType => {
-                        if cpsd_values.into_iter().any(|val| val.re > 0.0001 || val.im > 0.0001) {
+                        if cpsd_values.into_iter().any(|val| val.im.abs() > 0.0001) {
                             continue;
                         }
                     },
