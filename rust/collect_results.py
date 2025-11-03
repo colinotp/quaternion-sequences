@@ -70,6 +70,14 @@ def hadamard_reduced_QTS_count(path):
     
 # Count generated pairs
 def count_pairs(seqtype, n):
+    pattern = r'Generated (\d+) total pairs'
+    result_log = "./results/pairs/" + seqtype + "/find_" + str(n) + "/result.log"
+    if os.path.isfile(result_log):
+        with open(result_log, 'r') as file:
+            for line in file:
+                match = re.search(pattern, line)
+                if match:
+                    return int(match.group(1))
     return int(os.popen('./countpairs.sh ' + seqtype + ' ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
