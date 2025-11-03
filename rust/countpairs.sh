@@ -18,6 +18,10 @@ do
 	then
 		for filename in $dirname/*.sorted;
 		do
+			if [ ! -e "$filename" ]
+			then
+				break
+			fi
 			str=$(wc -l $filename)
 			arr=($str)
 			nb=${arr[0]}
