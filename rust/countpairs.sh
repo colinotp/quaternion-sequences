@@ -7,14 +7,8 @@ then
 	exit 0
 fi
 
-if [ ! -e tmp/ ]
-then
-	mkdir tmp/
-fi
-
 type=$1
 n=$2
-
 
 count=$((0))
 
