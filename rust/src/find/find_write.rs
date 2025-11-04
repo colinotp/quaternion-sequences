@@ -511,10 +511,10 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
     let filtered : Vec<QuadSeq> = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
 
     // Record result of filtered sequencews for faster filtering in Hadamard reduction
-    let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string();
-    let mut f_joined = File::create(&result_joined).expect("File creation unsuccessful");
-    let joined_string = filtered.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
-    f_joined.write(joined_string.as_bytes()).expect("File write error");
+    // let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string();
+    // let mut f_joined = File::create(&result_joined).expect("File creation unsuccessful");
+    // let joined_string = filtered.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+    // f_joined.write(joined_string.as_bytes()).expect("File write error");
 
     let reduced = reduce_to_canonical_reps(&filtered, seqtype);
     let elapsed = time.elapsed().as_secs_f32();

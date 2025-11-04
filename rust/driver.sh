@@ -117,9 +117,6 @@ then
 fi
 
 if [ $hadamard = true ]; then
-	seq_count=$(wc -l < "$foldername/ns_canonical.seq")
-	echo "Converting $seq_count sequences to Hadamard matrices up to equivalence ..."
-
 	start2=`date +%s.%N`
 	./target/release/rust convert hm $type $n | tee $filename -a
 	end2=`date +%s.%N`

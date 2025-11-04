@@ -72,7 +72,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
 
     let mut seqs = vec![];
 
-    // Taking input from ns_canonical.seq means the sequences have already been partially reduced via Hadamard equivalence operations
+    // Taking input from the list of filtered sequences means the sequences have already been reduced via QT equivalence operations
     println!("Converting sequences found in {pathname} to Hadamard matrices up to Hadamard equivalence ...");
     for line_res in read_lines(&pathname).expect(&format!("Error reading file. Make sure sequences have already been generated for this length (e.g., {} should exist and not be empty)", pathname)) {
         let line = line_res.expect("Error reading line");
