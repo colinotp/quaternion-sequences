@@ -277,7 +277,7 @@ fn equivalent(quad : &Quad, seqtype : SequenceType) -> Quad {
 
 
 
-pub fn generate_rowsums(p : usize) -> Vec<Quad>{
+pub fn generate_rowsums(p : usize, seqtype : SequenceType) -> Vec<Quad>{
     // generates all quadruplets of integers such that the sum of their squares equal 4*p
     // it also generates their permutation, but only up to equivalence
     let quads = sum_of_four_squares(4*p);
@@ -290,7 +290,7 @@ pub fn generate_rowsums(p : usize) -> Vec<Quad>{
         if parity == elm.0 % 2 && parity == elm.1 % 2 && parity == elm.2 % 2 && parity == elm.3 % 2 {
             total_quadruplets.push(elm);
 
-            if elm.0 != 0 && elm.0 != elm.1 && elm.1 != elm.2 && elm.2 != elm.3 {
+            if elm.0 != 0 && elm.0 != elm.1 && elm.1 != elm.2 && elm.2 != elm.3 && matches!(seqtype, SequenceType::QuaternionType){
                 let neg_quad : Quad = (elm.0,elm.1,elm.2,-elm.3);
                 total_quadruplets.push(neg_quad);
             }

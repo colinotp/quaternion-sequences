@@ -21,7 +21,7 @@ pub fn write_rowsums(p : usize, seqtype : SequenceType) {
     let path = folder_path.clone() + &"/rowsums.quad";
     let mut f = File::create(path).expect("Invalid file ?");
 
-    let rs = generate_rowsums(p);
+    let rs = generate_rowsums(p, seqtype);
 
     let s = rs.iter().map(|e| quad_to_string(*e)).fold("".to_string(), |a,b| a + &b);
 
@@ -267,7 +267,7 @@ pub fn write_pair_single(seqtype : SequenceType, p: usize, match_option : MatchO
     // `pair` should be either a 1 or a 2, which decides whether to look at the first or second pair given by the chosen pairing
 
     // all the possible rowsums of p
-    let rowsums = generate_rowsums(p);
+    let rowsums = generate_rowsums(p, seqtype);
     for rs in &rowsums {
         eprintln!("{:?}", rs);
     }
@@ -371,7 +371,7 @@ pub fn write_pairs(p : usize, seqtype : SequenceType, match_option : MatchOption
 
     // all the possible rowsums for length p
     println!("Generating rowsum decompositions for length {} ...", p);
-    let rowsums = generate_rowsums(p);
+    let rowsums = generate_rowsums(p, seqtype);
     for rs in &rowsums {
         println!("{:?}", rs);
     }

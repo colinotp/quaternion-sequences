@@ -14,8 +14,8 @@ mod tests;
 mod find;
 use crate::find::find_write::{create_rowsum_dirs, write_pair_single_rowsum, write_pairs, write_pairs_rowsum, write_rowsums, MatchOption};
 use crate::find::*;
-use crate::find::find_unique::reduce_to_equivalence;
-use crate::sequences::{williamson::*, sequence::*, symmetries::*};
+use crate::find::find_unique::{/*reduce_to_equivalence,*/reduce_to_canonical_reps};
+use crate::sequences::{williamson::*, sequence::*, symmetries::*, equivalence::negated};
 use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 
 fn find_pqs(symmetry : Option<Symmetry>){
@@ -161,7 +161,7 @@ fn convert_qs_to_matrices(seqtype : SequenceType, len : usize) {
 }
 
 
-fn find_matching_algorithm(p : usize) {
+/*fn find_matching_algorithm(p : usize) {
 
     let now = Instant::now();
     let sequences = find_with_rowsum::find_matching(p);
@@ -185,7 +185,7 @@ fn find_matching_algorithm(p : usize) {
     }
     f.write(result_string.as_bytes()).expect("Error when writing in the file");
     
-}
+}*/
 
 // Verify that all qts of a given length are also WTS (amicable)
 fn verify_qts_eq_wts(p : usize) {

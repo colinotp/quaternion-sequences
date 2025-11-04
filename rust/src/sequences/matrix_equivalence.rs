@@ -3,6 +3,7 @@ use std::{collections::{HashMap, HashSet}, fs::File, io::Write, path::Path};
 use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
+//use crate::{read_lines, sequences::{equivalence::ns_canonical, equivalence::negated, symmetries::SequenceType, williamson::QuadSeq, williamson::SequenceTag}};
 use crate::{read_lines, sequences::{equivalence::ns_canonical, symmetries::SequenceType, williamson::QuadSeq}};
 
 use super::{matrices::HM, sequence::QS};
