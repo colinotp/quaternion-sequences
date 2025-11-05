@@ -2,7 +2,7 @@ use std::{f64, fs::{self, DirEntry, File}, io::{Error, Write}, time::Instant};
 use itertools::{iproduct, Itertools};
 use memory_stats::memory_stats;
 
-use crate::{find::find_unique::reduce_to_canonical_reps, read_lines, sequences::{equivalence::ns_canonical, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_correlations_dft, compute_cross_psd_pair, compute_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
+use crate::{find::find_unique::reduce_to_canonical_reps, read_lines, sequences::{equivalence::ns_canonical, equivalence::sn_ss_canonical, fourier::iter_over_enumerate_filtered_couples_psds, matching::{compute_auto_correlation_pair_dft, compute_cross_correlations_dft, compute_cross_psd_pair, compute_psd_pair}, rowsum::{generate_rowsums, generate_sequences_with_rowsum, has_sorted_rowsums, rowsum, sequence_to_string, Quad}, symmetries::*, williamson::{QuadSeq, SequenceTag}}, str_to_seqtype};
 
 
 
@@ -505,10 +505,21 @@ pub fn join_pairs(p : usize, seqtype : SequenceType) -> Vec<QuadSeq>{
 
     debug_assert!(result.iter().all(|seq| has_sorted_rowsums(&seq)));
 
-    println!("\nFound {} {} after matching\nReducing sequences up to equivalence ...", result.len(), seqtype.to_string());
+    println!("\nFound {} {} after matching", result.len(), seqtype.to_string());
 
     let time = Instant::now();
-    let filtered : Vec<QuadSeq> = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
+    let filtered : Vec<QuadSeq>;
+    match seqtype {
+        SequenceType::QuaternionType => {
+            filtered = result.iter().map(|seq| ns_canonical(seq)).unique().collect();
+            println!("Filtered with the NS (negate-and-swap) operation; now filtering {} sequences up to QT equivalence ...", filtered.len());
+        },
+        SequenceType::WilliamsonType | SequenceType::Williamson => {
+            filtered = result.iter().map(|seq| sn_ss_canonical(seq)).unique().collect();
+            println!("Filtered with the SN (single negate) and SS (single swap) operations; now filtering {} sequences up to Williamson-type equivalence ...", filtered.len());
+        },
+        _ => {panic!("Not implemented yet")}
+    }
 
     // Record result of filtered sequencews for faster filtering in Hadamard reduction
     // let result_joined = "./results/pairs/".to_string() + &folder + &"/find_".to_string() + &p.to_string() + &"/ns_canonical.seq".to_string();
