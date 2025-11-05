@@ -90,7 +90,7 @@ fn find_unique_williamson_type_of_size(i : usize){
 
 fn find_write_quad_seq(i : usize, seqtype : SequenceType){
 
-    let result = find_write::join_pairs(i, seqtype);
+    let mut result = find_write::join_pairs(i, seqtype);
 
     if matches!(seqtype, SequenceType::QuaternionType) {
         // Check to see if also valid WTS
@@ -101,7 +101,7 @@ fn find_write_quad_seq(i : usize, seqtype : SequenceType){
             }
         }
     }
-    
+   
     let folder = seqtype.to_string();
     
     let s = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result.seq");
@@ -118,6 +118,40 @@ fn find_write_quad_seq(i : usize, seqtype : SequenceType){
 
     f_seq.write(seq_res_string.as_bytes()).expect("Error when writing in the file");
     f_qseq.write(qseq_res_string.as_bytes()).expect("Error when writing in the file");
+
+    // When doing a Williamson-type enumeration, additionally generate an enumeratation up to QT equivalences for the later Hadamard equivalence check
+    if matches!(seqtype, SequenceType::WilliamsonType) {
+        println!("In order to generate all Williamson-type sequences up to Hadamard equivalence, we now generate a complete list up to QT equivalence ...");
+
+        let time = Instant::now();
+        let mut neg_quad_seq_list = vec![];
+        // Negate a single sequence from each quadruple to ensure the enumeration up to QT equivalence is exhaustive
+        for quad_seq in &result {
+            let mut new_seq = quad_seq.clone();
+            let neg_w = &negated(&new_seq.sequence(SequenceTag::W));
+            new_seq.set_sequence(&neg_w, &SequenceTag::W);
+            neg_quad_seq_list.push(new_seq);
+        }
+        result.append(&mut neg_quad_seq_list);
+
+        let qt_reduced = reduce_to_canonical_reps(&result, SequenceType::QuaternionType);
+        let elapsed = time.elapsed().as_seconds_f32();
+
+        println!("Found {} qts after reducing to equivalence", qt_reduced.len());
+        println!("Reducing to equivalence took {:.2} seconds.\n", elapsed);
+
+        // Write the enumeration up to QT equivalence to separate result files
+        let s = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result-qts.seq");
+        let qs = &("./results/pairs/".to_string() + &folder + &"/find_".to_string() + &i.to_string() + &"/result-qts.qseq");
+        let path_seq = Path::new(s);
+        let path_qseq = Path::new(qs);
+        let mut f_seq = File::create(path_seq).expect("Invalid file ?");
+        let mut f_qseq = File::create(path_qseq).expect("Invalid file ?");
+        let seq_res_string = qt_reduced.iter().map(|w| w.to_qs().to_string_raw() + &"\n").fold("".to_string(), |s, t| s + &t);
+        let qseq_res_string = qt_reduced.iter().map(|w| w.to_string() + &"\n").fold("".to_string(), |s, t| s + &t);
+        f_seq.write(seq_res_string.as_bytes()).expect("Error when writing in the file");
+        f_qseq.write(qseq_res_string.as_bytes()).expect("Error when writing in the file");
+    }
 }
 
 
@@ -295,8 +329,12 @@ fn main() {
             let seqtype = str_to_seqtype(&args[3]);
             let p = str_to_usize(&args[4]);
             match args[2].as_str() {
-                "hm" => {        
-                    hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string(), seqtype);
+                "hm" => {
+                    if matches!(seqtype, SequenceType::WilliamsonType) {
+                        hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result-qts.seq".to_string(), seqtype);
+                    } else {
+                        hadamard_equivalence_from_file("results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &p.to_string() + &"/result.seq".to_string(), seqtype);
+                    }
                 }
                 "qhm" => {
                     convert_qs_to_matrices(seqtype, p);
