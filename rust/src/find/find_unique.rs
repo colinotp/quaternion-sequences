@@ -189,6 +189,5 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType, 
 pub fn reduce_to_canonical_reps(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
     let symmetries = generate_symmetry_group(sequences[0].size(), seqtype, &vec![equivalent_automorphism, equivalent_even_alternated_negation, equivalent_uniform_shift]);
 
-    sequences.iter().map(|seq| qt_canonical(seq, &symmetries)).unique().collect()
+    sequences.iter().map(|seq| qt_canonical(seq, &symmetries, seqtype)).unique().collect()
 }
-
