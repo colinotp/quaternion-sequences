@@ -49,8 +49,8 @@ def get_disk_usage(path):
     return total
 
 # Total QTS count after equivalences
-def reduced_QTS_count(result_dir):
-    pattern = r'Found (\d+) (\w+) after reducing to equivalence'
+def reduced_QTS_count(result_dir, seqtype):
+    pattern = r'Found (\d+) ' + seqtype + ' after reducing to equivalence'
     with open(result_dir, 'r') as file:
         for line in file:
             match = re.search(pattern, line)
@@ -81,12 +81,14 @@ def count_pairs(seqtype, n):
     return int(os.popen('./countpairs.sh ' + seqtype + ' ' + str(n)).read())
 
 # Create table from data. Each arg other than n should be a list of length n
-def create_table(start, end, S_equ, M_equ, time, qt_equiv_time, hm_equiv_time, pairs, disk, latex):
+def create_table(start, end, Q_equ, W_equ, M_equ, time, qt_equiv_time, hm_equiv_time, pairs, disk, latex, seqtype):
     if latex is False:
         width = 16
     
         print('n'.rjust(2, ' '), end='')
-        print('S_{equ}'.rjust(width, ' '), end='')
+        print('Q_{equ}'.rjust(width, ' '), end='')
+        if seqtype == "wts":
+            print('W_{equ}'.rjust(width, ' '), end='')
         print('M_{equ}'.rjust(width, ' '), end='')
         print('Time (s)'.rjust(width, ' '), end='')
         print('QT Equ Time (s)'.rjust(width, ' '), end='')
@@ -96,23 +98,25 @@ def create_table(start, end, S_equ, M_equ, time, qt_equiv_time, hm_equiv_time, p
         
         for i, n in enumerate(range(start, end+1)):
             print(str(n).rjust(2, ' '), end='')
-            print(str(S_equ[i]).rjust(width, ' '), end='')
+            print(str(Q_equ[i]).rjust(width, ' '), end='')
+            if seqtype == "wts":
+                print(str(W_equ[i]).rjust(width, ' '), end='')
             print(str(M_equ[i]).rjust(width, ' '), end='')
             print(str(f"{time[i]:.2f}").rjust(width, ' '), end='')
             print(str(f"{qt_equiv_time[i]:.2f}").rjust(width, ' '), end='')
             print(str(f"{hm_equiv_time[i]:.2f}").rjust(width, ' '), end='')
             print(str(pairs[i]).rjust(width, ' '), end='')
-            if disk[i] < 10:
-                print(str(round(disk[i], 1)).rjust(width, ' '))
-            else:
-                print(str(round(disk[i])).rjust(width, ' '))
+            print(f"{disk[i]:.1f}".rjust(width, ' '))
     else:
-        print(f'$n$ & $S_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
+        if seqtype == "wts":
+            print(f'$n$ & $Q_{{\\text{{equ}}}}$ & $W_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
+        else:
+            print(f'$n$ & $Q_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
         for i, n in enumerate(range(start, end+1)):
-            if disk[i] < 10:
-                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {round(disk[i], 1)}\\\\')
-            else: 
-                print(f'{n} & {S_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {round(disk[i])}\\\\')
+            if seqtype == "wts":
+                print(f'{n} & {W_equ[i]} & {M_equ[i]} & {W_equ[i]:.2f} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {disk[i]:.1f}\\\\')
+            else:
+                print(f'{n} & {W_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {disk[i]:.1f}\\\\')
 
 
 
@@ -134,6 +138,7 @@ qt_equivalence_time=[]
 hm_equivalence_time=[]
 disk_usage=[]
 QTS_reduced=[]
+WTS_reduced=[]
 QTS_hadamard_reduced=[]
 pairs=[]
 
@@ -149,6 +154,7 @@ for i, n in enumerate(range(int(start), int(end)+1)):
         hm_equivalence_time.append(-1)
         disk_usage.append(-1)
         QTS_reduced.append(-1)
+        WTS_reduced.append(-1)
         QTS_hadamard_reduced.append(-1)
         pairs.append(-1)
         continue
@@ -157,7 +163,8 @@ for i, n in enumerate(range(int(start), int(end)+1)):
     qt_equivalence_time.append(get_qt_equivalence_time(result_dir))
     hm_equivalence_time.append(get_hm_equivalence_time(result_dir))
     disk_usage.append(get_disk_usage(filePath))
-    QTS_reduced.append(reduced_QTS_count(result_dir))
+    QTS_reduced.append(reduced_QTS_count(result_dir, "qts"))
+    WTS_reduced.append(reduced_QTS_count(result_dir, "wts"))
     QTS_hadamard_reduced.append(hadamard_reduced_QTS_count(filePath))
     pairs.append(count_pairs(seqtype, n))
     
@@ -171,4 +178,4 @@ for i, n in enumerate(range(int(start), int(end)+1)):
         print(f'Total pairs generated: {pairs[i]}\n')
 
 
-create_table(int(start), int(end), QTS_reduced, QTS_hadamard_reduced, runtime, qt_equivalence_time, hm_equivalence_time, pairs, disk_usage, latex)
+create_table(int(start), int(end), QTS_reduced, WTS_reduced, QTS_hadamard_reduced, runtime, qt_equivalence_time, hm_equivalence_time, pairs, disk_usage, latex, seqtype)
