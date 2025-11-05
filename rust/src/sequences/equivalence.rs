@@ -276,23 +276,14 @@ pub fn qt_canonical(seq : &QuadSeq, symmetries : &HashSet<QuadSeq>, seqtype : Se
         _ => {panic!("Not implemented yet")}
     }
 
-    let min = ns_canonical_forms.iter().min_by(|a,b| {
-        if will_less_than(&a, &b) {std::cmp::Ordering::Less}
-        else if will_less_than(&b, &a) {std::cmp::Ordering::Greater}
-        else {std::cmp::Ordering::Equal}
-    }).expect("No minimum NS canonical form!");
-
-    let shifts = equivalent_dual_half_shift(min, SequenceType::QuaternionType, false);
-
-    if let Some(canonical) = shifts.iter().min_by(|a,b| {
+    if let Some(min) = ns_canonical_forms.iter().min_by(|a,b| {
         if will_less_than(&a, &b) {std::cmp::Ordering::Less}
         else if will_less_than(&b, &a) {std::cmp::Ordering::Greater}
         else {std::cmp::Ordering::Equal}
     }) {
-        canonical.clone()
-    }
-    else {
-        panic!("No minimum QT canonical sequence! Input list:\n{:?}", shifts);
+        min.clone()
+    } else {
+        panic!("No minimum QT canonical sequence! Input list:\n{:?}", ns_canonical_forms);
     }
 }
 
