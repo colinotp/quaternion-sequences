@@ -1,3 +1,0 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.07s
-     Running `target\debug\rust.exe pqs 8`
-For n = 8, the function took: 88.483185 seconds and found 768 sequences

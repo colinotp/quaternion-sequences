@@ -1,3 +1,0 @@
-    Finished dev [unoptimized + debuginfo] target(s) in 0.08s
-     Running `target\debug\rust.exe pqs 10`
-error: process didn't exit successfully: `target\debug\rust.exe pqs 10` (exit code: 0xc000013a, STATUS_CONTROL_C_EXIT)

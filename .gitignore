@@ -3,7 +3,5 @@
 .vscode/
 *.opb
 *.pair
-rust/results/pairs/wts/*/*/*.seq
-rust/results/pairs/wts/*/*/*.pair
-rust/results/pairs/wts/*/*/*.sorted
+rust/results/
 */tmp/
