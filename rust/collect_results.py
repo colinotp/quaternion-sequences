@@ -86,9 +86,9 @@ def create_table(start, end, Q_equ, W_equ, M_equ, time, qt_equiv_time, hm_equiv_
         width = 16
     
         print('n'.rjust(2, ' '), end='')
-        print('Q_{equ}'.rjust(width, ' '), end='')
         if seqtype == "wts":
             print('W_{equ}'.rjust(width, ' '), end='')
+        print('Q_{equ}'.rjust(width, ' '), end='')
         print('M_{equ}'.rjust(width, ' '), end='')
         print('Time (s)'.rjust(width, ' '), end='')
         print('QT Equ Time (s)'.rjust(width, ' '), end='')
@@ -98,9 +98,9 @@ def create_table(start, end, Q_equ, W_equ, M_equ, time, qt_equiv_time, hm_equiv_
         
         for i, n in enumerate(range(start, end+1)):
             print(str(n).rjust(2, ' '), end='')
-            print(str(Q_equ[i]).rjust(width, ' '), end='')
             if seqtype == "wts":
                 print(str(W_equ[i]).rjust(width, ' '), end='')
+            print(str(Q_equ[i]).rjust(width, ' '), end='')
             print(str(M_equ[i]).rjust(width, ' '), end='')
             print(str(f"{time[i]:.2f}").rjust(width, ' '), end='')
             print(str(f"{qt_equiv_time[i]:.2f}").rjust(width, ' '), end='')
@@ -109,14 +109,15 @@ def create_table(start, end, Q_equ, W_equ, M_equ, time, qt_equiv_time, hm_equiv_
             print(f"{disk[i]:.1f}".rjust(width, ' '))
     else:
         if seqtype == "wts":
-            print(f'$n$ & $Q_{{\\text{{equ}}}}$ & $W_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
+            print(f'$n$ & $W_{{\\text{{equ}}}}$ & $Q_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Pairs & Space \\\\')
         else:
-            print(f'$n$ & $Q_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & QT Equ Time (s) & HM Equ Time (s) & Pairs & Disk space (MB)\\\\')
+            print(f'$n$ & $Q_{{\\text{{equ}}}}$ & $M_{{\\text{{equ}}}}$ & Time (s) & Pairs & Space \\\\')
+        print('\\hline')
         for i, n in enumerate(range(start, end+1)):
             if seqtype == "wts":
-                print(f'{n} & {W_equ[i]} & {M_equ[i]} & {W_equ[i]:.2f} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {disk[i]:.1f}\\\\')
+                print(f'{n} & {W_equ[i]} & {Q_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {pairs[i]} & {disk[i]:.1f} \\\\')
             else:
-                print(f'{n} & {W_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {round(qt_equiv_time[i], 2):.2f} & {round(hm_equiv_time[i], 2):.2f} & {pairs[i]} & {disk[i]:.1f}\\\\')
+                print(f'{n} & {Q_equ[i]} & {M_equ[i]} & {time[i]:.2f} & {pairs[i]} & {disk[i]:.1f} \\\\')
 
 
 
