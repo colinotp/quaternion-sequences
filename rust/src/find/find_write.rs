@@ -171,7 +171,7 @@ pub fn write_seq_pairs(sequences : (&Vec<Vec<i8>>, &Vec<Vec<i8>>), tags : (&Sequ
                         }
                     },
                     SequenceType::WilliamsonType => {
-                        if crossc_values.into_iter().any(|val| val == 0) {
+                        if crossc_values.into_iter().any(|val| val != 0) {
                             continue;
                         }
                     },
