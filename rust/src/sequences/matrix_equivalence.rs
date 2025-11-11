@@ -87,7 +87,7 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
     let mut quad_seq_list : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
 
     for quad_seq in &quad_seq_list {
-        quad_seq.verify(seqtype);
+        assert!(quad_seq.verify(seqtype));
     }
 
     // If we are converting from WTS, we must add (-W,X,Y,Z) for each WTS (W,X,Y,Z)
