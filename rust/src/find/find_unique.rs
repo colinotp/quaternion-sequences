@@ -5,7 +5,7 @@ use std::collections::HashSet;
 
 use itertools::Itertools;
 
-use crate::sequences::{equivalence::{equivalent_automorphism, equivalent_even_alternated_negation, equivalent_uniform_shift, equivalent_dual_half_shift, generate_equivalence_class, generate_equivalence_class_fast, generate_symmetry_group, qt_canonical, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
+use crate::sequences::{equivalence::{equivalent_automorphism, equivalent_even_alternated_negation, equivalent_uniform_shift, equivalent_dual_half_shift, equivalent_uniform_half_shift, generate_equivalence_class, generate_equivalence_class_fast, generate_symmetry_group, qt_canonical, will_less_than}, symmetries::SequenceType, williamson::{QuadSeq, QUADRUPLETS}};
 
 
 
@@ -187,7 +187,12 @@ pub fn reduce_to_equivalence(sequences : &Vec<QuadSeq>, seqtype : SequenceType, 
 }
 
 pub fn reduce_to_canonical_reps(sequences : &Vec<QuadSeq>, seqtype : SequenceType) -> Vec<QuadSeq> {
-    let symmetries = generate_symmetry_group(sequences[0].size(), seqtype, &vec![equivalent_automorphism, equivalent_even_alternated_negation, equivalent_uniform_shift, equivalent_dual_half_shift]);
+    let symmetries;
+    if matches!(seqtype, SequenceType::QuaternionType) {
+        symmetries = generate_symmetry_group(sequences[0].size(), seqtype, &vec![equivalent_automorphism, equivalent_even_alternated_negation, equivalent_uniform_shift, equivalent_dual_half_shift]);
+    } else {
+        symmetries = generate_symmetry_group(sequences[0].size(), seqtype, &vec![equivalent_automorphism, equivalent_even_alternated_negation, equivalent_uniform_shift, equivalent_uniform_half_shift]);
+    }
 
     sequences.iter().map(|seq| qt_canonical(seq, &symmetries, seqtype)).unique().collect()
 }

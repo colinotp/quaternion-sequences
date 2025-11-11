@@ -15,7 +15,7 @@ mod find;
 use crate::find::find_write::{create_rowsum_dirs, write_pair_single_rowsum, write_pairs, write_pairs_rowsum, write_rowsums, MatchOption};
 use crate::find::*;
 use crate::find::find_unique::{/*reduce_to_equivalence,*/reduce_to_canonical_reps};
-use crate::sequences::{williamson::*, sequence::*, symmetries::*, equivalence::negated};
+use crate::sequences::{williamson::*, sequence::*, symmetries::*, equivalence::{negated, half_shift}};
 use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 
 fn find_pqs(symmetry : Option<Symmetry>){
@@ -124,15 +124,28 @@ fn find_write_quad_seq(i : usize, seqtype : SequenceType){
         println!("In order to generate all Williamson-type sequences up to Hadamard equivalence, we now generate a complete list up to QT equivalence ...");
 
         let time = Instant::now();
-        let mut neg_quad_seq_list = vec![];
-        // Negate a single sequence from each quadruple to ensure the enumeration up to QT equivalence is exhaustive
+        let mut new_quad_seq_list = vec![];
+        // Negate and/or half-shift a single sequence from each quadruple to ensure the enumeration up to QT equivalence is exhaustive
         for quad_seq in &result {
+            // Apply negation to W
             let mut new_seq = quad_seq.clone();
             let neg_w = &negated(&new_seq.sequence(SequenceTag::W));
             new_seq.set_sequence(&neg_w, &SequenceTag::W);
-            neg_quad_seq_list.push(new_seq);
+            new_quad_seq_list.push(new_seq);
+            if i % 2 == 0 {
+                // Apply half-shift to W
+                new_seq = quad_seq.clone();
+                let shift_w = &half_shift(&new_seq.sequence(SequenceTag::W));
+                new_seq.set_sequence(&shift_w, &SequenceTag::W);
+                new_quad_seq_list.push(new_seq);
+                // Apply negation and half-shift to W
+                new_seq = quad_seq.clone();
+                let neg_shift_w = &negated(&half_shift(&new_seq.sequence(SequenceTag::W)));
+                new_seq.set_sequence(&neg_shift_w, &SequenceTag::W);
+                new_quad_seq_list.push(new_seq);
+            }
         }
-        result.append(&mut neg_quad_seq_list);
+        result.append(&mut new_quad_seq_list);
 
         let qt_reduced = reduce_to_canonical_reps(&result, SequenceType::QuaternionType);
         let elapsed = time.elapsed().as_seconds_f32();

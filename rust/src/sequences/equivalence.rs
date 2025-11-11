@@ -744,8 +744,15 @@ pub fn equivalent_even_alternated_negation(seq : &QuadSeq, seqtype : SequenceTyp
     res
 }
 
-
-
+pub fn half_shift(seq : &Vec<i8>) -> Vec<i8> {
+    let n = seq.len();
+    debug_assert!(n % 2 == 0);
+    let mut s = vec![];
+    for i in 0..n {
+        s.push(seq[(i+n/2) % n]);
+    }
+    s
+}
 
 fn permute(seq : &Vec<i8>, coprime : usize) -> Vec<i8> {
     // permutes all elements of seq using
