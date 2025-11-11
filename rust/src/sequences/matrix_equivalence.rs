@@ -4,7 +4,7 @@ use itertools::Itertools;
 use petgraph::{graph::NodeIndex, Graph, Undirected};
 
 //use crate::{read_lines, sequences::{equivalence::ns_canonical, equivalence::negated, symmetries::SequenceType, williamson::QuadSeq, williamson::SequenceTag}};
-use crate::{read_lines, sequences::{equivalence::ns_canonical, symmetries::SequenceType, williamson::{QuadSeq, SequenceTag}}};
+use crate::{read_lines, sequences::{equivalence::ns_canonical, symmetries::SequenceType, williamson::{QuadSeq/*, SequenceTag*/}}};
 
 use super::{matrices::HM, sequence::QS};
 
@@ -84,32 +84,10 @@ pub fn hadamard_equivalence_from_file(pathname : String, seqtype : SequenceType)
         seqs.push(qs);
     }
 
-    let mut quad_seq_list : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
+    let quad_seq_list : Vec<QuadSeq> = seqs.into_iter().map(|s| QuadSeq::from_pqs(&s)).collect();
 
     for quad_seq in &quad_seq_list {
         assert!(quad_seq.verify(seqtype));
-    }
-
-    // If we are converting from WTS, we must add (-W,X,Y,Z) for each WTS (W,X,Y,Z)
-    // Note that the code follows the convention W <= X <= Y <= Z, so in implementation we add (W,X,Y,-Z)
-    match seqtype {
-        SequenceType::QuaternionType => {}, 
-        SequenceType::WilliamsonType | SequenceType::Williamson => {
-            let mut negated_seqs = Vec::new();
-            for seq in &quad_seq_list {
-                let mut new_seq = QuadSeq::new(seq.size());
-                let d = seq.sequence(SequenceTag::Z).into_iter().map(|elm| -elm).collect();
-                let (a,b,c,_) = seq.sequences();
-                new_seq.set_all_values((&a,&b,&c,&d));
-                
-                // A (relatively) quick check to ensure no duplicates are being passed to nauty
-                if !quad_seq_list.contains(&new_seq) {
-                    negated_seqs.push(new_seq);
-                }
-            }
-            quad_seq_list.append(&mut negated_seqs);
-        }
-        _ => {panic!("Not implemented yet!")}
     }
 
     // Reduce via graph isomorphism checking
