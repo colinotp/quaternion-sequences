@@ -25,6 +25,23 @@ impl QHM {
         self.matrix[i][j]
     }
 
+    // Returns reference to specified row (0 indexed)
+    pub fn row(&self, row : usize) -> Vec<Quaternion<f32>> {
+        self.matrix[row].clone()
+    }
+
+    pub fn col(&self, col : usize) -> Vec<Quaternion<f32>> {
+        let mut col_vec = Vec::new();
+        for i in 0..self.size() {
+            col_vec.push(self.matrix[i][col]);
+        }
+
+        col_vec
+    }
+
+
+    
+
 
     pub fn from_pqs(pqs : QS) -> QHM {
 
@@ -119,6 +136,49 @@ impl QHM {
         false
     }
 
+    // Verifies QHM property
+    pub fn verify(&self) -> bool {
+        let n = self.size();
+        let f32_tolerance : f32 = f32::EPSILON.sqrt();
+
+        // Take complex inner product of each row with each other row. Should get n when taking product with a row and itself, 0 otherwise.
+        for row1 in 0..n {
+            for row2 in 0..n {
+                // Get two rows
+                let row1_vec = self.row(row1);
+                let row2_vec = self.row(row2);
+
+                // Perform inner product
+                let mut result = Quaternion::<f32>::new(0.0,0.0,0.0,0.0);
+
+                for i in 0..n {
+                    result = result + (row1_vec[i] * (row2_vec[i].conjugate()));
+                }
+
+                // Check if the real component is what it should be
+                let real_match = if row1 == row2 {
+                    (result.s - n as f32).abs() < f32_tolerance
+                } else {
+                    result.s.abs() < f32_tolerance
+                };
+
+                // Check that the imaginary components are all 0
+                let imaginary_match = {
+                    result.v.x.abs() < f32_tolerance &&
+                    result.v.y.abs() < f32_tolerance &&
+                    result.v.z.abs() < f32_tolerance
+                };
+
+                // If either are incorrect, then matrix is not QHM
+                if !(scalar_match && vector_match) {
+                    return false;
+                }
+            }
+        }
+
+        // If we have not yet found an entry that does not match with nI_n, then it is a QHM
+        true
+    }
 
 
     pub fn to_string(&self) -> String {

@@ -6,6 +6,14 @@ mod tests {
     use crate::sequences::{sequence::QS, matrices::{QHM, HM, OpMat}, williamson::QuadSeq, symmetries::SequenceType, matrix_equivalence::reduce_to_hadamard_equivalence, equivalence::generate_equivalent_quad_seqs};
 
     #[test]
+    fn qhmtest() {
+        let qs = QS::from_str(&"+JJ+x".to_string());
+        let qhm = QHM::from_pqs(qs);
+
+        assert!(qhm.verify());
+    }
+
+    #[test]
     fn test_qts_from_hm() {
         let mut qts = QuadSeq::new(3);
         let w = vec![-1,-1,-1];
