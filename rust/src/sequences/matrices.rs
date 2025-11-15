@@ -170,7 +170,7 @@ impl QHM {
                 };
 
                 // If either are incorrect, then matrix is not QHM
-                if !(scalar_match && vector_match) {
+                if !(real_match && imaginary_match) {
                     return false;
                 }
             }
