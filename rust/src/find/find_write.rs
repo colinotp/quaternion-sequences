@@ -282,12 +282,13 @@ pub fn write_pair_single(seqtype : SequenceType, p: usize, match_option : MatchO
 }
 
 pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isize), p : usize, match_option : MatchOption, pairing: Option<RowsumPairing>, pair: u8) {
-    let (rowsums, indices) = sort(&rs); // we sort the rowsum in decreasing order, and we keep track of their original indices
-    let tags : Vec<SequenceTag> = indices.iter().map(|i| index_to_tag(*i)).collect(); // we convert the indices to their respective tags
+    let rowsums = vec![rs.0,rs.1,rs.2,rs.3];
+    let tags : Vec<SequenceTag> = vec![SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z];
 
     let folder_path = "results/pairs/".to_string()+ &folder + &"/find_" + &p.to_string() + &"/rowsum_" + &(rs.0).to_string() + &"_" + &(rs.1).to_string() + &"_" + &(rs.2).to_string() + &"_" + &(rs.3).to_string();
-    println!("{}",folder_path);
     fs::create_dir_all(&folder_path).expect("Error when creating the dir");     // This is safe to do concurrently across multiple processes according to the documentation
+
+    let seqtype = str_to_seqtype(&folder);
 
     let sequences_0: Vec<Vec<i8>>;
     let sequences_1: Vec<Vec<i8>>;
@@ -302,30 +303,40 @@ pub fn write_pair_single_rowsum(folder : String, rs : (isize, isize, isize, isiz
     }
 
     let now = Instant::now();
-    sequences_0 = generate_sequences_with_rowsum(rowsums[pair_indices.0], p);
-    sequences_1 = generate_sequences_with_rowsum(rowsums[pair_indices.1], p);
+    match seqtype {
+        SequenceType::Williamson => {
+            sequences_0 = generate_sequences_with_rowsum(rowsums[pair_indices.0], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_0.len(), rowsums[pair_indices.0]);
+            sequences_1 = generate_sequences_with_rowsum(rowsums[pair_indices.1], p).into_iter().filter(|seq| symmetric(seq)).collect();
+            println!("Found {} sequences with rowsum {}", sequences_1.len(), rowsums[pair_indices.1]);
+        },
+        _ => {
+            sequences_0 = generate_sequences_with_rowsum(rowsums[pair_indices.0], p);
+            println!("Found {} sequences with rowsum {}", sequences_0.len(), rowsums[pair_indices.0]);
+            sequences_1 = generate_sequences_with_rowsum(rowsums[pair_indices.1], p);
+            println!("Found {} sequences with rowsum {}", sequences_1.len(), rowsums[pair_indices.1]);
 
+        }
+    }
+    
     write_sequences(&sequences_0, &tags[pair_indices.0], &folder_path);
     write_sequences(&sequences_1, &tags[pair_indices.1], &folder_path);
 
     let elapsed_time = now.elapsed().as_secs();
-    eprintln!("Generating all sequences with rowsums {}, {}, {}, {} took {elapsed_time} seconds", rowsums[0], rowsums[1], rowsums[2], rowsums[3]);
+    println!("Generating all sequences with rowsums {}, {} took {elapsed_time} seconds", rowsums[pair_indices.0], rowsums[pair_indices.1]);
 
-    let side;
-    match pair {
-        1 => {side = EquationSide::LEFT},
-        2 => {side = EquationSide::RIGHT},
-        _ => {
-            println!("ERROR: Invalid `pair` passed");
-            return;
-        }
+    let side = match pair {
+        1 => {EquationSide::LEFT},
+        2 => {EquationSide::RIGHT},
+        _ => {panic!("ERROR: Invalid `pair` passed")}
     };
 
+
     let now = Instant::now();
-    write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), str_to_seqtype(&folder), rs, p, &folder_path, side, match_option);
+    let counter : u64 = write_seq_pairs((&sequences_0, &sequences_1), (&tags[pair_indices.0], &tags[pair_indices.1]), str_to_seqtype(&folder), rs, p, &folder_path, side, match_option);
     let elapsed_time = now.elapsed().as_secs_f32();
-    eprintln!("The function took: {elapsed_time} seconds to go through the two sets of pairs\n");
-    
+    println!("Generated {} total pairs", counter);
+    println!("Total time to generate .pair files: {:.2} seconds\n", elapsed_time);    
 }
 
 pub fn create_rowsum_dirs(folder : String, p : usize, rs : (isize, isize, isize, isize), pairing: Option<RowsumPairing>) {

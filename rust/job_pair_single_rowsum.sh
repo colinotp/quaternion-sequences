@@ -7,8 +7,9 @@
 #
 # This script runs the first part of the algorithm for a single set of rowsums
 # Stops after generating the lists of auto and cross correlation values for the pairs
+# Normally called from start_pairs_parallel.sh
 
-if [ $# -ne 7 ]
+if [ $# -ne 8 ]
 then
     echo "not enough arguments"
     exit 1
@@ -20,8 +21,9 @@ a=$3
 b=$4
 c=$5
 d=$6
-rowsum_pairing=$7
-pair=$8
+match_option=$7
+rowsum_pairing=$8
+pair=$9
 start=`date +%s`
 
 
@@ -38,6 +40,6 @@ fi
 
 # Creating every necessary file
 start2=`date +%s`
-./target/release/rust pair_single $type $n $a $b $c $d $rowsum_pairing $pair &>> $filename
+./target/release/rust pair_single $type $n $a $b $c $d $match_option $rowsum_pairing $pair &>> $filename
 end2=`date +%s`
 echo Creating the sequences took `expr $end2 - $start2` seconds. >> $filename

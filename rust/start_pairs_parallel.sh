@@ -16,14 +16,18 @@ shift
 shift
 foldername="./results/pairs/$type/find_$n"
 rowsum_pairing="XW"
+match_option="psd"
 
-while getopts "dp:" flag; do
+while getopts "dcp:" flag; do
 	case $flag in
 		d)
-		./pair_file_cleanup.sh $n
+		./pair_file_cleanup.sh $type $n
 		;;
 		p)
 		rowsum_pairing=$OPTARG
+		;;
+		c)
+		match_option="correlation"
 		;;
 		/?)
 		echo "Invalid argument(s) passed. Exiting."
@@ -49,6 +53,6 @@ input="results/pairs/$type/find_$n/rowsums.quad"
 while IFS= read -r rowsum
 do
     # Submit job for first pair, capturing job ID
-	sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 1
-	sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $rowsum_pairing 2
+	sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $match_option $rowsum_pairing 1
+	sbatch ./job_pair_single_rowsum.sh $type $n $rowsum $match_option $rowsum_pairing 2
 done < "$input"
