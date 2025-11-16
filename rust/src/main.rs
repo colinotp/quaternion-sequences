@@ -15,6 +15,7 @@ mod find;
 use crate::find::find_write::{create_rowsum_dirs, write_pair_single_rowsum, write_pairs, write_pairs_rowsum, write_rowsums, MatchOption};
 use crate::find::*;
 use crate::find::find_unique::{/*reduce_to_equivalence,*/reduce_to_canonical_reps};
+use crate::sequences::equivalence::generate_equivalent_quad_seqs;
 use crate::sequences::{williamson::*, sequence::*, symmetries::*, equivalence::{negated, half_shift}};
 use sequences::matrix_equivalence::hadamard_equivalence_from_file;
 
@@ -207,6 +208,35 @@ fn convert_qs_to_matrices(seqtype : SequenceType, len : usize) {
     }
 }
 
+// Write all found QHM of a given order to qhm.mat, using the expanded list including equivalent matrices
+fn qhm_write_all(seqtype : SequenceType, len : usize) {
+    let pathname = "results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + "/result.seq";
+    let mut qts : Vec<QuadSeq> = vec![];
+
+    for line_res in read_lines(&pathname).expect("Error reading file '{pathname}'") {
+        let line = line_res.expect("Error reading line from file '{pathname}'");
+        
+        println!("{}", line);
+        let pqs = QS::from_str(&line);
+        qts.push(QuadSeq::from_pqs(&pqs));
+    }
+
+    for seq in &qts {
+        println!("{}", seq.to_string());
+    }
+
+
+    let equ = generate_equivalent_quad_seqs(&qts, seqtype);
+    let path_out = "results/pairs/".to_string() + &seqtype.to_string() + &"/find_".to_string() + &len.to_string() + &"/qhm_all.mat".to_string();
+    let mut fout = File::create(path_out).expect("Error when trying to create file '{path_out}'");
+
+    for seq in &equ {
+        let qhm = QHM::from_pqs(seq.to_qs()).dephased();
+        //assert!(qhm.verify());
+        fout.write((qhm.to_string() + &"\n\n".to_string()).as_bytes()).expect("Error when trying to write to file '{path_out}'");
+    }
+}
+
 
 /*fn find_matching_algorithm(p : usize) {
 
@@ -316,6 +346,13 @@ fn main() {
     }
 
     match args[1].as_str() {
+        // Write all found QHM of a given order to qhm.mat, using the expanded list including equivalent matrices
+        "qhm-all" => {
+            assert_eq!(args.len(), 4, "Invalid args passed");
+            let seqtype = str_to_seqtype(&args[2]);
+            let p = str_to_usize(&args[3]);
+            qhm_write_all(seqtype, p);
+        }
         // Verifying QTS of a given length satisfy amicability condition (e.g., verifies all QTS are WTS)
         "amicable" => {
             assert_eq!(args.len(), 3, "Invalid args passed");
