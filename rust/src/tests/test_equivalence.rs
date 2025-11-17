@@ -11,6 +11,35 @@ mod tests {
     use crate::read_lines;
 
     #[test]
+    fn check_equiv() {
+        // Verify function works
+        
+        let mut q1 = QuadSeq::new(4);
+
+        let a1 = vec![-1,-1,-1,1];
+        let b1 = vec![-1,-1,-1,1];
+        let c1 = vec![-1,-1,-1,1];
+        let d1 = vec![-1,-1,-1,1];
+
+        q1.set_all_values((&a1,&b1,&c1,&d1));
+
+
+        let mut q2 = QuadSeq::new(4);
+
+        let a2 = vec![1,-1,-1,-1];
+        let b2 = vec![1,-1,-1,-1];
+        let c2 = vec![1,-1,-1,-1];
+        let d2 = vec![1,-1,-1,-1];
+
+        q2.set_all_values((&a2,&b2,&c2,&d2));
+
+
+        assert!(q1.verify(SequenceType::QuaternionType));
+        assert!(q2.verify(SequenceType::QuaternionType));
+        assert!(equiv(&q1, &q2, SequenceType::QuaternionType));
+    }
+
+    #[test]
     fn test_dual_half_shift() {
         let mut q = QuadSeq::new(4);
 

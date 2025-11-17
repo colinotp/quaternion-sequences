@@ -3,7 +3,7 @@ use std::collections::HashSet;
 
 use itertools::iproduct;
 
-use crate::sequences::{rowsum::has_sorted_rowsums, symmetries::SequenceType};
+use crate::{find::find_unique::reduce_to_canonical_reps, sequences::{rowsum::has_sorted_rowsums, symmetries::SequenceType}};
 
 use super::williamson::{QuadSeq, SequenceTag};
 
@@ -118,6 +118,28 @@ pub fn will_less_than(will1 : &QuadSeq, will2 : &QuadSeq) -> bool {
 
 
 // * Functions to treat the equivalences
+
+// Checks whether seq1 and seq2 are equivalent under seqtype equivalence operations (primarily for testing)
+pub fn equiv(seq1 : &QuadSeq, seq2 : &QuadSeq, seqtype : SequenceType) -> bool {
+    assert!(seq1.verify(seqtype));
+    assert!(seq2.verify(seqtype));
+
+    match seqtype {
+        SequenceType::QuaternionType => {
+            let ns_canon1 = ns_canonical(seq1);
+            let ns_canon2 = ns_canonical(seq2);
+
+            reduce_to_canonical_reps(&vec![ns_canon1, ns_canon2], seqtype).len() == 1
+        }
+        SequenceType::WilliamsonType | SequenceType::Williamson => {
+            let sn_ss_canon1 = sn_ss_canonical(seq1);
+            let sn_ss_canon2 = sn_ss_canonical(seq2);
+
+            reduce_to_canonical_reps(&vec![sn_ss_canon1, sn_ss_canon2], seqtype).len() == 1
+        }
+        _ => {false}
+    }
+}
 
 pub fn generate_canonical_representative(seq : &QuadSeq, seqtype : SequenceType) -> QuadSeq{
     let set = generate_equivalence_class(seq, seqtype, &seqtype.equivalences(), false);
