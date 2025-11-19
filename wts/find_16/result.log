@@ -1,0 +1,62 @@
+Generating rowsum decompositions for length 16 ...
+(0, 0, 0, 8)
+(4, 4, 4, 4)
+Generated 2 different rowsums
+
+Generating .pair files for rowsums (0, 0, 0, 8) ...
+Found 12870 sequences with rowsum 0
+Found 12870 sequences with rowsum 0
+Found 12870 sequences with rowsum 0
+Found 1820 sequences with rowsum 8
+Generating all sequences with rowsums (0, 0, 0, 8) took 0.04 seconds
+Generated 36240 pairs for pairing WZ
+Generated 116736 pairs for pairing XY
+Generating .pair files for both pairs took 51.75 seconds
+
+Generating .pair files for rowsums (4, 4, 4, 4) ...
+Found 8008 sequences with rowsum 4
+Found 8008 sequences with rowsum 4
+Found 8008 sequences with rowsum 4
+Found 8008 sequences with rowsum 4
+Generating all sequences with rowsums (4, 4, 4, 4) took 0.06 seconds
+Generated 26752 pairs for pairing WZ
+Generated 26752 pairs for pairing XY
+Generating .pair files for both pairs took 57.18 seconds
+
+Generated 206480 total pairs
+Total time to generate .pair files: 109.04 seconds
+
+Sorting file results/pairs/wts/find_16/rowsum_0_0_0_8/pair_WZ.pair ...
+Sorting file results/pairs/wts/find_16/rowsum_0_0_0_8/pair_XY.pair ...
+Sorting file results/pairs/wts/find_16/rowsum_4_4_4_4/pair_WZ.pair ...
+Sorting file results/pairs/wts/find_16/rowsum_4_4_4_4/pair_XY.pair ...
+Total time to sort: 0.22 seconds.
+
+Matching files in /rowsum_4_4_4_4 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 4587520
+
+Matching files in /rowsum_0_0_0_8 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 10797056
+
+Matching took: 27.03 seconds.
+
+Found 129024 wts after matching
+Filtered with the SN (single negate) and SS (single swap) operations; now filtering 6720 sequences up to Williamson-type equivalence ...
+Found 18 wts after reducing to equivalence
+Reducing to equivalence took 49.55 seconds.
+
+In order to generate all Williamson-type sequences up to Hadamard equivalence, we now generate a complete list up to QT equivalence ...
+Found 44 qts after reducing to equivalence
+Reducing to equivalence took 0.30 seconds.
+
+Converting sequences found in results/pairs/wts/find_16/result-qts.seq to Hadamard matrices up to Hadamard equivalence ...
+Reducing matrices to equivalence via graph isomorphism...
+Number of matrices up to equivalence : 19
+Converting to matrices up to Hadamard equivalence took 3.31 seconds
+19 matrices were found after converting up to Hadamard equivalence.
+Converting PQS to QHM ...
+./results/pairs/wts/find_16/result.seq
+converted 18 sequences of size 16. 11 contained non-commuting elements.
+Converting to PQS to QHM took 0.02 seconds
+
+Total execution time was 189.64 seconds.

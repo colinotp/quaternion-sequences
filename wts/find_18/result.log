@@ -1,0 +1,78 @@
+Generating rowsum decompositions for length 18 ...
+(0, 0, 6, 6)
+(0, 2, 2, 8)
+(2, 4, 4, 6)
+Generated 3 different rowsums
+
+Generating .pair files for rowsums (0, 0, 6, 6) ...
+Found 48620 sequences with rowsum 0
+Found 48620 sequences with rowsum 0
+Found 18564 sequences with rowsum 6
+Found 18564 sequences with rowsum 6
+Generating all sequences with rowsums (0, 0, 6, 6) took 0.07 seconds
+Generated 70308 pairs for pairing WZ
+Generated 70308 pairs for pairing XY
+Generating .pair files for both pairs took 669.96 seconds
+
+Generating .pair files for rowsums (0, 2, 2, 8) ...
+Found 48620 sequences with rowsum 0
+Found 43758 sequences with rowsum 2
+Found 43758 sequences with rowsum 2
+Found 8568 sequences with rowsum 8
+Generating all sequences with rowsums (0, 2, 2, 8) took 0.10 seconds
+Generated 24192 pairs for pairing WZ
+Generated 35100 pairs for pairing XY
+Generating .pair files for both pairs took 791.70 seconds
+
+Generating .pair files for rowsums (2, 4, 4, 6) ...
+Found 43758 sequences with rowsum 2
+Found 31824 sequences with rowsum 4
+Found 31824 sequences with rowsum 4
+Found 18564 sequences with rowsum 6
+Generating all sequences with rowsums (2, 4, 4, 6) took 0.10 seconds
+Generated 33588 pairs for pairing WZ
+Generated 41688 pairs for pairing XY
+Generating .pair files for both pairs took 685.26 seconds
+
+Generated 275184 total pairs
+Total time to generate .pair files: 2147.31 seconds
+
+Sorting file results/pairs/wts/find_18/rowsum_0_0_6_6/pair_WZ.pair ...
+Sorting file results/pairs/wts/find_18/rowsum_0_0_6_6/pair_XY.pair ...
+Sorting file results/pairs/wts/find_18/rowsum_0_2_2_8/pair_WZ.pair ...
+Sorting file results/pairs/wts/find_18/rowsum_0_2_2_8/pair_XY.pair ...
+Sorting file results/pairs/wts/find_18/rowsum_2_4_4_6/pair_WZ.pair ...
+Sorting file results/pairs/wts/find_18/rowsum_2_4_4_6/pair_XY.pair ...
+Total time to sort: 0.34 seconds.
+
+Matching files in /rowsum_2_4_4_6 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 419904
+
+Matching files in /rowsum_0_2_2_8 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 416016
+
+Matching files in /rowsum_0_0_6_6 ...
+Matches found in "pair_WZ.pair.sorted" and "pair_XY.pair.sorted": 1244160
+
+Matching took: 6.25 seconds.
+
+Found 144720 wts after matching
+Filtered with the SN (single negate) and SS (single swap) operations; now filtering 20628 sequences up to Williamson-type equivalence ...
+Found 28 wts after reducing to equivalence
+Reducing to equivalence took 1351.40 seconds.
+
+In order to generate all Williamson-type sequences up to Hadamard equivalence, we now generate a complete list up to QT equivalence ...
+Found 88 qts after reducing to equivalence
+Reducing to equivalence took 1.79 seconds.
+
+Converting sequences found in results/pairs/wts/find_18/result-qts.seq to Hadamard matrices up to Hadamard equivalence ...
+Reducing matrices to equivalence via graph isomorphism...
+Number of matrices up to equivalence : 82
+Converting to matrices up to Hadamard equivalence took 11.64 seconds
+82 matrices were found after converting up to Hadamard equivalence.
+Converting PQS to QHM ...
+./results/pairs/wts/find_18/result.seq
+converted 28 sequences of size 18. 27 contained non-commuting elements.
+Converting to PQS to QHM took 0.01 seconds
+
+Total execution time was 3519.18 seconds.
