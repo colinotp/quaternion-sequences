@@ -178,5 +178,11 @@ for i, n in enumerate(range(int(start), int(end)+1)):
         print(f'QTS after Hadamard equivalence: {QTS_hadamard_reduced[i]}')
         print(f'Total pairs generated: {pairs[i]}\n')
 
+if verbose:
+    if seqtype == "wts":
+        print(f"A total of {sum(WTS_reduced)} sets of QT sequences found up to Williamson-type equivalence")
+    print(f"A total of {sum(QTS_reduced)} sets of QT sequences found up to QT equivalence")
+    print(f"A total of {sum(QTS_hadamard_reduced)} sets of QT sequences found up to Hadamard equivalence")
+    print("")
 
 create_table(int(start), int(end), QTS_reduced, WTS_reduced, QTS_hadamard_reduced, runtime, qt_equivalence_time, hm_equivalence_time, pairs, disk_usage, latex, seqtype)
