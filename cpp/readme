@@ -1,6 +1,0 @@
-Run ./driver.sh n to search for quasi-Williamson sequences of length n.
-
-Warning: The code was adapted from a search for Williamson sequences and not all
-aspects were adapted to the quasi-Williamson case.  For example, the set of
-rowsum decompositions will not be exhaustive for the quasi-Williamson case.
-The quasi-Williamson equivalence check should also be updated.
