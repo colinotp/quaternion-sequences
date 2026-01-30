@@ -52,7 +52,7 @@ You can run the tests with the command `cargo test`.
 ### Quaternion encoding
 
 The Williamson-type and QT sequences are represented in the following format:
-each line contains a sequence, and each element correspond to a character
+each line contains a sequence, and each element corresponds to a character
 
 | Quaternion | Encoding |
 | :--------: | :------: |
