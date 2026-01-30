@@ -1,4 +1,4 @@
-use itertools::*;
+//use itertools::*;
 
 use crate::sequences::symmetries::SequenceType;
 use crate::QuadSeq;
@@ -153,7 +153,7 @@ pub fn sum_of_four_squares(p : usize) -> Vec<Quad> {
 
 
 
-pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Quad> {
+/*pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Quad> {
     // returns all the permutations of the quadruplet up to equivalence
     
     // generate all permutations and filter them
@@ -178,7 +178,7 @@ pub fn generate_other_quadruplets(quad : &Quad, seqtype : SequenceType) -> Vec<Q
     }
 
     result.into_iter().unique().collect()
-}
+}*/
 
 
 
