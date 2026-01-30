@@ -14,7 +14,7 @@ This will create an exectuable in the target folder, which the driver scripts us
 
 * `driver.sh` runs the main algorithm as described in our paper to exhaustively generate sequences of the desired length. Results wlil be stored in /rust/results/pairs/`<sequencetype>`/find_`<length>`/
 Usage: `./driver.sh <sequencetype> <length> [flags]`
-    * `sequencetype` is the type of sequence to be searched for. Options are either qts, wts, or ws
+    * `sequencetype` is the type of sequence to be searched for. Options are wts (Williamson-type sequences), qts (QT sequences), or ws (Williamson sequences).
     * `length` is the length 
     * Flags:
         * `-d`: Delete existing .seq, .pair and .sorted files before running
