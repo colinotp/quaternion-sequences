@@ -440,4 +440,35 @@ impl HM {
         result
     }
 
+    // Returns reference to specified row (0 indexed)
+    pub fn row(&self, row : usize) -> Vec<i8> {
+        self.matrix[row].clone()
+    }
+
+    // Verifies Hadamard matrix property
+    pub fn verify(&self) -> bool {
+        let n = self.size();
+
+        // Take inner product of each row with every other row
+        for row1 in 0..n {
+            for row2 in (row1+1)..n {
+                // Get two rows
+                let row1_vec = self.row(row1);
+                let row2_vec = self.row(row2);
+
+                // Perform inner product
+                let mut result = 0;
+                for i in 0..n {
+                    result += row1_vec[i] * row2_vec[i];
+                }
+
+                if result != 0 {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 }
