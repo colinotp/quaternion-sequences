@@ -22,8 +22,8 @@ impl SequenceType {
     pub fn equivalences(&self) -> Vec<fn(&QuadSeq, SequenceType, bool) -> HashSet<QuadSeq>> {
         match self {
             Self::QuaternionType => vec![equivalent_uniform_shift, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_negate_swap, equivalent_dual_half_shift],
-            Self::WilliamsonType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_reverse],
-            Self::Williamson => vec![equivalent_negate, equivalent_uniform_half_shift, equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism],
+            Self::WilliamsonType => vec![equivalent_negate, equivalent_uniform_shift, equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_single_half_shift],
+            Self::Williamson =>     vec![equivalent_negate,                           equivalent_reorder, equivalent_even_alternated_negation, equivalent_automorphism, equivalent_single_half_shift],
             _ => vec![]
         }
     }

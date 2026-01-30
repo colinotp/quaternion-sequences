@@ -488,7 +488,6 @@ pub fn equivalent_double_reorder(seq : &QuadSeq, seqtype : SequenceType, symmetr
         if !symmetry_group {
             debug_assert!(new_seq.verify(seqtype), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
         }
-        
 
         res.insert(new_seq);
     
@@ -552,7 +551,7 @@ pub fn equivalent_uniform_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry
     res
 }
 
-// If n is even, apply a cyclic shift of n/2 to 2 sequences
+// If n is even, apply a cyclic shift of n/2 to an even number of sequences
 pub fn equivalent_dual_half_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
     let mut res : HashSet<QuadSeq> = HashSet::new();
     res.insert(seq.clone());
@@ -597,6 +596,36 @@ pub fn equivalent_dual_half_shift(seq : &QuadSeq, seqtype : SequenceType, symmet
     }
 
     res.insert(s);
+
+    res
+}
+
+// If n is even, apply a cyclic shift of n/2 to a single sequence
+pub fn equivalent_single_half_shift(seq : &QuadSeq, seqtype : SequenceType, symmetry_group : bool) -> HashSet<QuadSeq> {
+    let mut res : HashSet<QuadSeq> = HashSet::new();
+    res.insert(seq.clone());
+
+    if seq.size() % 2 == 1 {
+        return res;
+    }
+
+    let offset = seq.size() / 2;
+
+    // Apply half shift to all sequences
+    for tag in [SequenceTag::W, SequenceTag::X, SequenceTag::Y, SequenceTag::Z] {
+        let mut s = seq.clone();
+        let tag_seq = seq.sequence(tag);
+
+        for index in 0..seq.size() {
+            s.set_single_value(tag_seq[(index + offset) % seq.size()], &tag, index);
+        }
+
+        if !symmetry_group {
+            debug_assert!(seq.verify(seqtype), "equivalent_single_half_shift function produced invalid {}", seqtype.to_string());
+        }
+
+        res.insert(s);
+    }
 
     res
 }
