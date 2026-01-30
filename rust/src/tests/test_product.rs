@@ -136,9 +136,6 @@ mod tests {
 
         //println!("{}",from_mum_product.to_string());
         //println!("{}",from_qs_product.to_string());
-
-
-        assert!(false);
     }
 
 
