@@ -232,7 +232,7 @@ mod tests {
 
         let sym = generate_symmetry_group(8, SequenceType::QuaternionType, &vec![equivalent_alternated_negation, equivalent_automorphism, equivalent_uniform_shift]);
 
-        println!("Canonical form:\n{}", qt_canonical(&qs, &sym).to_string());
+        println!("Canonical form:\n{}", qt_canonical(&qs, &sym, SequenceType::QuaternionType).to_string());
     }
 
     #[test]

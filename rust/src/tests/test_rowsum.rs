@@ -88,7 +88,7 @@ mod tests {
     fn test_rowsum_gen() {
         for p in 1..23 {
             println!("\nn={}", p);
-            for rs in generate_rowsums(p) {
+            for rs in generate_rowsums(p, SequenceType::QuaternionType) {
                 println!("{:?}", rs);
                 assert_eq!(rs.0*rs.0 + rs.1*rs.1 + rs.2*rs.2 + rs.3*rs.3, 4*p as isize);
             }
@@ -191,13 +191,11 @@ mod tests {
     #[test]
     fn test_possible_rowsums(){
 
-        let rowsums = generate_rowsums(17);
+        let rowsums = generate_rowsums(17, SequenceType::QuaternionType);
         
-        assert_eq!(rowsums.len(), 4);
+        assert_eq!(rowsums.len(), 2);
         assert_eq!(rowsums[0], (1,3,3,7));
-        assert_eq!(rowsums[1], (-1,3,3,7));
-        assert_eq!(rowsums[2], (3,3,5,5));
-        assert_eq!(rowsums[3], (-3,3,5,5));
+        assert_eq!(rowsums[1], (3,3,5,5));
     }
 
 
