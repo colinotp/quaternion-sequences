@@ -5,7 +5,10 @@
 #
 # Optional flags:
 # -d: delete existing .seq, .pair and .sorted files
-# -p <pairing>: run code with chosen pairing of sequences. Options include WX, WY and WZ
+# -p <pairing>: run code with chosen pairing of sequences. Options include WX, WY and WZ.
+# -c: Use auto/cross correlation for matching instead of PSD/CPSD
+# -h: Convert sequences to Hadamard matrices when finished
+# -s: Use this flag for SLURM jobs (writes temporarily files to $SLURM_TMPDIR)
 
 
 if [ $# -eq 0 ] || [ "$1" = "help" ] || [ "$1" = "-h" ] || [ "$1" = "--help" ]
@@ -14,11 +17,11 @@ then
 	echo "./driver.sh <sequencetype> <n> [flags]"
 	echo "The sequencetype must be one of wts (Williamson-type sequences), qts (QT sequences), or ws (Williamson sequences)."
 	echo "Optional flags:"
-	echo "  * -s: Use this flag for SLURM jobs"
 	echo "  * -h: Convert sequences to Hadamard matrices when finished"
 	echo "  * -d: Delete existing .seq, .pair and .sorted files"
 	echo "  * -c: Use auto/cross correlation for matching instead of PSD/CPSD"
 	echo "  * -p <pairing>: Specify rowsum pairing to be used. Options include WX, WY and WZ (e.g., WX means that the sequences of rowsum W are paired with the sequences of rowsum X). Note that the code follows the convention W <= X <= Y <= Z. Default is WZ"
+	echo "  * -s: Use this flag for SLURM jobs (writes temporarily files to \$SLURM_TMPDIR)"
 	exit 0
 fi
 
