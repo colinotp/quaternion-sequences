@@ -879,7 +879,7 @@ pub fn equivalent_disjoint_swaps(seq : &QuadSeq, seqtype : SequenceType, symmetr
 
         // Don't want to verify sequence properties of symmetry groups, as they will not meet them
         if !symmetry_group {
-            debug_assert!(new_seq.verify(seqtype), "equivalent_double_reorder function produced invalid {}", seqtype.to_string());
+            debug_assert!(new_seq.verify(seqtype), "equivalent_disjoint_swaps function produced invalid {}", seqtype.to_string());
         }
 
         res.insert(new_seq);
