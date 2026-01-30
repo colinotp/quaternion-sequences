@@ -11,8 +11,8 @@ mod tests {
     use crate::read_lines;
 
     #[test]
-    fn check_equiv() {
-        // Verify function works
+    fn check_equiv_four() {
+        // Verify function works (order four)
         
         let mut q1 = QuadSeq::new(4);
 
@@ -23,7 +23,6 @@ mod tests {
 
         q1.set_all_values((&a1,&b1,&c1,&d1));
 
-
         let mut q2 = QuadSeq::new(4);
 
         let a2 = vec![1,-1,-1,-1];
@@ -33,10 +32,174 @@ mod tests {
 
         q2.set_all_values((&a2,&b2,&c2,&d2));
 
+        // Example that is not a quadruple of QT sequences
+        let mut q3 = QuadSeq::new(4);
+
+        let a3 = vec![1,1,1,1];
+        let b3 = vec![-1,1,-1,1];
+        let c3 = vec![1,1,-1,-1];
+        let d3 = vec![-1,1,1,-1];
+
+        q3.set_all_values((&a3,&b3,&c3,&d3));
+
+        assert!(q1.verify(SequenceType::QuaternionType));
+        assert!(q2.verify(SequenceType::QuaternionType));
+        assert!(!q3.verify(SequenceType::QuaternionType));
+        assert!(equiv(&q1, &q2, SequenceType::QuaternionType));
+    }
+
+    #[test]
+    fn check_equiv_five() {
+        // Verify function works (order five)
+        
+        let mut q1 = QuadSeq::new(5);
+
+        let a1 = vec![1,-1,-1,-1,-1];
+        let b1 = vec![1,-1,-1,-1,-1];
+        let c1 = vec![-1,-1,1,1,-1];
+        let d1 = vec![1,-1,1,1,-1];
+
+        q1.set_all_values((&a1,&b1,&c1,&d1));
+
+        let mut q2 = QuadSeq::new(5);
+
+        let a2 = vec![1,1,-1,-1,1];
+        let b2 = vec![-1,1,-1,-1,1];
+        let c2 = vec![-1,1,1,1,1];
+        let d2 = vec![-1,1,1,1,1];
+
+        q2.set_all_values((&a2,&b2,&c2,&d2));
+        
 
         assert!(q1.verify(SequenceType::QuaternionType));
         assert!(q2.verify(SequenceType::QuaternionType));
         assert!(equiv(&q1, &q2, SequenceType::QuaternionType));
+    }
+
+    #[test]
+    fn check_equiv_seven() {
+        // Verify function works (order seven)
+        
+        let mut q1 = QuadSeq::new(7);
+
+        let a1 = vec![1,-1,-1,-1,-1,-1,-1];
+        let b1 = vec![-1,-1,1,1,1,1,-1];
+        let c1 = vec![-1,1,1,-1,-1,1,1];
+        let d1 = vec![-1,1,-1,1,1,-1,1];
+
+        q1.set_all_values((&a1,&b1,&c1,&d1));
+
+
+        let mut q2 = QuadSeq::new(7);
+
+        let a2 = vec![-1,-1,-1,-1,-1,1,1];
+        let b2 = vec![-1,-1,-1,-1,-1,1,1];
+        let c2 = vec![-1,1,-1,1,-1,1,1];
+        let d2 = vec![-1,1,1,1,-1,1,1];
+
+        q2.set_all_values((&a2,&b2,&c2,&d2));
+
+        let mut q3 = QuadSeq::new(7);
+
+        let a3 = vec![1,1,-1,-1,1,1,-1];
+        let b3 = vec![-1,1,-1,-1,1,-1,1];
+        let c3 = vec![-1,1,1,1,1,-1,-1];
+        let d3 = vec![-1,-1,-1,-1,-1,-1,1];
+
+        q3.set_all_values((&a3,&b3,&c3,&d3));
+
+        let mut q4 = QuadSeq::new(7);
+
+        let a4 = vec![-1,1,1,1,1,1,1];
+        let b4 = vec![-1,-1,1,1,1,1,-1];
+        let c4 = vec![-1,1,1,-1,-1,1,1];
+        let d4 = vec![-1,1,-1,1,1,-1,1];
+
+        q4.set_all_values((&a4,&b4,&c4,&d4));
+
+        let mut q5 = QuadSeq::new(7);
+
+        let a5 = vec![1,1,1,1,1,1,-1];
+        let b5 = vec![-1,1,1,1,1,-1,-1];
+        let c5 = vec![1,-1,1,1,-1,1,-1];
+        let d5 = vec![1,1,-1,-1,1,1,-1];
+
+        q5.set_all_values((&a5,&b5,&c5,&d5));
+
+        assert!(q1.verify(SequenceType::QuaternionType));
+        assert!(q2.verify(SequenceType::QuaternionType));
+        assert!(q3.verify(SequenceType::QuaternionType));
+        assert!(q4.verify(SequenceType::QuaternionType));
+        assert!(q5.verify(SequenceType::QuaternionType));
+
+        assert!(!equiv(&q1, &q2, SequenceType::QuaternionType));
+        assert!(equiv(&q1, &q3, SequenceType::QuaternionType));
+        assert!(!equiv(&q1, &q4, SequenceType::QuaternionType));
+        assert!(!equiv(&q2, &q3, SequenceType::QuaternionType));
+        assert!(!equiv(&q2, &q4, SequenceType::QuaternionType));
+        assert!(!equiv(&q3, &q4, SequenceType::QuaternionType));
+        assert!(equiv(&q1, &q5, SequenceType::QuaternionType));
+
+        assert!(!equiv(&q1, &q2, SequenceType::WilliamsonType));
+        assert!(equiv(&q1, &q3, SequenceType::WilliamsonType));
+        assert!(equiv(&q1, &q4, SequenceType::WilliamsonType));
+        assert!(!equiv(&q2, &q3, SequenceType::WilliamsonType));
+        assert!(!equiv(&q2, &q4, SequenceType::WilliamsonType));
+        assert!(equiv(&q3, &q4, SequenceType::WilliamsonType));
+        assert!(equiv(&q1, &q5, SequenceType::WilliamsonType));
+        
+        /*let qhm1 = QHM::from_pqs(q1.to_qs()).dephased();
+        let qhm2 = QHM::from_pqs(q2.to_qs()).dephased();
+        let qhm3 = QHM::from_pqs(q3.to_qs()).dephased();
+        println!("{}", q1.to_qs().to_string());
+        println!("{}", qhm1.to_string());*/
+    }
+
+    #[test]
+    fn check_equiv_eight() {
+        // Verify function works (order eight)
+        
+        let mut q1 = QuadSeq::new(8);
+
+        // ---+-+-- ---+-+-- +--+++-- +--+++--
+        let a1 = vec![-1,-1,-1,1,-1,1,-1,-1];
+        let b1 = vec![-1,-1,-1,1,-1,1,-1,-1];
+        let c1 = vec![1,-1,-1,1,1,1,-1,-1];
+        let d1 = vec![1,-1,-1,1,1,1,-1,-1];
+
+        q1.set_all_values((&a1,&b1,&c1,&d1));
+
+        let mut q2 = QuadSeq::new(8);
+
+        // ----++++ ---+---+ ---+---+ -++-+--+
+        let a2 = vec![-1,-1,-1,-1,1,1,1,1];
+        let b2 = vec![-1,-1,-1,1,-1,-1,-1,1];
+        let c2 = vec![-1,-1,-1,1,-1,-1,-1,1];
+        let d2 = vec![-1,1,1,-1,1,-1,-1,1];
+
+        q2.set_all_values((&a2,&b2,&c2,&d2));
+
+        let mut q3 = QuadSeq::new(8);
+
+        // ----++++ ---+---+ -+---+-- -++-+--+
+        let a3 = vec![-1,-1,-1,-1,1,1,1,1];
+        let b3 = vec![-1,-1,-1,1,-1,-1,-1,1];
+        let c3 = vec![-1,1,-1,-1,-1,1,-1,-1];
+        let d3 = vec![-1,1,1,-1,1,-1,-1,1];
+
+        q3.set_all_values((&a3,&b3,&c3,&d3));
+
+        assert!(q1.verify(SequenceType::QuaternionType));
+        assert!(q2.verify(SequenceType::QuaternionType));
+        assert!(q3.verify(SequenceType::QuaternionType));
+
+        assert!(!equiv(&q1, &q2, SequenceType::QuaternionType));
+        assert!(!equiv(&q1, &q3, SequenceType::QuaternionType));
+        assert!(!equiv(&q2, &q3, SequenceType::QuaternionType));
+
+        assert!(!equiv(&q1, &q2, SequenceType::WilliamsonType));
+        assert!(!equiv(&q1, &q3, SequenceType::WilliamsonType));
+        assert!(!equiv(&q2, &q3, SequenceType::WilliamsonType));
     }
 
     #[test]
