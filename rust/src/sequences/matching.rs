@@ -42,11 +42,12 @@ pub fn compute_auto_correlation_pair(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<is
     let auto1 = compute_auto_correlation(&seq1);
     let auto2 = compute_auto_correlation(&seq2);
     
-    let mut res = vec![];
-    for offset in 0..(seq1.len() / 2) {
+    /*let mut res = vec![];
+    for offset in 1..(seq1.len() / 2) {
         res.push(auto1[offset] + auto2[offset]);
     }
-    res
+    res*/
+    auto1.iter().zip(auto2.iter()).map(|(x,y)| x + y).collect()
 }
 
 pub fn compute_auto_correlation_dft(psd_vec : &Vec<f64>, len : usize) -> Vec<isize> {
@@ -158,7 +159,7 @@ pub fn compute_cross_psd(dft1 : &Vec<Complex<f64>>, dft2 : &Vec<Complex<f64>>) -
 pub fn compute_complementary_auto_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>) -> Vec<isize> {
     let mut res = vec![];
     
-    for offset in 1..seq1.len() {
+    for offset in 1..=(seq1.len()/2) {
         res.push(-(periodic_autocorrelation(seq1, offset) + periodic_autocorrelation(seq2, offset)));
     }
     res
@@ -178,7 +179,7 @@ pub fn compute_complementary_cross_correlations(seq1 : &Vec<i8>, seq2 : &Vec<i8>
     };
 
     let mut res = vec![];
-    for offset in 0..seq1.len() {
+    for offset in 1..=(seq1.len()/2) {
         res.push(-compute_crossc_with_offset(seq1, seq2, offset));
     }
     res
