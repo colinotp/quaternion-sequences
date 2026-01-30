@@ -408,11 +408,12 @@ mod tests {
     fn test_disjoint_swap() {
         let a = vec![-1,-1,-1];
         let b = vec![-1,-1,1];
-        let c = vec![-1,1,-1];
-        let d = vec![-1,1,1];
+        let c = vec![-1,-1,1];
+        let d = vec![-1,-1,1];
 
         let mut qs = QuadSeq::new(3);
         qs.set_all_values((&a, &b, &c, &d));
+        assert!(qs.verify(SequenceType::QuaternionType));
 
         let h_equ = equivalent_disjoint_swaps(&qs, SequenceType::QuaternionType, false);
         println!("Orig seq:\n{}\nEquivalence class:", qs.to_string());

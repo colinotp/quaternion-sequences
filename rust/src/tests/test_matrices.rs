@@ -57,6 +57,8 @@ mod tests {
         let hm = HM::from_sequence(&seq);
 
         println!("{}", hm.to_string());
+
+        assert!(!hm.verify());
     }
 
     #[test]
@@ -73,50 +75,42 @@ mod tests {
 
         println!("minus: \n{}", hm2.to_string());
     
+        assert!(!hm.verify());
     }
 
     #[test]
     fn matrix_from_will() {
         let size = 3;
         let seq_x = vec![-1,-1, 1];
-        let seq_y = vec![-1,-1,-1];
-        let seq_z = vec![-1,-1,-1];
+        let seq_y = vec![-1,-1, 1];
+        let seq_z = vec![-1,-1, 1];
         let seq_w = vec![-1,-1,-1];
 
         let mut will = QuadSeq::new(size);
         will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
+        assert!(will.verify(SequenceType::QuaternionType));
 
         let hm = HM::from_williamson(&will, SequenceType::QuaternionType);
 
         println!("{}", hm.to_string());
 
+        assert!(hm.verify());
     }
 
 
     #[test]
     fn matrix_equ2() {
-        // ! WAY TOO LONG !
-
         let size = 3;
-        let seq_x = vec![-1,-1,1];
-        let seq_y = vec![-1,-1,-1];
-        let seq_z = vec![-1,-1,-1];
+        let seq_x = vec![-1,-1, 1];
+        let seq_y = vec![-1,-1, 1];
+        let seq_z = vec![-1,-1, 1];
         let seq_w = vec![-1,-1,-1];
 
-        let mut will1 = QuadSeq::new(size);
-        will1.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
+        let mut will = QuadSeq::new(size);
+        will.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
+        assert!(will.verify(SequenceType::QuaternionType));
 
-
-        let size = 3;
-        let seq_x = vec![1,1,-1];
-        let seq_y = vec![1,1,1];
-        let seq_z = vec![1,1,1];
-        let seq_w = vec![-1,-1,-1];
-
-        let mut will2 = QuadSeq::new(size);
-        will2.set_all_values((&seq_x, &seq_y, &seq_z, &seq_w));
-
-        let wills = vec![will1, will2];
+        let wills = vec![will];
         let all = generate_equivalent_quad_seqs(&wills, SequenceType::QuaternionType);
 
         println!("{}", all.len());
@@ -129,8 +123,8 @@ mod tests {
 
         for elm in equ {
             println!("{}", elm.to_string());
+            assert!(elm.verify());
         }
-
     }
 
 }
