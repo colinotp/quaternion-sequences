@@ -23,6 +23,7 @@ The different parts of the algorithm run by `driver.sh` can also be run one at a
 2. `sortpairs.sh` sorts the `.pair` files
 3. `join_pairs.sh` matches the data in the `.pair` files to find valid sequences, and reduces them to sequence equivalence
 4. `convert_hm.sh` converts the matched sequences found in the previous step to Hadamard matrices up to Hadamard equivalence
+5. `convert_qhm.sh` converts the matched perfect quaternionic sequences into normalized quaternionic Hadamard matrices
 
 All scripts can be run without arguments to get a message describing how to use them.
 
